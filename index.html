@@ -74,31 +74,43 @@
         .nav-tabs {
             display: flex;
             background: rgba(245, 205, 226, 0.35);
-            padding: 4px;
+            padding: 5px;
             border-radius: 24px;
-            gap: 4px;
+            gap: 6px;
             margin: 12px 18px 0;
+            box-shadow: inset 0 2px 4px rgba(220, 160, 180, 0.15);
         }
 
         .tab-btn {
             flex: 1;
             padding: 8px 12px;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             font-family: inherit;
             font-size: 13px;
             font-weight: 700;
             color: #7b6267;
             background: transparent;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+            outline: none;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+        }
+
+        .tab-btn:active {
+            transform: translateY(2px) scale(0.95);
         }
 
         .tab-btn.active {
-            background: #ffffff;
+            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
             color: #e08b9b;
-            box-shadow: 0 3px 8px rgba(224, 139, 155, 0.22);
-            transform: scale(1.02);
+            box-shadow: 0 3px 0 #e2becb, 0 4px 8px rgba(224, 139, 155, 0.2), inset 0 1px 1px #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active:active {
+            transform: translateY(2px) scale(0.95);
+            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
         main {
@@ -135,20 +147,23 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            background: #ffffff;
-            border: 1.5px solid #e2becb;
+            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
+            border: 1.5px solid #f5cde2;
             color: #5c4a4d;
             border-radius: 16px;
             padding: 12px 16px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             font-family: inherit;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(200, 150, 160, 0.15);
-            transition: transform 0.15s ease;
+            user-select: none;
+            outline: none;
+            box-shadow: 0 4px 0 #e2becb, 0 6px 12px rgba(200, 150, 160, 0.2), inset 0 1px 1px #ffffff;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
         }
         .login-btn:active {
-            transform: scale(0.96);
+            transform: translateY(3px) scale(0.96);
+            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
         /* Controls */
@@ -169,6 +184,7 @@
             font-size: 13.5px;
             color: #5c4a4d;
             outline: none;
+            box-shadow: inset 0 1px 3px rgba(220, 160, 180, 0.12);
         }
 
         .select-row {
@@ -293,42 +309,49 @@
             border: 1px solid rgba(255, 255, 255, 0.85);
             background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
             color: #7b6267;
-            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.2);
+            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             cursor: pointer;
             user-select: none;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            outline: none;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background 0.2s ease, color 0.2s ease;
         }
         .deck-badge:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #d9a8b6;
+            transform: translateY(2.5px) scale(0.94);
+            box-shadow: 0 0.5px 0 #d9a8b6, inset 0 1.5px 2px rgba(180, 110, 125, 0.25);
         }
         .deck-badge.in-deck {
             background: linear-gradient(180deg, #ffc7d5 0%, #e08b9b 100%);
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        }
+        .deck-badge.in-deck:active {
+            transform: translateY(2.5px) scale(0.94);
+            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35);
         }
 
         /* Mode Picker Art Cards */
         .mode-picker-card {
-            border-radius: 20px;
-            padding: 22px 18px;
-            margin-bottom: 16px;
+            border-radius: 18px;
+            padding: 20px 16px;
+            margin-bottom: 14px;
             cursor: pointer;
-            box-shadow: 0 6px 16px rgba(200, 150, 160, 0.2);
-            border: 1.5px solid rgba(245, 205, 226, 0.8);
+            border: 1.5px solid rgba(245, 205, 226, 0.85);
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
-            min-height: 145px;
+            min-height: 135px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+            box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3);
+            transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
         }
         .mode-picker-card:active {
-            transform: scale(0.97);
+            transform: translateY(5px) scale(0.96);
+            box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2);
         }
         .mode-picker-card.card-b1 {
             background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
@@ -345,15 +368,23 @@
             padding: 6px 20px;
             font-weight: 800;
             font-size: 13.5px;
-            box-shadow: 0 3px 6px rgba(224, 139, 155, 0.22);
+            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
+            transition: transform 0.15s ease;
         }
 
-        /* 3D Flashcard Module with Gestures */
+        /* 3D Flashcard Module - Exact Netflix 300x280 Aspect Frame */
+        #fc-session-box, #fc-setup-box {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
         .flashcard-wrapper {
             perspective: 1200px;
             width: 100%;
-            height: 380px;
-            margin-top: 10px;
+            max-width: 300px;
+            height: 280px;
+            margin: 10px auto 0;
             position: relative;
         }
 
@@ -376,14 +407,14 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 22px;
-            box-shadow: 0 10px 28px rgba(200, 150, 160, 0.25);
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(200, 150, 160, 0.2);
             border: 2px solid #f5cde2;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 24px;
+            padding: 20px;
             box-sizing: border-box;
             background-size: cover !important;
             background-repeat: no-repeat !important;
@@ -398,24 +429,31 @@
 
         .fc-controls {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
         }
 
+        /* 3D Physical Squish Feedback on Buttons */
         .fc-btn {
             flex: 1;
-            padding: 14px;
-            border-radius: 16px;
+            padding: 12px;
+            border-radius: 14px;
             border: 1.5px solid rgba(255, 255, 255, 0.85);
             font-weight: 800;
-            font-size: 14px;
+            font-size: 13.5px;
+            letter-spacing: 0.3px;
             font-family: inherit;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(180, 140, 150, 0.2);
-            transition: transform 0.15s ease;
+            user-select: none;
+            outline: none;
+            box-shadow: 0 4.5px 0 #b38c94, 0 6px 12px rgba(180, 140, 150, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
         .fc-btn:active {
-            transform: scale(0.93) translateY(2px);
+            transform: translateY(4px) scale(0.95);
+            box-shadow: 0 0.5px 0 #b38c94, inset 0 2px 4px rgba(140, 100, 110, 0.3);
         }
         .fc-btn-learn {
             background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f1.jpeg');
@@ -436,27 +474,36 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            outline: none;
+            transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .ponyo-btn img {
-            width: 54px;
+            width: 50px;
             height: auto;
             filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4));
         }
         .ponyo-btn:active {
-            transform: scale(0.85);
+            transform: translateY(2px) scale(0.86, 0.82);
         }
 
         .ghost-btn {
-            background: #ffffff;
-            border: 1px solid #e2becb;
+            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
+            border: 1px solid #f5cde2;
             color: #7b6267;
             border-radius: 12px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             font-size: 11.5px;
             font-family: inherit;
             font-weight: 700;
             cursor: pointer;
+            user-select: none;
+            outline: none;
+            box-shadow: 0 2.5px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15), inset 0 1px 1px #ffffff;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+        }
+        .ghost-btn:active {
+            transform: translateY(2px) scale(0.93);
+            box-shadow: 0 0.5px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
         .sync-box {
@@ -541,8 +588,8 @@
 
             <!-- 2. Flashcards View -->
             <section id="flash-view" style="display: none; flex-direction: column; align-items: center;">
-                <div id="fc-setup-box" style="text-align: center; width: 100%; max-width: 320px; margin: 10px auto;">
-                    <div style="margin-bottom: 14px;">
+                <div id="fc-setup-box">
+                    <div style="margin-bottom: 14px; text-align: center;">
                         <span id="fc-count-pill" style="font-size: 13px; font-weight: 700; color: #e08b9b; background: rgba(255, 240, 245, 0.95); border: 1px solid rgba(245, 205, 226, 0.7); padding: 4px 14px; border-radius: 14px;">
                             0 Words
                         </span>
@@ -558,12 +605,14 @@
                         <span class="fc-start-pill">Start ▶</span>
                     </div>
 
-                    <button id="fc-clear-deck-btn" class="ghost-btn" style="margin-top: 10px;">Clear Deck 🧹</button>
+                    <div style="text-align: center;">
+                        <button id="fc-clear-deck-btn" class="ghost-btn" style="margin-top: 10px;">Clear Deck 🧹</button>
+                    </div>
                 </div>
 
                 <!-- Flashcard Active Session -->
-                <div id="fc-session-box" style="display: none; width: 100%; max-width: 320px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
+                <div id="fc-session-box" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
                         <span id="fc-left-counter">Cards Left: 0</span>
                         <span id="fc-quit-btn" style="color: #8ba6b6; cursor: pointer; text-decoration: underline;">Quit</span>
                     </div>
@@ -578,9 +627,6 @@
                     <div class="fc-controls" id="fc-controls-bar" style="opacity: 0.4; pointer-events: none;">
                         <button id="fc-btn-learn" class="fc-btn fc-btn-learn">Still Learning</button>
                         <button id="fc-btn-gotit" class="fc-btn fc-btn-gotit">Got It !</button>
-                    </div>
-                    <div style="text-align: center; margin-top: 10px; font-size: 11px; color: #a38c90; font-style: italic;">
-                        👈 Swipe left: Learning | Swipe right: Got it 👉
                     </div>
                 </div>
             </section>
@@ -929,26 +975,27 @@
             // Rotating Background Texture
             const activeSet = fcMode === 'en' ? FLASHCARD_BG_IMAGES_ENGLISH : FLASHCARD_BG_IMAGES_HANZI;
             const bgImg = activeSet[flashcardSessionCount % activeSet.length];
-            const bgStyle = `background: linear-gradient(rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.82)), url('${bgImg}');`;
+            const bgPosition = bgImg.includes('d5.png') ? 'left center' : 'center center';
+            const bgStyle = `background: linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.78)), url('${bgImg}'); background-position: ${bgPosition} !important;`;
 
             fcFaceFront.style.cssText = bgStyle;
             fcFaceBack.style.cssText = bgStyle;
 
             if (fcMode === 'hanzi') {
                 fcFaceFront.innerHTML = `
-                    <span style="position:absolute; top:18px; right:18px; font-size:11px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700;">HSK ${vocab.level || '?'}</span>
-                    <button class="ponyo-btn fc-speak-btn" style="position:absolute; top:12px; left:12px;" title="Listen">
+                    <span style="position:absolute; top:15px; right:15px; font-size:10px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700; color:#5c4a4d;">HSK ${vocab.level || '?'}</span>
+                    <button class="ponyo-btn fc-speak-btn" style="position:absolute; top:10px; left:10px;" title="Listen">
                         <img src="${PONYO_IMG_URL}" alt="Speak">
                     </button>
-                    <div style="font-size: 48px; font-weight: 800; color: #e08b9b; margin-top: 15px;">${vocab.hanzi}</div>
-                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #a38c90; font-style: italic;">(Tap to flip)</div>
+                    <div style="font-size: 42px; font-weight: bold; color: #e08b9b; margin-top: 10px;">${vocab.hanzi}</div>
+                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #b89c9e; font-style: italic;">(Tap to flip)</div>
                 `;
             } else {
                 const defs = (vocab.translations || []).map(t => `<li style="margin-bottom:4px;">${t}</li>`).join('');
                 fcFaceFront.innerHTML = `
-                    <span style="position:absolute; top:18px; right:18px; font-size:11px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700;">HSK ${vocab.level || '?'}</span>
-                    <ul style="margin:0; padding-left:20px; font-size:16px; color:#5c4a4d; font-weight:700; text-align:left; width:100%;">${defs}</ul>
-                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #a38c90; font-style: italic;">(Tap to flip)</div>
+                    <span style="position:absolute; top:15px; right:15px; font-size:10px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700; color:#5c4a4d;">HSK ${vocab.level || '?'}</span>
+                    <ul style="margin:0; padding-left:20px; font-size:15px; color:#5c4a4d; font-weight:700; text-align:left; width:100%;">${defs}</ul>
+                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #b89c9e; font-style: italic;">(Tap to flip)</div>
                 `;
             }
 
@@ -956,16 +1003,16 @@
             fcFaceBack.innerHTML = `
                 <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
                     <div>
-                        <div style="font-size: 32px; font-weight: 800; color: #e08b9b;">${vocab.hanzi}</div>
+                        <div style="font-size: 28px; font-weight: bold; color: #e08b9b;">${vocab.hanzi}</div>
                         <div style="font-size: 14px; color: #d09b9f; font-style: italic;">${vocab.pinyin || ''}</div>
                     </div>
                     <button class="ponyo-btn fc-speak-btn" title="Listen">
                         <img src="${PONYO_IMG_URL}" alt="Speak">
                     </button>
                 </div>
-                <ul style="margin: 8px 0 10px; padding-left: 18px; font-size: 13.5px; line-height: 1.4;">${defsBack}</ul>
-                ${vocab.note ? `<div class="sticky-note-box" style="margin-bottom:6px; font-size:11.5px;">📌 ${vocab.note}</div>` : ''}
-                ${vocab.beanReply ? `<div class="bean-note-box" style="font-size:11.5px;">💬 Bean: ${vocab.beanReply}</div>` : ''}
+                <ul style="margin: 6px 0 10px; padding-left: 18px; font-size: 13px; line-height: 1.4;">${defsBack}</ul>
+                ${vocab.note ? `<div class="sticky-note-box" style="margin-bottom:6px; font-size:11px; padding:6px 8px;">📌 ${vocab.note}</div>` : ''}
+                ${vocab.beanReply ? `<div class="bean-note-box" style="font-size:11px; padding:6px 8px;">💬 Bean: ${vocab.beanReply}</div>` : ''}
             `;
 
             fcFaceFront.querySelector('.fc-speak-btn')?.addEventListener('click', (e) => {
@@ -1025,18 +1072,15 @@
         }, { passive: true });
 
         fcSwipeContainer.addEventListener('touchend', (e) => {
-            if (!fcIsFlipped) return; // Only allow swipe after flipped
+            if (!fcIsFlipped) return;
 
             const deltaX = e.changedTouches[0].clientX - touchStartX;
             const deltaY = e.changedTouches[0].clientY - touchStartY;
 
-            // Horizontal swipe threshold: 60px
             if (Math.abs(deltaX) > 60 && Math.abs(deltaY) < 50) {
                 if (deltaX < 0) {
-                    // Swipe Left ➔ Still Learning
                     markStillLearning();
                 } else {
-                    // Swipe Right ➔ Got It !
                     markGotIt();
                 }
             }
