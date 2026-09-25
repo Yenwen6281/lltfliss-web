@@ -1044,7 +1044,7 @@
                     <button id="enable-push-btn" class="login-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border: 1.5px solid #f5cde2; font-size: 13px;">
                         🔔 Enable Push Notifications
                     </button>
-                    <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 700;">Status: Ready to enable</div>
+                    <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 700;">Status: Checking...</div>
                 </div>
 
                 <!-- App Version & Cache Status Card -->
@@ -1148,20 +1148,17 @@
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
         const APP_VERSION = 'v1.1.8';
 
-        document.getElementById('force-update-btn')?.addEventListener('click', () => {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(registrations => {
-                    for (let registration of registrations) {
-                        registration.unregister();
-                    }
-                });
-            }
+        // Safe update: Clears cache storage WITHOUT breaking the Apple Push Notification registration
+        document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
-                caches.keys().then(names => {
-                    for (let name of names) caches.delete(name);
-                });
+                const names = await caches.keys();
+                for (let name of names) await caches.delete(name);
             }
-            alert(`Checking for updates... Refreshing to verify latest version.`);
+            if ('serviceWorker' in navigator) {
+                const reg = await navigator.serviceWorker.getRegistration();
+                if (reg) await reg.update();
+            }
+            alert(`Cache refreshed! Reloading Eggy's Mandarin...`);
             window.location.reload(true);
         });
 
@@ -1195,7 +1192,7 @@
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
         const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
 
-        // Set your valid Firebase Web Push VAPID key here if testing push token generation
+        // --> PASTE YOUR FIREBASE WEB PUSH (VAPID) KEY HERE <--
         const FIREBASE_VAPID_KEY = '';
 
         const FLASHCARD_BG_IMAGES_HANZI = [
@@ -1259,7 +1256,7 @@
         let menuTargetMsg = null;
         let swRegistration = null;
 
-        // Register Inline Service Worker for Web Push & Notification Dispatch
+        // Register Service Worker for Web Push & Notification Dispatch
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('firebase-messaging-sw.js')
                 .then(reg => {
@@ -1290,7 +1287,7 @@
                 });
         }
 
-        // Trigger notifications reliably via ServiceWorker or fallback
+        // Robust notification trigger across all iOS WebKit & Android states
         function triggerAppNotification(title, body) {
             if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
 
@@ -1383,6 +1380,8 @@
                 initChat(user);
                 initGlobalNotificationWatcher(user);
                 checkPushStatus();
+                // Automatically ensure FCM background push token is active in Firestore
+                autoSyncPushToken(user.uid);
             } else {
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
@@ -1435,6 +1434,21 @@
                 }, err => console.warn("Global alert watcher error:", err));
         }
 
+        // Automatic Token Refresh to ensure Apple never drops background notifications
+        async function autoSyncPushToken(uid) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            if (!messaging || !FIREBASE_VAPID_KEY) return;
+
+            try {
+                const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY });
+                if (token && uid) {
+                    await db.collection('users').doc(uid).update({ fcmToken: token });
+                }
+            } catch (err) {
+                console.warn("Auto-sync FCM token notice:", err);
+            }
+        }
+
         // Push Notifications Activation Handler
         function checkPushStatus() {
             if (!('Notification' in window)) {
@@ -1445,7 +1459,7 @@
             if (Notification.permission === 'granted') {
                 pushStatusLbl.textContent = "Status: Enabled";
                 enablePushBtn.textContent = "Notifications Active 🌸";
-                enablePushBtn.disabled = true;
+                enablePushBtn.disabled = false; // Keep clickable to allow token refreshing
             } else if (Notification.permission === 'denied') {
                 pushStatusLbl.textContent = "Status: Blocked in Settings";
             } else {
@@ -1473,7 +1487,7 @@
                         }
                     }
                     checkPushStatus();
-                    alert("Notifications enabled! Alerts are now active 🌸");
+                    alert("Notifications enabled and refreshed! Background alerts are active 🌸");
                 } else {
                     checkPushStatus();
                 }
