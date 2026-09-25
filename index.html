@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Eggy's Mandarin 🌸</title>
+    
+    <!-- PWA / iOS WebApp 支援 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#fcf8f5">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png">
+    
+    <!-- 字體與圖標 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK (v9+ compat CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fcf8f5;
+            color: #5c4a4d;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* 頂部導航欄 */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(252, 248, 245, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px dashed rgba(245, 205, 226, 0.8);
+            padding: env(safe-area-inset-top, 15px) 18px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title-box h1 {
+            margin: 0;
+            font-size: 19px;
+            color: #e08b9b;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title-box p {
+            margin: 2px 0 0;
+            font-size: 11px;
+            color: #a38c90;
+            font-weight: 600;
+        }
+
+        /* 導航分頁切換鈕 */
+        .nav-tabs {
+            display: flex;
+            background: rgba(245, 205, 226, 0.35);
+            padding: 4px;
+            border-radius: 24px;
+            gap: 4px;
+            margin: 12px 18px 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            color: #7b6267;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: #e08b9b;
+            box-shadow: 0 3px 8px rgba(224, 139, 155, 0.22);
+        }
+
+        /* 主內容區 */
+        main {
+            flex: 1;
+            padding: 14px 18px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 登入畫面 */
+        #auth-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #f5cde2;
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 12px 28px rgba(200, 150, 160, 0.18);
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: #ffffff;
+            border: 1.5px solid #e2becb;
+            color: #5c4a4d;
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(200, 150, 160, 0.15);
+            transition: transform 0.15s ease;
+        }
+        .login-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* 控制項 (搜尋、篩選、排序) */
+        .controls-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #f5cde2;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: inherit;
+            font-size: 13px;
+            color: #5c4a4d;
+            outline: none;
+        }
+
+        .select-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #f5cde2;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: inherit;
+            font-size: 12px;
+            color: #5c4a4d;
+            outline: none;
+        }
+
+        /* 單字卡卡片清單樣式 */
+        .vocab-card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(250, 227, 239, 0.8);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(200, 150, 160, 0.12);
+            position: relative;
+        }
+
+        .vocab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vocab-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #e08b9b;
+        }
+
+        .vocab-pinyin {
+            font-size: 14px;
+            color: #d09b9f;
+            font-style: italic;
+            margin: 2px 0 8px;
+        }
+
+        .vocab-level {
+            font-size: 11px;
+            background: #f5cde2;
+            color: #5c4a4d;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .vocab-defs {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #5c4a4d;
+        }
+
+        .vocab-note-box {
+            margin-top: 8px;
+            background: #fff9e6;
+            border: 1px solid #fbe7b2;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: #b0743b;
+            font-weight: 600;
+        }
+
+        .bean-note-box {
+            margin-top: 8px;
+            background: #eef7fc;
+            border: 1.5px solid #c9e4f5;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 12.5px;
+            color: #406277;
+            line-height: 1.4;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(245, 205, 226, 0.6);
+        }
+
+        .deck-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 16px;
+            border: 1px solid #f5cde2;
+            background: #fff;
+            color: #7b6267;
+            cursor: pointer;
+        }
+
+        .deck-badge.in-deck {
+            background: #e08b9b;
+            color: #fff;
+            border-color: #e08b9b;
+        }
+
+        /* 3D 單字卡複習模組 */
+        .flashcard-wrapper {
+            perspective: 1200px;
+            width: 100%;
+            height: 380px;
+            margin-top: 15px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 22px;
+            box-shadow: 0 10px 30px rgba(200, 150, 160, 0.22);
+            border: 2px solid #f5cde2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            background: #ffffff;
+            text-align: center;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            align-items: flex-start;
+            text-align: left;
+            overflow-y: auto;
+        }
+
+        .fc-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .fc-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 800;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(180, 140, 150, 0.2);
+            transition: transform 0.15s ease;
+        }
+        .fc-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fc-btn-learn {
+            background: #fff0f3;
+            color: #c75d71;
+            border: 1.5px solid #f7c6d1;
+        }
+
+        .fc-btn-gotit {
+            background: #eaf8f0;
+            color: #3f8a5c;
+            border: 1.5px solid #bce6cc;
+        }
+
+        /* 帳號設定面板 (顯示 Sync Key) */
+        .sync-box {
+            background: #fff;
+            border: 2px solid #f5cde2;
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .sync-key-pill {
+            display: inline-block;
+            background: #f7eaf0;
+            color: #e08b9b;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 12px;
+            margin: 6px 0 10px;
+            word-break: break-all;
+        }
+
+        .ghost-btn {
+            background: none;
+            border: 1px solid #d9a8b6;
+            color: #7b6267;
+            border-radius: 14px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部資訊列 -->
+    <header>
+        <div class="header-title-box">
+            <h1>Eggy's Mandarin</h1>
+            <p id="user-display-email">Connecting...</p>
+        </div>
+        <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
+    </header>
+
+    <!-- 登入介面 (未登入時顯示) -->
+    <div id="auth-view">
+        <div class="login-card">
+            <img src="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png" style="width: 80px; height: auto; margin-bottom: 16px;" alt="Logo">
+            <h2 style="margin: 0 0 6px; color: #e08b9b; font-size: 20px;">Welcome Bub!</h2>
+            <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words & flashcards from Netflix.</p>
+            <button id="google-login-btn" class="login-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- 已登入介面 -->
+    <div id="app-view" style="display: none; flex-direction: column; flex: 1;">
+        <!-- 分頁切換 -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
+            <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
+            <button class="tab-btn" id="tab-btn-sync">Sync Key</button>
+        </div>
+
+        <main>
+            <!-- 1. Saved Words View -->
+            <section id="vocab-view">
+                <div class="controls-card">
+                    <input type="text" id="vocab-search" class="search-input" placeholder="🔍 Search word, pinyin, meaning...">
+                    <div class="select-row">
+                        <select id="vocab-filter" class="filter-select">
+                            <option value="all">All Words</option>
+                            <option value="deck">In Flashcard Deck</option>
+                            <option value="notes">Has Note</option>
+                            <option value="bean">Has Bean's Note</option>
+                        </select>
+                        <select id="vocab-sort" class="filter-select">
+                            <option value="time_desc">Newest First</option>
+                            <option value="time_asc">Oldest First</option>
+                            <option value="hsk_asc">HSK: 1 ➔ 6</option>
+                            <option value="hsk_desc">HSK: 6 ➔ 1</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="vocab-list-container"></div>
+            </section>
+
+            <!-- 2. Flashcards View -->
+            <section id="flash-view" style="display: none; flex-direction: column; align-items: center;">
+                <div id="fc-setup-box" style="text-align: center; width: 100%; margin-top: 20px;">
+                    <div id="fc-count-pill" style="display: inline-block; font-size: 13px; font-weight: 700; color: #e08b9b; background: rgba(255, 240, 245, 0.9); padding: 4px 14px; border-radius: 14px; margin-bottom: 15px;">
+                        0 Words in Deck
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px; max-width: 240px; margin: 0 auto;">
+                        <button id="fc-start-hanzi-btn" class="login-btn" style="background: #ffffff; border-color: #f5cde2; color: #e08b9b;">Start (Hanzi First) ▶</button>
+                        <button id="fc-start-en-btn" class="login-btn" style="background: #ffffff; border-color: #f5cde2; color: #5c7482;">Start (English First) ▶</button>
+                    </div>
+                </div>
+
+                <div id="fc-session-box" style="display: none; width: 100%; max-width: 320px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
+                        <span id="fc-left-counter">Cards Left: 0</span>
+                        <span id="fc-quit-btn" style="color: #8ba6b6; cursor: pointer; text-decoration: underline;">Quit</span>
+                    </div>
+
+                    <div class="flashcard-wrapper">
+                        <div class="flashcard-inner" id="fc-card-inner">
+                            <div class="flashcard-face" id="fc-face-front"></div>
+                            <div class="flashcard-face flashcard-back" id="fc-face-back"></div>
+                        </div>
+                    </div>
+
+                    <div class="fc-controls" id="fc-controls-bar" style="opacity: 0.4; pointer-events: none;">
+                        <button id="fc-btn-learn" class="fc-btn fc-btn-learn">Still Learning</button>
+                        <button id="fc-btn-gotit" class="fc-btn fc-btn-gotit">Got It !</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Sync Key View -->
+            <section id="sync-view" style="display: none;">
+                <div class="sync-box">
+                    <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
+                    <p style="margin: 0 0 10px; font-size: 13px; color: #7b6267;">Copy this key and paste it into the Netflix UserScript settings on your Mac.</p>
+                    <div class="sync-key-pill" id="sync-key-display">Loading...</div>
+                    <div>
+                        <button id="copy-sync-key-btn" class="ghost-btn">📋 Copy Sync Key</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- 1. FIREBASE 初始化 ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGhMMd6fd2oK23J-YA27VYXFGh69R1PA0",
+            authDomain: "lltfliss-ce07a.firebaseapp.com",
+            projectId: "lltfliss-ce07a",
+            storageBucket: "lltfliss-ce07a.firebasestorage.app",
+            messagingSenderId: "839671719751",
+            appId: "1:839671719751:web:063a638ed2c7eb984f4e62",
+            measurementId: "G-RR57EXPBH6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // 離線持久化支援
+        db.enablePersistence().catch(err => {
+            console.warn("Firestore persistence warning:", err.code);
+        });
+
+        let currentUser = null;
+        let unsubscribeVocabListener = null;
+        let vocabList = [];
+
+        // --- 2. 身份驗證邏輯 ---
+        const authView = document.getElementById('auth-view');
+        const appView = document.getElementById('app-view');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userDisplayEmail = document.getElementById('user-display-email');
+        const syncKeyDisplay = document.getElementById('sync-key-display');
+
+        googleLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(error => {
+                alert("Login Error: " + error.message);
+            });
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            if (confirm("Are you sure you want to sign out?")) {
+                auth.signOut();
+            }
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                authView.style.display = 'none';
+                appView.style.display = 'flex';
+                logoutBtn.style.display = 'inline-block';
+                userDisplayEmail.textContent = user.email;
+                syncKeyDisplay.textContent = user.uid;
+
+                listenToUserData(user.uid);
+            } else {
+                currentUser = null;
+                if (unsubscribeVocabListener) unsubscribeVocabListener();
+                authView.style.display = 'flex';
+                appView.style.display = 'none';
+                logoutBtn.style.display = 'none';
+                userDisplayEmail.textContent = "Please sign in";
+            }
+        });
+
+        // 複製 Sync Key
+        document.getElementById('copy-sync-key-btn').addEventListener('click', () => {
+            if (currentUser) {
+                navigator.clipboard.writeText(currentUser.uid).then(() => {
+                    alert("Sync Key copied to clipboard! 🌷");
+                });
+            }
+        });
+
+        // --- 3. FIRESTORE 即時資料監聽 (Realtime Sync) ---
+        function listenToUserData(uid) {
+            if (unsubscribeVocabListener) unsubscribeVocabListener();
+
+            unsubscribeVocabListener = db.collection('users').doc(uid).collection('vocab')
+                .onSnapshot(snapshot => {
+                    vocabList = [];
+                    snapshot.forEach(doc => {
+                        vocabList.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderSavedVocab();
+                    updateFlashcardCounts();
+                }, error => {
+                    console.error("Firestore listen error:", error);
+                });
+        }
+
+        // --- 4. 分頁切換 ---
+        const tabBtnVocab = document.getElementById('tab-btn-vocab');
+        const tabBtnFlash = document.getElementById('tab-btn-flash');
+        const tabBtnSync = document.getElementById('tab-btn-sync');
+        const vocabView = document.getElementById('vocab-view');
+        const flashView = document.getElementById('flash-view');
+        const syncView = document.getElementById('sync-view');
+
+        function switchTab(activeBtn, activeSection) {
+            [tabBtnVocab, tabBtnFlash, tabBtnSync].forEach(b => b.classList.remove('active'));
+            [vocabView, flashView, syncView].forEach(s => s.style.display = 'none');
+            activeBtn.classList.add('active');
+            activeSection.style.display = activeSection === flashView ? 'flex' : 'block';
+        }
+
+        tabBtnVocab.addEventListener('click', () => switchTab(tabBtnVocab, vocabView));
+        tabBtnFlash.addEventListener('click', () => switchTab(tabBtnFlash, flashView));
+        tabBtnSync.addEventListener('click', () => switchTab(tabBtnSync, syncView));
+
+        // --- 5. SAVED WORDS 渲染與互動 ---
+        const vocabListContainer = document.getElementById('vocab-list-container');
+        const searchInput = document.getElementById('vocab-search');
+        const filterSelect = document.getElementById('vocab-filter');
+        const sortSelect = document.getElementById('vocab-sort');
+
+        [searchInput, filterSelect, sortSelect].forEach(el => {
+            el.addEventListener('input', renderSavedVocab);
+        });
+
+        function renderSavedVocab() {
+            let filtered = [...vocabList];
+            const query = (searchInput.value || '').toLowerCase().trim();
+            const filterVal = filterSelect.value;
+            const sortVal = sortSelect.value;
+
+            // 搜尋
+            if (query) {
+                filtered = filtered.filter(v => 
+                    (v.hanzi || '').includes(query) ||
+                    (v.pinyin || '').toLowerCase().includes(query) ||
+                    (v.translations || []).some(t => t.toLowerCase().includes(query))
+                );
+            }
+
+            // 篩選
+            if (filterVal === 'deck') filtered = filtered.filter(v => !!v.inDeck);
+            else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
+            else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0);
+
+            // 排序
+            if (sortVal === 'time_desc') filtered.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            else if (sortVal === 'time_asc') filtered.sort((a,b) => (a.updatedAt || 0) - (b.updatedAt || 0));
+            else if (sortVal === 'hsk_asc') filtered.sort((a,b) => (a.level || 99) - (b.level || 99));
+            else if (sortVal === 'hsk_desc') filtered.sort((a,b) => (b.level || 99) - (a.level || 99));
+
+            if (filtered.length === 0) {
+                vocabListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No words found 🐣</div>`;
+                return;
+            }
+
+            vocabListContainer.innerHTML = '';
+            filtered.forEach(vocab => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card';
+
+                const defsHtml = (vocab.translations || []).map(t => `<li>${t}</li>`).join('');
+
+                card.innerHTML = `
+                    <div class="vocab-header">
+                        <span class="vocab-title">${vocab.hanzi}</span>
+                        <span class="vocab-level">HSK ${vocab.level || '?'}</span>
+                    </div>
+                    <div class="vocab-pinyin">${vocab.pinyin || ''}</div>
+                    <ul class="vocab-defs">${defsHtml}</ul>
+                    ${vocab.note ? `<div class="vocab-note-box">📌 ${vocab.note}</div>` : ''}
+                    ${vocab.beanReply ? `<div class="bean-note-box">💬 Bean's Note: ${vocab.beanReply}</div>` : ''}
+                    <div class="card-actions">
+                        <button class="deck-badge ${vocab.inDeck ? 'in-deck' : ''}" data-hanzi="${vocab.hanzi}">
+                            ${vocab.inDeck ? '✓ Flashcard' : '+ Flashcard'}
+                        </button>
+                        <button class="ghost-btn speak-btn" data-hanzi="${vocab.hanzi}">🔊 Listen</button>
+                    </div>
+                `;
+
+                // 切換牌組狀態
+                card.querySelector('.deck-badge').addEventListener('click', (e) => {
+                    const targetHanzi = e.target.getAttribute('data-hanzi');
+                    const newState = !vocab.inDeck;
+                    db.collection('users').doc(currentUser.uid).collection('vocab').doc(targetHanzi).update({
+                        inDeck: newState,
+                        updatedAt: Date.now()
+                    });
+                });
+
+                // 發音
+                card.querySelector('.speak-btn').addEventListener('click', () => {
+                    playTTS(vocab.hanzi);
+                });
+
+                vocabListContainer.appendChild(card);
+            });
+        }
+
+        // --- 6. FLASHCARDS 模組 ---
+        const fcSetupBox = document.getElementById('fc-setup-box');
+        const fcSessionBox = document.getElementById('fc-session-box');
+        const fcCountPill = document.getElementById('fc-count-pill');
+        const fcStartHanziBtn = document.getElementById('fc-start-hanzi-btn');
+        const fcStartEnBtn = document.getElementById('fc-start-en-btn');
+        const fcQuitBtn = document.getElementById('fc-quit-btn');
+        const fcLeftCounter = document.getElementById('fc-left-counter');
+        const fcCardInner = document.getElementById('fc-card-inner');
+        const fcFaceFront = document.getElementById('fc-face-front');
+        const fcFaceBack = document.getElementById('fc-face-back');
+        const fcControlsBar = document.getElementById('fc-controls-bar');
+        const fcBtnLearn = document.getElementById('fc-btn-learn');
+        const fcBtnGotit = document.getElementById('fc-btn-gotit');
+
+        let fcQueue = [];
+        let fcMode = 'hanzi';
+        let fcIsFlipped = false;
+
+        function updateFlashcardCounts() {
+            const deckWords = vocabList.filter(v => v.inDeck);
+            fcCountPill.textContent = `${deckWords.length} Words in Deck`;
+        }
+
+        function startFlashcardSession(mode) {
+            const deckWords = vocabList.filter(v => v.inDeck);
+            if (deckWords.length === 0) {
+                alert("Your study deck is empty! Add some words using '+ Flashcard' first 🌸");
+                return;
+            }
+            fcMode = mode;
+            fcQueue = [...deckWords].sort(() => Math.random() - 0.5);
+            fcSetupBox.style.display = 'none';
+            fcSessionBox.style.display = 'block';
+            renderNextFlashcard();
+        }
+
+        fcStartHanziBtn.addEventListener('click', () => startFlashcardSession('hanzi'));
+        fcStartEnBtn.addEventListener('click', () => startFlashcardSession('en'));
+
+        fcQuitBtn.addEventListener('click', () => {
+            fcSessionBox.style.display = 'none';
+            fcSetupBox.style.display = 'block';
+        });
+
+        function renderNextFlashcard() {
+            if (fcQueue.length === 0) {
+                alert("Deck complete! Well done bub! 🧸");
+                fcQuitBtn.click();
+                return;
+            }
+
+            fcIsFlipped = false;
+            fcCardInner.classList.remove('is-flipped');
+            fcControlsBar.style.opacity = '0.4';
+            fcControlsBar.style.pointerEvents = 'none';
+
+            const vocab = fcQueue[0];
+            fcLeftCounter.textContent = `Cards Left: ${fcQueue.length}`;
+
+            // 正面
+            if (fcMode === 'hanzi') {
+                fcFaceFront.innerHTML = `
+                    <span style="position:absolute; top:18px; right:18px; font-size:11px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700;">HSK ${vocab.level || '?'}</span>
+                    <div style="font-size: 48px; font-weight: 800; color: #e08b9b;">${vocab.hanzi}</div>
+                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #a38c90; font-style: italic;">(Tap to flip)</div>
+                `;
+            } else {
+                const defs = (vocab.translations || []).map(t => `<li style="margin-bottom:4px;">${t}</li>`).join('');
+                fcFaceFront.innerHTML = `
+                    <span style="position:absolute; top:18px; right:18px; font-size:11px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700;">HSK ${vocab.level || '?'}</span>
+                    <ul style="margin:0; padding-left:20px; font-size:16px; color:#5c4a4d; font-weight:700; text-align:left;">${defs}</ul>
+                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #a38c90; font-style: italic;">(Tap to flip)</div>
+                `;
+            }
+
+            // 背面
+            const defsBack = (vocab.translations || []).map(t => `<li>${t}</li>`).join('');
+            fcFaceBack.innerHTML = `
+                <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                    <span style="font-size: 30px; font-weight: 800; color: #e08b9b;">${vocab.hanzi}</span>
+                    <button class="ghost-btn fc-speak-btn" style="padding:4px 8px;">🔊</button>
+                </div>
+                <div style="font-size: 15px; color: #d09b9f; font-style: italic; margin-bottom: 8px;">${vocab.pinyin || ''}</div>
+                <ul style="margin: 0 0 10px; padding-left: 18px; font-size: 14px; line-height: 1.4;">${defsBack}</ul>
+                ${vocab.note ? `<div class="vocab-note-box" style="margin-bottom:6px;">📌 ${vocab.note}</div>` : ''}
+                ${vocab.beanReply ? `<div class="bean-note-box">💬 Bean: ${vocab.beanReply}</div>` : ''}
+            `;
+
+            fcFaceBack.querySelector('.fc-speak-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                playTTS(vocab.hanzi);
+            });
+        }
+
+        // 點擊卡片翻轉
+        fcCardInner.addEventListener('click', () => {
+            if (!fcIsFlipped) {
+                fcIsFlipped = true;
+                fcCardInner.classList.add('is-flipped');
+                fcControlsBar.style.opacity = '1';
+                fcControlsBar.style.pointerEvents = 'auto';
+
+                if (fcMode === 'en') {
+                    playTTS(fcQueue[0].hanzi);
+                }
+            }
+        });
+
+        // Still Learning: 移至隊尾重練
+        fcBtnLearn.addEventListener('click', () => {
+            const card = fcQueue.shift();
+            fcQueue.push(card);
+            renderNextFlashcard();
+        });
+
+        // Got It: 本輪過關 (並可選擇同步移出牌組)
+        fcBtnGotit.addEventListener('click', () => {
+            const card = fcQueue.shift();
+            renderNextFlashcard();
+        });
+
+        // --- 7. TTS 語音朗讀 ---
+        function playTTS(text) {
+            try {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            } catch (e) {
+                console.warn("TTS error:", e);
+            }
+        }
+    </script>
+</body>
+</html>
