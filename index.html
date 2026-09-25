@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.1.4)</title>
+    <title>Eggy's Mandarin (v1.1.5)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -977,8 +977,7 @@
 
                 <!-- Web Push Notifications Card -->
                 <div class="sync-box">
-                    <h3 style="margin: 0 0 6px; color: #e08b9b;">Push Notifications 🔔</h3>
-                    <p style="margin: 0 0 12px; font-size: 13px; color: #7b6267;">Get notifications on your lock screen when Bean replies to your questions or sends messages.</p>
+                    <h3 style="margin: 0 0 10px; color: #e08b9b;">Push Notifications 🔔</h3>
                     <button id="enable-push-btn" class="login-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border: 1.5px solid #f5cde2; font-size: 13px;">
                         🔔 Enable Push Notifications
                     </button>
@@ -989,13 +988,13 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <span>🏷️ Current Build:</span>
                         <b id="settings-version-display">v1.1.4</b>
                     </div>
-                    <p style="margin: 0 0 12px; font-size: 12.5px; color: #7b6267;">If updates from GitHub do not appear immediately on iOS, tap below to clear the local service worker cache.</p>
-                    <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
-                        🔄 Check for Update
-                    </button>
+                    <div>
+                        <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
+                            🔄 Check for Update
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
@@ -1273,18 +1272,18 @@
         // Push Notifications Activation Handler
         function checkPushStatus() {
             if (!('Notification' in window)) {
-                pushStatusLbl.textContent = "Push notifications not supported on this browser.";
+                pushStatusLbl.textContent = "Status: Not supported on this browser";
                 enablePushBtn.style.display = 'none';
                 return;
             }
             if (Notification.permission === 'granted') {
-                pushStatusLbl.textContent = "Status: Enabled ✅ (Active on Home Screen)";
+                pushStatusLbl.textContent = "Status: Enabled";
                 enablePushBtn.textContent = "Notifications Active 🌸";
                 enablePushBtn.disabled = true;
             } else if (Notification.permission === 'denied') {
-                pushStatusLbl.textContent = "Status: Blocked in iOS Settings. Allow notifications for Eggy's Mandarin in Settings.";
+                pushStatusLbl.textContent = "Status: Blocked in Settings";
             } else {
-                pushStatusLbl.textContent = "Status: Ready to enable on Home Screen";
+                pushStatusLbl.textContent = "Status: Ready to enable";
             }
         }
 
