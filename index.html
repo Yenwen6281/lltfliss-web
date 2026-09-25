@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.1.6)</title>
+    <title>Eggy's Mandarin 🌸 (v1.1.7)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -457,6 +457,24 @@
             border: 1px solid rgba(245, 205, 226, 0.7);
             margin-bottom: 8px;
             -webkit-overflow-scrolling: touch;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            transition: background-image 0.3s ease-in-out;
+        }
+
+        .chat-system-msg {
+            align-self: center;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px dashed #f5cde2;
+            color: #a38c90;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 14px;
+            margin: 4px auto;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(200, 150, 160, 0.1);
         }
 
         .chat-bubble-wrapper {
@@ -855,7 +873,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.6</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.7</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1002,6 +1020,24 @@
                     </div>
                 </div>
 
+                <!-- Custom Chat Wallpaper Card -->
+                <div class="sync-box">
+                    <h3 style="margin: 0 0 6px; color: #e08b9b;">Chat Wallpaper 🖼️</h3>
+                    <p style="margin: 0 0 12px; font-size: 12.5px; color: #7b6267;">
+                        Personalize the wallpaper for your chat. Both you and Bean will see this wallpaper in your conversation!
+                    </p>
+                    
+                    <input type="file" id="chat-bg-file-input" accept="image/*" style="display: none;">
+                    <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                        <button id="upload-bg-btn" class="login-btn" style="max-width: 170px; font-size: 12.5px; padding: 10px 14px;">
+                            🖼️ Choose Photo
+                        </button>
+                        <button id="reset-bg-btn" class="ghost-btn" style="color: #ba6273; padding: 10px 14px;">
+                            Reset Default
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Web Push Notifications Card (Cleaned) -->
                 <div class="sync-box">
                     <h3 style="margin: 0 0 10px; color: #e08b9b;">Push Notifications 🔔</h3>
@@ -1015,7 +1051,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.1.6</b>
+                        <b id="settings-version-display">v1.1.7</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1113,7 +1149,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.1.6';
+        const APP_VERSION = 'v1.1.7';
 
         document.getElementById('force-update-btn')?.addEventListener('click', () => {
             if ('serviceWorker' in navigator) {
@@ -1211,6 +1247,7 @@
         let currentUser = null;
         let unsubscribeVocab = null;
         let unsubscribeChat = null;
+        let unsubscribeChatWallpaper = null;
         let unsubscribeGlobalAlerts = null;
         let vocabList = [];
         let beanRepliesList = [];
@@ -1314,6 +1351,7 @@
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
                 if (unsubscribeChat) unsubscribeChat();
+                if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
                 if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
                 authView.style.display = 'flex';
                 appView.style.display = 'none';
@@ -1869,7 +1907,20 @@
 
         function bindChatListener(targetUid) {
             if (unsubscribeChat) unsubscribeChat();
+            if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
 
+            // 1. Listen for Wallpaper changes on the conversation document
+            unsubscribeChatWallpaper = db.collection('users').doc(targetUid)
+                .onSnapshot(doc => {
+                    const data = doc.data() || {};
+                    if (data.chatBackgroundUrl) {
+                        chatMessagesBox.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('${data.chatBackgroundUrl}')`;
+                    } else {
+                        chatMessagesBox.style.backgroundImage = 'none';
+                    }
+                });
+
+            // 2. Real-time Messages Listener
             unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
@@ -1885,6 +1936,16 @@
                     chatMessagesBox.innerHTML = '';
                     snapshot.forEach(doc => {
                         const msg = doc.data();
+
+                        // Check for System Announcements
+                        if (msg.isSystem) {
+                            const systemEl = document.createElement('div');
+                            systemEl.className = 'chat-system-msg';
+                            systemEl.textContent = msg.text;
+                            chatMessagesBox.appendChild(systemEl);
+                            return;
+                        }
+
                         const isMe = currentUser.email === ADMIN_EMAIL 
                             ? msg.sender === 'admin'
                             : msg.sender === 'user';
@@ -1929,7 +1990,6 @@
                             mediaHTML = `<img src="${msg.imageUrl}" class="chat-media-img" alt="Chat attachment" />`;
                         }
 
-                        // Don't show your own name on your text bubbles
                         const senderHeaderHTML = isMe ? '' : `
                             <div style="font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.85;">
                                 ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
@@ -1947,7 +2007,7 @@
                             </div>
                         `;
 
-                        // Render Max 2 Reactions (1 from user, 1 from admin)
+                        // Reactions
                         const reactions = msg.reactions || {};
                         let reactionPillsHTML = '';
                         ['user', 'admin'].forEach(role => {
@@ -2339,6 +2399,79 @@
             reader.readAsDataURL(file);
             chatFileInput.value = '';
         });
+
+        // --- CHAT WALLPAPER MANAGEMENT ---
+        const chatBgFileInput = document.getElementById('chat-bg-file-input');
+        const uploadBgBtn = document.getElementById('upload-bg-btn');
+        const resetBgBtn = document.getElementById('reset-bg-btn');
+
+        uploadBgBtn?.addEventListener('click', () => chatBgFileInput.click());
+
+        chatBgFileInput?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentUser) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_DIM = 1280;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height && width > MAX_DIM) {
+                        height = Math.round((height * MAX_DIM) / width);
+                        width = MAX_DIM;
+                    } else if (height > MAX_DIM) {
+                        width = Math.round((width * MAX_DIM) / height);
+                        height = MAX_DIM;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    updateChatWallpaper(compressedDataUrl);
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+            chatBgFileInput.value = '';
+        });
+
+        resetBgBtn?.addEventListener('click', () => {
+            if (confirm("Reset the chat wallpaper to default?")) {
+                updateChatWallpaper(null);
+            }
+        });
+
+        function updateChatWallpaper(bgUrl) {
+            if (!currentUser) return;
+            
+            const targetRoomId = (currentUser.email === ADMIN_EMAIL && activeChatUserId) 
+                ? activeChatUserId 
+                : currentUser.uid;
+
+            const myName = currentUser.displayName || currentUser.email.split('@')[0];
+
+            db.collection('users').doc(targetRoomId).update({
+                chatBackgroundUrl: bgUrl
+            }).then(() => {
+                const actionNotice = bgUrl ? 'updated the chat wallpaper 🖼️' : 'removed the chat wallpaper';
+                db.collection('users').doc(targetRoomId).collection('messages').add({
+                    isSystem: true,
+                    text: `@${myName} ${actionNotice}`,
+                    timestamp: Date.now()
+                });
+                alert("Chat wallpaper updated successfully! 🌸");
+            }).catch(err => {
+                alert("Failed to update wallpaper: " + err.message);
+            });
+        }
 
         // --- 9. ASK BEAN MODAL LOGIC ---
         const reportModal = document.getElementById('report-modal');
