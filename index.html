@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.1.5)</title>
+    <title>Eggy's Mandarin 🌸 (v1.1.6)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -855,7 +855,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.5</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.6</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1015,7 +1015,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.1.5</b>
+                        <b id="settings-version-display">v1.1.6</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1113,7 +1113,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.1.5';
+        const APP_VERSION = 'v1.1.6';
 
         document.getElementById('force-update-btn')?.addEventListener('click', () => {
             if ('serviceWorker' in navigator) {
@@ -1162,7 +1162,7 @@
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
         const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
 
-        // Firebase Web Push Public Key (VAPID key)
+        // Paste your Firebase VAPID Public Key here from Project Settings > Cloud Messaging > Web Push Certificates
         const FIREBASE_VAPID_KEY = 'BAe8fK13o1c3JzFjJqC...YOUR_VAPID_KEY_HERE';
 
         const FLASHCARD_BG_IMAGES_HANZI = [
@@ -1211,7 +1211,7 @@
         let currentUser = null;
         let unsubscribeVocab = null;
         let unsubscribeChat = null;
-        let unsubscribeLiveAlerts = null;
+        let unsubscribeGlobalAlerts = null;
         let vocabList = [];
         let beanRepliesList = [];
         let askedWordsList = [];
@@ -1220,7 +1220,7 @@
         let activeReplyTarget = null;
         let menuTargetMsg = null;
 
-        // Register Inline Service Worker for Background Web Push
+        // Register Inline Service Worker for Web Push
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('firebase-messaging-sw.js').catch(() => {
                 const swBlob = new Blob([`
@@ -1308,12 +1308,13 @@
 
                 listenToCloudData(user.uid);
                 initChat(user);
+                initGlobalNotificationWatcher(user);
                 checkPushStatus();
             } else {
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
                 if (unsubscribeChat) unsubscribeChat();
-                if (unsubscribeLiveAlerts) unsubscribeLiveAlerts();
+                if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
                 authView.style.display = 'flex';
                 appView.style.display = 'none';
                 logoutBtn.style.display = 'none';
@@ -1326,6 +1327,45 @@
                 navigator.clipboard.writeText(currentUser.uid).then(() => alert("Sync Key copied to clipboard! 🌷"));
             }
         });
+
+        // App-wide Background Alert Watcher (Runs on ANY tab / background)
+        function initGlobalNotificationWatcher(user) {
+            if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
+
+            const targetUid = user.email === ADMIN_EMAIL && activeChatUserId ? activeChatUserId : user.uid;
+            let initialLoad = true;
+
+            unsubscribeGlobalAlerts = db.collection('users').doc(targetUid).collection('messages')
+                .where('read', '==', false)
+                .onSnapshot(snap => {
+                    if (initialLoad) {
+                        initialLoad = false;
+                        return;
+                    }
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const msg = change.doc.data();
+                            const isMe = (currentUser.email === ADMIN_EMAIL && msg.sender === 'admin') ||
+                                         (currentUser.email !== ADMIN_EMAIL && msg.sender === 'user');
+                            
+                            // Only notify if message is from the other person
+                            if (!isMe) {
+                                // Double haptic pulse
+                                if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
+
+                                // Fire system banner if permitted
+                                if ('Notification' in window && Notification.permission === 'granted') {
+                                    new Notification(msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "New Message"), {
+                                        body: msg.text || "Sent a photo 📷",
+                                        icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
+                                        tag: 'eggys-msg'
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }, err => console.warn("Global alert watcher:", err));
+        }
 
         // Push Notifications Activation Handler
         function checkPushStatus() {
@@ -1361,16 +1401,16 @@
                                 await db.collection('users').doc(currentUser.uid).update({ fcmToken: token });
                             }
                         } catch (tokenErr) {
-                            console.warn("FCM Token retrieved or awaiting VAPID key:", tokenErr);
+                            console.warn("FCM Token registration:", tokenErr);
                         }
                     }
                     checkPushStatus();
-                    alert("Push Notifications enabled! You'll now receive alerts on your Home Screen 🌸");
+                    alert("Push Notifications enabled! Alerts are now active 🌸");
                 } else {
                     checkPushStatus();
                 }
             } catch (err) {
-                alert("Permission prompt error: " + err.message);
+                alert("Permission error: " + err.message);
             }
         });
 
@@ -1475,7 +1515,6 @@
             return 0;
         }
 
-        // Strictly gets the ORIGINAL creation/added timestamp, ignoring note/flashcard edits
         function getOriginalAddedTime(v) {
             const saved = parseTimestamp(v.savedAt);
             if (saved > 0) return saved;
@@ -1519,7 +1558,6 @@
             else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
             else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0 || getAllBeanRepliesFor(v.hanzi).length > 0);
 
-            // True Added-Time Sort
             if (sortVal === 'time_desc') {
                 filtered.sort((a,b) => {
                     const timeB = getOriginalAddedTime(b);
@@ -1756,7 +1794,7 @@
             });
         }
 
-        // --- 8. MODERNIZED CHAT MODULE (MODIFIED V1.1.5) ---
+        // --- 8. MODERNIZED CHAT MODULE (INSTANT OPTIMISTIC EMOJI REACTIONS) ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
@@ -1822,6 +1860,7 @@
                 adminTargetUserSelect.addEventListener('change', (e) => {
                     activeChatUserId = e.target.value;
                     bindChatListener(activeChatUserId);
+                    initGlobalNotificationWatcher(currentUser);
                 });
             }
 
@@ -1830,7 +1869,6 @@
 
         function bindChatListener(targetUid) {
             if (unsubscribeChat) unsubscribeChat();
-            if (unsubscribeLiveAlerts) unsubscribeLiveAlerts();
 
             unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
                 .orderBy('timestamp', 'asc')
@@ -1891,7 +1929,7 @@
                             mediaHTML = `<img src="${msg.imageUrl}" class="chat-media-img" alt="Chat attachment" />`;
                         }
 
-                        // 4. Don't show your own name on your text bubbles
+                        // Don't show your own name on your text bubbles
                         const senderHeaderHTML = isMe ? '' : `
                             <div style="font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.85;">
                                 ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
@@ -1909,12 +1947,10 @@
                             </div>
                         `;
 
-                        // 2. Maximum 2 Reactions Display (1 from User, 1 from Bean)
+                        // Render Max 2 Reactions (1 from user, 1 from admin)
                         const reactions = msg.reactions || {};
                         let reactionPillsHTML = '';
-                        const roles = ['user', 'admin'];
-
-                        roles.forEach(role => {
+                        ['user', 'admin'].forEach(role => {
                             const emoji = reactions[role];
                             if (emoji && typeof emoji === 'string') {
                                 reactionPillsHTML += `
@@ -1934,7 +1970,7 @@
                             `);
                         }
 
-                        // 3. Cancel Reaction on Click (Only your own)
+                        // Cancel Reaction on Click (Only your own)
                         bubbleWrapper.querySelectorAll('.chat-reaction-badge').forEach(badge => {
                             badge.addEventListener('click', (e) => {
                                 e.stopPropagation();
@@ -1983,33 +2019,6 @@
                     }
                     scrollChatToBottom();
                 }, err => console.error("Chat sync error:", err));
-
-            let isFirstLoad = true;
-            unsubscribeLiveAlerts = db.collection('users').doc(targetUid).collection('messages')
-                .where('read', '==', false)
-                .onSnapshot(snap => {
-                    if (isFirstLoad) {
-                        isFirstLoad = false;
-                        return;
-                    }
-                    snap.docChanges().forEach(change => {
-                        if (change.type === 'added') {
-                            const msg = change.doc.data();
-                            const isMe = (currentUser.email === ADMIN_EMAIL && msg.sender === 'admin') ||
-                                         (currentUser.email !== ADMIN_EMAIL && msg.sender === 'user');
-                            
-                            if (!isMe) {
-                                if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
-                                if ('Notification' in window && Notification.permission === 'granted') {
-                                    new Notification(msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "New Message"), {
-                                        body: msg.text || "Sent a photo 📷",
-                                        icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png"
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }, err => console.warn("Live alert listener:", err));
         }
 
         function jumpToMessage(msgId) {
@@ -2106,7 +2115,7 @@
             if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
-        // 1. Quick Reaction Selection (Top 5 + Extended Tray)
+        // Quick Reaction Selection (Top 5 + Extended Tray)
         document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
@@ -2123,12 +2132,47 @@
             chatScrollableEmojiTray.style.display = chatScrollableEmojiTray.style.display === 'grid' ? 'none' : 'grid';
         });
 
-        // Save reaction to role (Max 1 per role)
+        // Instant Optimistic Reaction (0ms latency UI response)
         function applyReaction(msgId, emoji) {
             if (!activeChatUserId || !msgId || !currentUser) return;
             const myRole = currentUser.email === ADMIN_EMAIL ? 'admin' : 'user';
-            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
+            const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
 
+            // 1. Instant DOM Optimistic Update
+            if (wrapper) {
+                let strip = wrapper.querySelector('.chat-reactions-strip');
+                if (!strip) {
+                    const bubble = wrapper.querySelector('.chat-bubble');
+                    const isFromUser = bubble && bubble.classList.contains('from-user');
+                    wrapper.insertAdjacentHTML('beforeend', `<div class="chat-reactions-strip ${isFromUser ? 'from-user-strip' : 'from-admin-strip'}"></div>`);
+                    strip = wrapper.querySelector('.chat-reactions-strip');
+                }
+
+                let myBadge = strip.querySelector(`[data-reactor-role="${myRole}"]`);
+                if (myBadge) {
+                    if (myBadge.textContent.trim() === emoji) {
+                        myBadge.remove(); // Toggle off if same
+                    } else {
+                        myBadge.textContent = emoji; // Swap
+                    }
+                } else {
+                    const newBadge = document.createElement('span');
+                    newBadge.className = 'chat-reaction-badge';
+                    newBadge.setAttribute('data-reactor-role', myRole);
+                    newBadge.textContent = emoji;
+                    newBadge.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (navigator.vibrate) navigator.vibrate(10);
+                        removeReaction(msgId, myRole);
+                    });
+                    strip.appendChild(newBadge);
+                }
+
+                if (strip.children.length === 0) strip.remove();
+            }
+
+            // 2. Background Firestore Sync
+            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
             db.runTransaction(transaction => {
                 return transaction.get(ref).then(doc => {
                     if (!doc.exists) return;
@@ -2145,11 +2189,23 @@
             }).catch(err => console.error("Reaction update failed:", err));
         }
 
-        // Cancel own reaction
+        // Instant Optimistic Removal
         function removeReaction(msgId, role) {
             if (!activeChatUserId || !msgId) return;
-            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
 
+            // 1. Instant DOM Removal
+            const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
+            if (wrapper) {
+                const strip = wrapper.querySelector('.chat-reactions-strip');
+                if (strip) {
+                    const myBadge = strip.querySelector(`[data-reactor-role="${role}"]`);
+                    if (myBadge) myBadge.remove();
+                    if (strip.children.length === 0) strip.remove();
+                }
+            }
+
+            // 2. Background Firestore Removal
+            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
             db.runTransaction(transaction => {
                 return transaction.get(ref).then(doc => {
                     if (!doc.exists) return;
