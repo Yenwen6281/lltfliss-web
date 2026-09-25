@@ -32,7 +32,7 @@
             -webkit-touch-callout: none;
         }
 
-        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn {
+        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn {
             touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
@@ -114,11 +114,6 @@
             color: #e08b9b;
             box-shadow: 0 3px 0 #e2becb, 0 4px 8px rgba(224, 139, 155, 0.2), inset 0 1px 1px #ffffff;
             transform: translateY(-1px);
-        }
-
-        .tab-btn.active:active, .tab-btn.active.is-pressed {
-            transform: translateY(2px) scale(0.95) !important;
-            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2) !important;
         }
 
         main {
@@ -333,9 +328,6 @@
             height: auto;
             filter: drop-shadow(1px 2px 4px rgba(200, 150, 160, 0.35));
         }
-        .woodstock-btn:active, .woodstock-btn.is-pressed {
-            transform: translateY(2px) scale(0.85) rotate(4deg) !important;
-        }
 
         .card-actions {
             display: flex;
@@ -359,19 +351,11 @@
             outline: none;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
-        .deck-badge:active, .deck-badge.is-pressed {
-            transform: translateY(2.5px) scale(0.94) !important;
-            box-shadow: 0 0.5px 0 #d9a8b6, inset 0 1.5px 2px rgba(180, 110, 125, 0.25) !important;
-        }
         .deck-badge.in-deck {
             background: linear-gradient(180deg, #ffc7d5 0%, #e08b9b 100%);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
-        }
-        .deck-badge.in-deck:active, .deck-badge.in-deck.is-pressed {
-            transform: translateY(2.5px) scale(0.94) !important;
-            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35);
         }
 
         .icon-btn {
@@ -384,50 +368,430 @@
             background: rgba(245, 205, 226, 0.25);
             box-shadow: 0 2px 0 rgba(200, 150, 160, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.8);
             outline: none;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
-        }
-        .icon-btn:active, .icon-btn.is-pressed {
-            transform: translateY(2px) scale(0.88) !important;
-            box-shadow: 0 0.5px 0 rgba(200, 150, 160, 0.2), inset 0 1.5px 2px rgba(180, 120, 130, 0.25) !important;
         }
 
-        /* Mode Picker Art Cards */
-        .mode-picker-card {
+        .ghost-btn {
+            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
+            border: 1px solid #f5cde2;
+            color: #7b6267;
+            border-radius: 12px;
+            padding: 6px 14px;
+            font-size: 11.5px;
+            font-family: inherit;
+            font-weight: 700;
+            outline: none;
+            box-shadow: 0 2.5px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15), inset 0 1px 1px #ffffff;
+        }
+
+        .jump-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #8ba6b6;
+            background: rgba(139, 166, 182, 0.15);
+            padding: 4px 9px;
+            border-radius: 8px;
+        }
+
+        .sync-box {
+            background: #fff;
+            border: 2px solid #f5cde2;
             border-radius: 18px;
-            padding: 20px 16px;
-            margin-bottom: 14px;
-            border: 1.5px solid rgba(245, 205, 226, 0.85);
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 135px;
+            padding: 18px;
+            margin-bottom: 16px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(200, 150, 160, 0.15);
+        }
+
+        .sync-key-pill {
+            display: inline-block;
+            background: #f7eaf0;
+            color: #e08b9b;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin: 8px 0 14px;
+            word-break: break-all;
+        }
+
+        /* --- MODERNIZED CHAT STYLES --- */
+        #chat-view {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3);
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
-        }
-        .mode-picker-card:active, .mode-picker-card.is-pressed {
-            transform: translateY(5px) scale(0.96) !important;
-            box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2);
-        }
-        .mode-picker-card.card-b1 {
-            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
-        }
-        .mode-picker-card.card-b2 {
-            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/8651c6a44f1b8e7f87d4654e96e8bdc7c4ef52ae/b2.png');
+            height: calc(100vh - 175px);
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
         }
 
-        .fc-start-pill {
-            background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
+        .chat-messages-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 16px 10px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(245, 205, 226, 0.7);
+            margin-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chat-bubble-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+
+        .chat-bubble {
+            max-width: 82%;
+            padding: 10px 14px 8px;
+            border-radius: 18px;
+            font-size: 13.5px;
+            line-height: 1.45;
+            position: relative;
+            word-break: break-word;
+            box-shadow: 0 4px 12px rgba(200, 150, 160, 0.14);
+            user-select: none;
+            -webkit-user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .chat-bubble.from-user {
+            align-self: flex-end;
+            background: linear-gradient(145deg, #ffdce5, #f5cde2);
+            color: #5c4a4d;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(224, 139, 155, 0.4);
+        }
+
+        .chat-bubble.from-admin {
+            align-self: flex-start;
+            background: #ffffff;
+            color: #406277;
+            border-bottom-left-radius: 4px;
+            border: 1.5px solid #c9e4f5;
+        }
+
+        /* 3-Row Modern Reply Quote */
+        .chat-reply-card {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            background: rgba(255, 255, 255, 0.65);
+            border-left: 3.5px solid #e08b9b;
+            padding: 5px 9px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+        .chat-reply-card:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.85);
+        }
+        .from-admin .chat-reply-card {
+            border-left-color: #8ba6b6;
+            background: rgba(238, 247, 252, 0.8);
+        }
+
+        .chat-reply-row-relation {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #b56c7d;
+            letter-spacing: 0.2px;
+        }
+        .from-admin .chat-reply-row-relation {
+            color: #567990;
+        }
+
+        .chat-reply-row-snippet {
+            font-size: 11.5px;
+            color: #6d5b5e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 240px;
+            opacity: 0.85;
+        }
+
+        .chat-actual-body {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: inherit;
+        }
+
+        .chat-media-img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 6px;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .chat-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+            font-size: 10px;
+            opacity: 0.75;
+            margin-top: 4px;
+        }
+
+        /* Read Receipts: Clean "Read" label */
+        .chat-read-label {
+            font-weight: 800;
+            font-size: 9.5px;
+            color: #d8697f;
+            letter-spacing: 0.2px;
+        }
+
+        /* Reaction Sticker Pills Overlapping Bubble */
+        .chat-reactions-strip {
+            position: absolute;
+            bottom: -9px;
+            display: flex;
+            gap: 3px;
+            z-index: 5;
+        }
+        .chat-bubble.from-user + .chat-reactions-strip,
+        .from-user-strip {
+            right: 8px;
+        }
+        .from-admin-strip {
+            left: 8px;
+        }
+
+        .chat-reaction-pill {
+            background: #ffffff;
+            border: 1px solid #f5cde2;
+            border-radius: 14px;
+            padding: 1px 6px;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(180, 130, 140, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            transform: scale(0.95);
+            animation: jellyShakeOnce 0.3s ease-out 1;
+        }
+        .chat-reaction-count {
+            font-size: 10px;
+            font-weight: 800;
+            color: #8a7176;
+        }
+
+        /* Reply Preview Bar above input */
+        #chat-reply-preview-bar {
+            display: none;
+            background: #ffffff;
+            border: 1.5px solid #f5cde2;
+            border-radius: 16px;
+            padding: 8px 14px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #5c4a4d;
+            box-shadow: 0 4px 12px rgba(200, 150, 160, 0.15);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-input-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .chat-attach-btn {
+            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
+            border: 1.5px solid #f5cde2;
             color: #e08b9b;
-            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 3px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15);
+            outline: none;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            padding: 11px 16px;
+            border-radius: 22px;
+            border: 1.5px solid #f5cde2;
+            background: #ffffff;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: #5c4a4d;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(220, 160, 180, 0.12);
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 20px;
-            padding: 6px 20px;
+            padding: 11px 18px;
+            font-family: inherit;
             font-weight: 800;
             font-size: 13.5px;
-            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
+            box-shadow: 0 3px 0 #ba6273, 0 4px 10px rgba(224, 139, 155, 0.3);
+            outline: none;
+        }
+
+        /* --- LONG-PRESS CONTEXT MENU & REACTION BAR --- */
+        #chat-action-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(40, 20, 25, 0.38);
+            backdrop-filter: blur(4px);
+            z-index: 999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-action-menu-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 2px solid #f5cde2;
+            padding: 12px 14px;
+            width: 100%;
+            max-width: 310px;
+            box-shadow: 0 16px 40px rgba(160, 90, 110, 0.35);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: menuPopup 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) 1 forwards;
+        }
+
+        @keyframes menuPopup {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .chat-quick-reaction-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #fff4f7;
+            padding: 7px 10px;
+            border-radius: 30px;
+            border: 1.5px solid #fcdbe9;
+        }
+
+        .chat-react-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            padding: 2px 4px;
+            outline: none;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-react-btn:active {
+            transform: scale(1.35) !important;
+        }
+
+        .chat-menu-actions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chat-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 14px;
+            border: none;
+            background: #ffffff;
+            color: #5c4a4d;
+            font-size: 13.5px;
+            font-weight: 700;
+            font-family: inherit;
+            outline: none;
+            transition: background 0.12s ease;
+        }
+        .chat-menu-btn:active {
+            background: #fdf0f4;
+        }
+        .chat-menu-btn.destructive {
+            color: #d85268;
+        }
+
+        /* Expanded Emoji Picker Box */
+        #chat-emoji-picker-grid {
+            display: none;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            padding: 8px;
+            background: #faf4f6;
+            border-radius: 14px;
+            border: 1px dashed #f5cde2;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        /* Lightbox & Animations */
+        #chat-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.88);
+            z-index: 1000000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(6px);
+        }
+        #chat-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes jellyShakeOnce {
+            0%   { transform: scale(1, 1); }
+            15%  { transform: scale(1.12, 0.88) rotate(-2deg); }
+            30%  { transform: scale(0.9, 1.1) rotate(2deg); }
+            45%  { transform: scale(1.05, 0.95) rotate(-1deg); }
+            60%  { transform: scale(0.98, 1.02) rotate(0.5deg); }
+            100% { transform: scale(1, 1) rotate(0deg); }
+        }
+
+        .jelly-shake-once {
+            animation: jellyShakeOnce 0.95s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1 forwards !important;
+        }
+
+        .card-highlight-persistent {
+            border: 2.5px solid #e08b9b !important;
+            background: rgba(255, 240, 245, 0.96) !important;
+            box-shadow: 0 6px 20px rgba(224, 139, 155, 0.32) !important;
         }
 
         /* Flashcard Proportions (300x280) */
@@ -504,11 +868,6 @@
             outline: none;
             box-shadow: 0 4.5px 0 #b38c94, 0 6px 12px rgba(180, 140, 150, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
-            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
-        }
-        .fc-btn:active, .fc-btn.is-pressed {
-            transform: translateY(4px) scale(0.95) !important;
-            box-shadow: 0 0.5px 0 #b38c94, inset 0 2px 4px rgba(140, 100, 110, 0.3);
         }
         .fc-btn-learn {
             background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f1.jpeg');
@@ -529,277 +888,44 @@
             align-items: center;
             justify-content: center;
             outline: none;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .ponyo-btn img {
             width: 50px;
             height: auto;
             filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4));
         }
-        .ponyo-btn:active, .ponyo-btn.is-pressed {
-            transform: translateY(2px) scale(0.86, 0.82) !important;
-        }
 
-        .ghost-btn {
-            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
-            border: 1px solid #f5cde2;
-            color: #7b6267;
-            border-radius: 12px;
-            padding: 6px 14px;
-            font-size: 11.5px;
-            font-family: inherit;
-            font-weight: 700;
-            outline: none;
-            box-shadow: 0 2.5px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15), inset 0 1px 1px #ffffff;
-            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
-        }
-        .ghost-btn:active, .ghost-btn.is-pressed {
-            transform: translateY(2px) scale(0.93) !important;
-            box-shadow: 0 0.5px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
-        }
-
-        .jump-back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: #8ba6b6;
-            background: rgba(139, 166, 182, 0.15);
-            padding: 4px 9px;
-            border-radius: 8px;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .jump-back-btn:active, .jump-back-btn.is-pressed {
-            transform: translateY(2px) scale(0.9) !important;
-        }
-
-        .sync-box {
-            background: #fff;
-            border: 2px solid #f5cde2;
+        .mode-picker-card {
             border-radius: 18px;
-            padding: 18px;
-            margin-bottom: 16px;
-            text-align: center;
-            box-shadow: 0 4px 14px rgba(200, 150, 160, 0.15);
-        }
-
-        .sync-key-pill {
-            display: inline-block;
-            background: #f7eaf0;
-            color: #e08b9b;
-            font-family: monospace;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 8px 14px;
-            border-radius: 12px;
-            margin: 8px 0 14px;
-            word-break: break-all;
-        }
-
-        /* --- ENHANCED CHAT BOX STYLES --- */
-        #chat-view {
+            padding: 20px 16px;
+            margin-bottom: 14px;
+            border: 1.5px solid rgba(245, 205, 226, 0.85);
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 135px;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 175px);
-            max-width: 480px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .chat-messages-container {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 14px 8px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(245, 205, 226, 0.7);
-            margin-bottom: 8px;
-        }
-
-        .chat-bubble {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 16px;
-            font-size: 13.5px;
-            line-height: 1.45;
-            position: relative;
-            word-break: break-word;
-            box-shadow: 0 3px 8px rgba(200, 150, 160, 0.15);
-            cursor: pointer;
-        }
-
-        .chat-bubble.from-user {
-            align-self: flex-end;
-            background: linear-gradient(145deg, #ffdce5, #f5cde2);
-            color: #5c4a4d;
-            border-bottom-right-radius: 4px;
-            border: 1px solid rgba(224, 139, 155, 0.4);
-        }
-
-        .chat-bubble.from-admin {
-            align-self: flex-start;
-            background: #ffffff;
-            color: #406277;
-            border-bottom-left-radius: 4px;
-            border: 1.5px solid #c9e4f5;
-        }
-
-        .chat-reply-quote {
-            background: rgba(0, 0, 0, 0.05);
-            border-left: 3px solid #e08b9b;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11.5px;
-            margin-bottom: 6px;
-            opacity: 0.85;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .chat-media-img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-top: 4px;
-            display: block;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .chat-meta {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
-            font-size: 10px;
-            opacity: 0.7;
-            margin-top: 4px;
-        }
-
-        .chat-receipt {
-            font-weight: 800;
-            font-size: 11px;
-        }
-        .chat-receipt.is-read {
-            color: #e08b9b;
-        }
-
-        /* Reply Preview Bar above input */
-        #chat-reply-preview-bar {
-            display: none;
-            background: #ffffff;
-            border: 1.5px solid #f5cde2;
-            border-radius: 14px;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            font-size: 12px;
-            color: #5c4a4d;
-            box-shadow: 0 2px 6px rgba(200, 150, 160, 0.15);
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-input-bar {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .chat-attach-btn {
-            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
-            border: 1.5px solid #f5cde2;
-            color: #e08b9b;
-            border-radius: 50%;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-            box-shadow: 0 3px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15);
-            outline: none;
-            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .chat-attach-btn:active, .chat-attach-btn.is-pressed {
-            transform: translateY(2px) scale(0.9) !important;
-            box-shadow: 0 0.5px 0 #e2becb;
-        }
-
-        .chat-input-field {
-            flex: 1;
-            padding: 11px 14px;
-            border-radius: 20px;
-            border: 1.5px solid #f5cde2;
-            background: #ffffff;
-            font-family: inherit;
-            font-size: 13.5px;
-            color: #5c4a4d;
-            outline: none;
-            box-shadow: inset 0 1px 3px rgba(220, 160, 180, 0.12);
-        }
-
-        .chat-send-btn {
-            background: linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            padding: 10px 18px;
-            font-family: inherit;
-            font-weight: 800;
-            font-size: 13px;
-            box-shadow: 0 3px 0 #ba6273, 0 4px 10px rgba(224, 139, 155, 0.3);
-            outline: none;
-            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
-        }
-        .chat-send-btn:active, .chat-send-btn.is-pressed {
-            transform: translateY(2.5px) scale(0.93) !important;
-            box-shadow: 0 0.5px 0 #ba6273, inset 0 1.5px 3px rgba(140, 50, 65, 0.35);
-        }
-
-        /* Fullscreen Image Lightbox */
-        #chat-lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
+            box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3);
         }
-        #chat-lightbox img {
-            max-width: 90vw;
-            max-height: 85vh;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        .mode-picker-card.card-b1 {
+            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
         }
-
-        /* Animations */
-        @keyframes jellyShakeOnce {
-            0%   { transform: scale(1, 1); }
-            15%  { transform: scale(1.13, 0.87) rotate(-3deg); }
-            30%  { transform: scale(0.89, 1.11) rotate(2.5deg); }
-            45%  { transform: scale(1.06, 0.95) rotate(-1.5deg); }
-            60%  { transform: scale(0.97, 1.03) rotate(1deg); }
-            75%  { transform: scale(1.02, 0.98) rotate(-0.5deg); }
-            90%  { transform: scale(0.99, 1.01) rotate(0.2deg); }
-            100% { transform: scale(1, 1) rotate(0deg); }
+        .mode-picker-card.card-b2 {
+            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/8651c6a44f1b8e7f87d4654e96e8bdc7c4ef52ae/b2.png');
         }
 
-        .jelly-shake-once {
-            animation: jellyShakeOnce 1.05s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1 forwards !important;
-        }
-
-        .card-highlight-persistent {
-            border: 2.5px solid #e08b9b !important;
-            background: rgba(255, 240, 245, 0.96) !important;
-            box-shadow: 0 6px 20px rgba(224, 139, 155, 0.32) !important;
+        .fc-start-pill {
+            background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
+            color: #e08b9b;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-weight: 800;
+            font-size: 13.5px;
+            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
         }
 
         /* Report Modal */
@@ -945,7 +1071,7 @@
                 </div>
             </section>
 
-            <!-- 4. Persistent Chat View (With Read Receipts, Replies & Images) -->
+            <!-- 4. Modernized Chat View -->
             <section id="chat-view" style="display: none;">
                 <div id="admin-user-selector" style="display: none; margin-bottom: 8px;">
                     <span style="font-size: 11px; font-weight: 700; color: #e08b9b;">Admin: Select Conversation:</span>
@@ -960,17 +1086,18 @@
 
                 <!-- Quote Reply Preview Bar -->
                 <div id="chat-reply-preview-bar">
-                    <div style="overflow: hidden;">
-                        <span style="font-weight: 800; color: #e08b9b;" id="reply-to-user-label">Replying...</span>
-                        <div id="reply-to-text-label" style="opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;"></div>
+                    <div style="overflow: hidden; padding-right: 10px;">
+                        <span style="font-weight: 800; font-size: 11px; color: #e08b9b;" id="reply-to-user-label">Replying</span>
+                        <div id="reply-to-text-label" style="opacity: 0.85; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;"></div>
                     </div>
-                    <span id="cancel-reply-btn" style="font-weight: 800; font-size: 14px; color: #a38c90; cursor: pointer; padding: 2px 6px;">✕</span>
+                    <span id="cancel-reply-btn" style="font-weight: 800; font-size: 16px; color: #a38c90; cursor: pointer; padding: 4px 8px;">✕</span>
                 </div>
 
+                <!-- Simplified Typing Bar -->
                 <div class="chat-input-bar">
                     <input type="file" id="chat-file-input" accept="image/*" style="display: none;">
                     <button class="chat-attach-btn" id="chat-attach-trigger" title="Send Photo">📷</button>
-                    <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message (tap message to reply)...">
+                    <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message...">
                     <button id="chat-send-action-btn" class="chat-send-btn">Send</button>
                 </div>
             </section>
@@ -987,6 +1114,50 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Long-press Action Sheet Modal -->
+    <div id="chat-action-menu-overlay">
+        <div class="chat-action-menu-card">
+            <!-- 5 Quick Reactions + Plus -->
+            <div class="chat-quick-reaction-bar">
+                <button class="chat-react-btn" data-emoji="❤️">❤️</button>
+                <button class="chat-react-btn" data-emoji="😂">😂</button>
+                <button class="chat-react-btn" data-emoji="👍">👍</button>
+                <button class="chat-react-btn" data-emoji="😢">😢</button>
+                <button class="chat-react-btn" data-emoji="😡">😡</button>
+                <button class="chat-react-btn" id="toggle-more-emojis-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
+            </div>
+
+            <!-- More Emojis Expansion Grid -->
+            <div id="chat-emoji-picker-grid">
+                <button class="chat-react-btn" data-emoji="🥰">🥰</button>
+                <button class="chat-react-btn" data-emoji="🥳">🥳</button>
+                <button class="chat-react-btn" data-emoji="😮">😮</button>
+                <button class="chat-react-btn" data-emoji="🙏">🙏</button>
+                <button class="chat-react-btn" data-emoji="🔥">🔥</button>
+                <button class="chat-react-btn" data-emoji="🌸">🌸</button>
+                <button class="chat-react-btn" data-emoji="🧸">🧸</button>
+                <button class="chat-react-btn" data-emoji="🐣">🐣</button>
+                <button class="chat-react-btn" data-emoji="✨">✨</button>
+                <button class="chat-react-btn" data-emoji="💯">💯</button>
+                <button class="chat-react-btn" data-emoji="👀">👀</button>
+                <button class="chat-react-btn" data-emoji="🎉">🎉</button>
+            </div>
+
+            <!-- Actions: Reply, Copy, Unsend -->
+            <div class="chat-menu-actions-list">
+                <button class="chat-menu-btn" id="menu-act-reply">
+                    <span>💬</span> <span>Reply</span>
+                </button>
+                <button class="chat-menu-btn" id="menu-act-copy">
+                    <span>📋</span> <span>Copy Text</span>
+                </button>
+                <button class="chat-menu-btn destructive" id="menu-act-unsend" style="display: none;">
+                    <span>🗑️</span> <span>Unsend Message</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Fullscreen Image Lightbox -->
@@ -1013,7 +1184,7 @@
 
     <script>
         // --- 0. PHYSICAL SQUISH HANDLER FOR IOS HOME SCREEN APP ---
-        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn';
+        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn';
 
         document.addEventListener('pointerdown', (e) => {
             const btn = e.target.closest(SQUISH_TARGETS);
@@ -1082,7 +1253,10 @@
         let askedWordsList = [];
         let flashcardSessionCount = 0;
         let activeChatUserId = null;
-        let activeReplyTarget = null; // Holds { id, text, senderName }
+        let activeReplyTarget = null;
+
+        // Long-Press context target
+        let menuTargetMsg = null;
 
         function fetchBeanReplies(onComplete) {
             fetch(GOOGLE_APP_SCRIPT_URL)
@@ -1493,7 +1667,7 @@
             });
         }
 
-        // --- 8. PERSISTENT CHAT MODULE (READ RECEIPTS, REPLIES, MEDIA) ---
+        // --- 8. MODERNIZED CHAT MODULE (READ RECEIPTS, 3-ROW QUOTES, LONG-PRESS, REACTIONS) ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
@@ -1507,6 +1681,14 @@
         const cancelReplyBtn = document.getElementById('cancel-reply-btn');
         const chatLightbox = document.getElementById('chat-lightbox');
         const chatLightboxImg = document.getElementById('chat-lightbox-img');
+
+        // Action Menu Elements
+        const chatActionMenuOverlay = document.getElementById('chat-action-menu-overlay');
+        const menuActReply = document.getElementById('menu-act-reply');
+        const menuActCopy = document.getElementById('menu-act-copy');
+        const menuActUnsend = document.getElementById('menu-act-unsend');
+        const toggleMoreEmojisBtn = document.getElementById('toggle-more-emojis-btn');
+        const chatEmojiPickerGrid = document.getElementById('chat-emoji-picker-grid');
 
         function scrollChatToBottom() {
             setTimeout(() => {
@@ -1580,24 +1762,41 @@
                             ? msg.sender === 'admin'
                             : msg.sender === 'user';
 
+                        const bubbleWrapper = document.createElement('div');
+                        bubbleWrapper.className = 'chat-bubble-wrapper';
+                        bubbleWrapper.id = `msg-wrapper-${doc.id}`;
+
                         const bubble = document.createElement('div');
                         bubble.className = `chat-bubble ${isMe ? 'from-user' : 'from-admin'}`;
                         bubble.setAttribute('data-msg-id', doc.id);
 
                         const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                         
-                        // Read Receipt checkmark
+                        // 1. Read receipt: Shows "Read" only when read is true
                         let receiptHTML = '';
-                        if (isMe) {
-                            receiptHTML = msg.read ? `<span class="chat-receipt is-read" title="Read">✓✓</span>` : `<span class="chat-receipt" title="Sent">✓</span>`;
+                        if (isMe && msg.read) {
+                            receiptHTML = `<span class="chat-read-label">Read</span>`;
                         }
 
-                        // Quote reply preview
-                        let replyHTML = '';
+                        // 3. Modern 3-Row Reply Layout
+                        let replyCardHTML = '';
                         if (msg.replyTo) {
-                            replyHTML = `
-                                <div class="chat-reply-quote">
-                                    <b>${escapeHtml(msg.replyTo.senderName)}:</b> ${escapeHtml(msg.replyTo.text || '[Image]')}
+                            let relationText = 'Replied';
+                            const origSender = msg.replyTo.senderRole; // 'user' or 'admin'
+                            const currentSender = msg.sender;          // 'user' or 'admin'
+
+                            if (isMe) {
+                                // I sent this reply
+                                relationText = (currentSender === origSender) ? 'Replied to yourself' : 'You replied';
+                            } else {
+                                // The other person sent this reply
+                                relationText = (currentSender === origSender) ? 'Replied to themselves' : 'Replied to you';
+                            }
+
+                            replyCardHTML = `
+                                <div class="chat-reply-card" data-jump-to="${msg.replyTo.id}">
+                                    <div class="chat-reply-row-relation">${relationText}</div>
+                                    <div class="chat-reply-row-snippet">${escapeHtml(msg.replyTo.text || '[Image]')}</div>
                                 </div>
                             `;
                         }
@@ -1609,11 +1808,11 @@
                         }
 
                         bubble.innerHTML = `
-                            ${replyHTML}
-                            <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px; opacity: 0.85;">
+                            ${replyCardHTML}
+                            <div style="font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.85;">
                                 ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
                             </div>
-                            ${msg.text ? `<div>${escapeHtml(msg.text)}</div>` : ''}
+                            ${msg.text ? `<div class="chat-actual-body">${escapeHtml(msg.text)}</div>` : ''}
                             ${mediaHTML}
                             <div class="chat-meta">
                                 <span>${timeStr}</span>
@@ -1621,13 +1820,40 @@
                             </div>
                         `;
 
-                        // Tapping bubble initiates quote-reply
-                        bubble.addEventListener('click', () => {
-                            setReplyTarget({
-                                id: doc.id,
-                                text: msg.text || (msg.imageUrl ? '[Image]' : ''),
-                                senderName: msg.sender === 'admin' ? "Bean" : (msg.senderName || "Bub")
+                        // Reactions Sticker Strip
+                        const reactions = msg.reactions || {};
+                        const reactionEntries = Object.entries(reactions).filter(([_, count]) => count > 0);
+                        let reactionStripHTML = '';
+                        if (reactionEntries.length > 0) {
+                            const pills = reactionEntries.map(([emoji, count]) => `
+                                <span class="chat-reaction-pill">${emoji} <span class="chat-reaction-count">${count > 1 ? count : ''}</span></span>
+                            `).join('');
+                            reactionStripHTML = `<div class="chat-reactions-strip ${isMe ? 'from-user-strip' : 'from-admin-strip'}">${pills}</div>`;
+                        }
+
+                        bubbleWrapper.appendChild(bubble);
+                        if (reactionStripHTML) {
+                            bubbleWrapper.insertAdjacentHTML('beforeend', reactionStripHTML);
+                        }
+
+                        // Jump to original message on reply card tap
+                        const replyCardEl = bubble.querySelector('.chat-reply-card');
+                        if (replyCardEl) {
+                            replyCardEl.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const jumpTargetId = replyCardEl.getAttribute('data-jump-to');
+                                jumpToMessage(jumpTargetId);
                             });
+                        }
+
+                        // Attach Long-Press Gestures & Right Click
+                        bindLongPress(bubble, {
+                            id: doc.id,
+                            text: msg.text || '',
+                            imageUrl: msg.imageUrl || null,
+                            sender: msg.sender,
+                            senderName: msg.sender === 'admin' ? "Bean" : (msg.senderName || "Bub"),
+                            isMe: isMe
                         });
 
                         // Image tap opens lightbox
@@ -1640,16 +1866,156 @@
                             });
                         }
 
-                        chatMessagesBox.appendChild(bubble);
+                        chatMessagesBox.appendChild(bubbleWrapper);
                     });
 
-                    // If tab is active, mark incoming unread messages as read
                     if (chatView.style.display === 'flex') {
                         markIncomingMessagesAsRead();
                     }
                     scrollChatToBottom();
                 }, err => console.error("Chat sync error:", err));
         }
+
+        // Jump to quoted original message with bounce
+        function jumpToMessage(msgId) {
+            if (!msgId) return;
+            const targetEl = document.querySelector(`[data-msg-id="${msgId}"]`);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetEl.classList.remove('jelly-shake-once');
+                void targetEl.offsetWidth;
+                targetEl.classList.add('jelly-shake-once');
+            }
+        }
+
+        // --- 4. LONG-PRESS & CONTEXT MENU IMPLEMENTATION ---
+        function bindLongPress(element, msgData) {
+            let pressTimer = null;
+            let startX = 0;
+            let startY = 0;
+
+            const startPress = (e) => {
+                if (e.target.closest('.chat-reply-card')) return;
+                startX = e.clientX || (e.touches && e.touches[0].clientX);
+                startY = e.clientY || (e.touches && e.touches[0].clientY);
+
+                pressTimer = setTimeout(() => {
+                    if (navigator.vibrate) navigator.vibrate(25);
+                    openActionMenu(msgData);
+                }, 450);
+            };
+
+            const cancelPress = (e) => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+
+            const movePress = (e) => {
+                const curX = e.clientX || (e.touches && e.touches[0].clientX);
+                const curY = e.clientY || (e.touches && e.touches[0].clientY);
+                if (Math.hypot(curX - startX, curY - startY) > 8) {
+                    cancelPress();
+                }
+            };
+
+            element.addEventListener('touchstart', startPress, { passive: true });
+            element.addEventListener('touchend', cancelPress);
+            element.addEventListener('touchmove', movePress, { passive: true });
+
+            element.addEventListener('mousedown', startPress);
+            element.addEventListener('mouseup', cancelPress);
+            element.addEventListener('mouseleave', cancelPress);
+            element.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                openActionMenu(msgData);
+            });
+        }
+
+        function openActionMenu(msgData) {
+            menuTargetMsg = msgData;
+            chatEmojiPickerGrid.style.display = 'none';
+
+            // Show or hide unsend depending on ownership
+            if (msgData.isMe) {
+                menuActUnsend.style.display = 'flex';
+            } else {
+                menuActUnsend.style.display = 'none';
+            }
+
+            chatActionMenuOverlay.style.display = 'flex';
+        }
+
+        function closeActionMenu() {
+            chatActionMenuOverlay.style.display = 'none';
+            menuTargetMsg = null;
+        }
+
+        chatActionMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === chatActionMenuOverlay) closeActionMenu();
+        });
+
+        // Quick reactions handler
+        document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const emoji = btn.getAttribute('data-emoji');
+                if (menuTargetMsg && emoji) {
+                    applyReaction(menuTargetMsg.id, emoji);
+                    closeActionMenu();
+                }
+            });
+        });
+
+        toggleMoreEmojisBtn.addEventListener('click', () => {
+            chatEmojiPickerGrid.style.display = chatEmojiPickerGrid.style.display === 'grid' ? 'none' : 'grid';
+        });
+
+        function applyReaction(msgId, emoji) {
+            if (!activeChatUserId || !msgId) return;
+            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
+            
+            db.runTransaction(transaction => {
+                return transaction.get(ref).then(doc => {
+                    if (!doc.exists) return;
+                    const data = doc.data();
+                    const reactions = data.reactions || {};
+                    reactions[emoji] = (reactions[emoji] || 0) + 1;
+                    transaction.update(ref, { reactions });
+                });
+            }).catch(err => console.error("Reaction failed:", err));
+        }
+
+        // Action menu button clicks
+        menuActReply.addEventListener('click', () => {
+            if (menuTargetMsg) {
+                setReplyTarget({
+                    id: menuTargetMsg.id,
+                    text: menuTargetMsg.text || (menuTargetMsg.imageUrl ? '[Image]' : ''),
+                    senderName: menuTargetMsg.senderName,
+                    senderRole: menuTargetMsg.sender
+                });
+            }
+            closeActionMenu();
+        });
+
+        menuActCopy.addEventListener('click', () => {
+            if (menuTargetMsg && menuTargetMsg.text) {
+                navigator.clipboard.writeText(menuTargetMsg.text).then(() => {
+                    alert("Text copied! 📋");
+                });
+            }
+            closeActionMenu();
+        });
+
+        menuActUnsend.addEventListener('click', () => {
+            if (menuTargetMsg && menuTargetMsg.isMe) {
+                if (confirm("Unsend this message?")) {
+                    db.collection('users').doc(activeChatUserId).collection('messages').doc(menuTargetMsg.id).delete();
+                }
+            }
+            closeActionMenu();
+        });
 
         // Reply Bar Control
         function setReplyTarget(target) {
@@ -1690,7 +2056,8 @@
                 senderEmail: currentUser.email,
                 senderName: currentUser.displayName || currentUser.email.split('@')[0],
                 timestamp: Date.now(),
-                read: false
+                read: false,
+                reactions: {}
             };
 
             if (imageUrl) messagePayload.imageUrl = imageUrl;
@@ -1698,7 +2065,8 @@
                 messagePayload.replyTo = {
                     id: activeReplyTarget.id,
                     text: activeReplyTarget.text,
-                    senderName: activeReplyTarget.senderName
+                    senderName: activeReplyTarget.senderName,
+                    senderRole: activeReplyTarget.senderRole
                 };
             }
 
