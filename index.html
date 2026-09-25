@@ -1094,6 +1094,7 @@
         let currentUser = null;
         let unsubscribeVocab = null;
         let unsubscribeChat = null;
+        let unsubscribeLiveAlerts = null;
         let vocabList = [];
         let beanRepliesList = [];
         let askedWordsList = [];
@@ -1195,6 +1196,7 @@
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
                 if (unsubscribeChat) unsubscribeChat();
+                if (unsubscribeLiveAlerts) unsubscribeLiveAlerts();
                 authView.style.display = 'flex';
                 appView.style.display = 'none';
                 logoutBtn.style.display = 'none';
@@ -1661,7 +1663,9 @@
 
         function bindChatListener(targetUid) {
             if (unsubscribeChat) unsubscribeChat();
+            if (unsubscribeLiveAlerts) unsubscribeLiveAlerts();
 
+            // Real-time chat messages display
             unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
@@ -1808,6 +1812,34 @@
                     }
                     scrollChatToBottom();
                 }, err => console.error("Chat sync error:", err));
+
+            // In-App Foreground Push Listener: Vibrates & fires notifications when receiving a message
+            let isFirstLoad = true;
+            unsubscribeLiveAlerts = db.collection('users').doc(targetUid).collection('messages')
+                .where('read', '==', false)
+                .onSnapshot(snap => {
+                    if (isFirstLoad) {
+                        isFirstLoad = false;
+                        return;
+                    }
+                    snap.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const msg = change.doc.data();
+                            const isMe = (currentUser.email === ADMIN_EMAIL && msg.sender === 'admin') ||
+                                         (currentUser.email !== ADMIN_EMAIL && msg.sender === 'user');
+                            
+                            if (!isMe) {
+                                if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+                                if ('Notification' in window && Notification.permission === 'granted') {
+                                    new Notification(msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "New Message"), {
+                                        body: msg.text || "Sent a photo 📷",
+                                        icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png"
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }, err => console.warn("Live alert listener:", err));
         }
 
         function jumpToMessage(msgId) {
