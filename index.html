@@ -29,6 +29,13 @@
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn {
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: pointer;
         }
 
         body {
@@ -91,14 +98,12 @@
             font-weight: 700;
             color: #7b6267;
             background: transparent;
-            cursor: pointer;
-            user-select: none;
             outline: none;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
 
         .tab-btn:active {
-            transform: translateY(2px) scale(0.95);
+            transform: translateY(2.5px) scale(0.95) !important;
         }
 
         .tab-btn.active {
@@ -109,7 +114,7 @@
         }
 
         .tab-btn.active:active {
-            transform: translateY(2px) scale(0.95);
+            transform: translateY(2px) scale(0.95) !important;
             box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
@@ -155,14 +160,12 @@
             font-size: 14px;
             font-weight: 800;
             font-family: inherit;
-            cursor: pointer;
-            user-select: none;
             outline: none;
             box-shadow: 0 4px 0 #e2becb, 0 6px 12px rgba(200, 150, 160, 0.2), inset 0 1px 1px #ffffff;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
         .login-btn:active {
-            transform: translateY(3px) scale(0.96);
+            transform: translateY(3.5px) scale(0.96) !important;
             box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
@@ -310,13 +313,11 @@
             background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
             color: #7b6267;
             box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-            user-select: none;
             outline: none;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background 0.2s ease, color 0.2s ease;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
         .deck-badge:active {
-            transform: translateY(2.5px) scale(0.94);
+            transform: translateY(2.5px) scale(0.94) !important;
             box-shadow: 0 0.5px 0 #d9a8b6, inset 0 1.5px 2px rgba(180, 110, 125, 0.25);
         }
         .deck-badge.in-deck {
@@ -326,7 +327,7 @@
             box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
         }
         .deck-badge.in-deck:active {
-            transform: translateY(2.5px) scale(0.94);
+            transform: translateY(2.5px) scale(0.94) !important;
             box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35);
         }
 
@@ -335,7 +336,6 @@
             border-radius: 18px;
             padding: 20px 16px;
             margin-bottom: 14px;
-            cursor: pointer;
             border: 1.5px solid rgba(245, 205, 226, 0.85);
             background-size: 100% 100%;
             background-position: center;
@@ -345,12 +345,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            user-select: none;
             box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3);
-            transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
         }
         .mode-picker-card:active {
-            transform: translateY(5px) scale(0.96);
+            transform: translateY(5px) scale(0.96) !important;
             box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2);
         }
         .mode-picker-card.card-b1 {
@@ -369,7 +368,6 @@
             font-weight: 800;
             font-size: 13.5px;
             box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
-            transition: transform 0.15s ease;
         }
 
         /* 3D Flashcard Module - Exact Netflix 300x280 Aspect Frame */
@@ -444,15 +442,13 @@
             font-size: 13.5px;
             letter-spacing: 0.3px;
             font-family: inherit;
-            cursor: pointer;
-            user-select: none;
             outline: none;
             box-shadow: 0 4.5px 0 #b38c94, 0 6px 12px rgba(180, 140, 150, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
         .fc-btn:active {
-            transform: translateY(4px) scale(0.95);
+            transform: translateY(4px) scale(0.95) !important;
             box-shadow: 0 0.5px 0 #b38c94, inset 0 2px 4px rgba(140, 100, 110, 0.3);
         }
         .fc-btn-learn {
@@ -470,12 +466,11 @@
             background: none;
             border: none;
             padding: 0;
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             outline: none;
-            transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .ponyo-btn img {
             width: 50px;
@@ -483,7 +478,7 @@
             filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4));
         }
         .ponyo-btn:active {
-            transform: translateY(2px) scale(0.86, 0.82);
+            transform: translateY(2px) scale(0.86, 0.82) !important;
         }
 
         .ghost-btn {
@@ -495,14 +490,12 @@
             font-size: 11.5px;
             font-family: inherit;
             font-weight: 700;
-            cursor: pointer;
-            user-select: none;
             outline: none;
             box-shadow: 0 2.5px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15), inset 0 1px 1px #ffffff;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
         .ghost-btn:active {
-            transform: translateY(2px) scale(0.93);
+            transform: translateY(2px) scale(0.93) !important;
             box-shadow: 0 0.5px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
@@ -646,6 +639,9 @@
     </div>
 
     <script>
+        // Enable instantaneous iOS Safari / PWA :active states on touch
+        document.addEventListener("touchstart", function() {}, { passive: true });
+
         // --- 0. ASSET CONSTANTS ---
         const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
         const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
