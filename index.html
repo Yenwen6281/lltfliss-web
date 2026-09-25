@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.1.2)</title>
+    <title>Eggy's Mandarin 🌸 (v1.1.3)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -828,7 +828,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.2</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.3</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -990,7 +990,7 @@
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
                         <span>🏷️ Current Build:</span>
-                        <b id="settings-version-display">v1.1.2</b>
+                        <b id="settings-version-display">v1.1.3</b>
                     </div>
                     <p style="margin: 0 0 12px; font-size: 12.5px; color: #7b6267;">If updates from GitHub do not appear immediately on iOS, tap below to clear the local service worker cache.</p>
                     <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1056,7 +1056,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.1.2';
+        const APP_VERSION = 'v1.1.3';
 
         document.getElementById('force-update-btn')?.addEventListener('click', () => {
             if ('serviceWorker' in navigator) {
@@ -1395,7 +1395,7 @@
             }, 100);
         }
 
-        // --- 6. SAVED WORDS MODULE (UNIFIED TIMESTAMP ORDERING - v1.1.2) ---
+        // --- 6. SAVED WORDS MODULE (UNIFIED TIMESTAMP ORDERING - v1.1.3) ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -1416,25 +1416,27 @@
             return 0;
         }
 
-        function getOriginalAddedTime(vocab) {
-            // Evaluates creation fields first to match the Safari extension exactly
-            const added = parseTimestamp(vocab.addedAt);
-            if (added > 0) return added;
+        // Matches the Safari Extension's exact timestamp hierarchy
+        function getExtensionMatchedTime(v) {
+            const up = parseTimestamp(v.updatedAt);
+            if (up > 0) return up;
 
-            const saved = parseTimestamp(vocab.savedAt);
+            const saved = parseTimestamp(v.savedAt);
             if (saved > 0) return saved;
 
-            const dateAdded = parseTimestamp(vocab.dateAdded);
-            if (dateAdded > 0) return dateAdded;
-
-            const created = parseTimestamp(vocab.createdAt);
-            if (created > 0) return created;
-
-            const ts = parseTimestamp(vocab.timestamp);
+            const ts = parseTimestamp(v.timestamp);
             if (ts > 0) return ts;
 
-            // Fallback only if no creation timestamp exists
-            return parseTimestamp(vocab.updatedAt);
+            const created = parseTimestamp(v.createdAt);
+            if (created > 0) return created;
+
+            const added = parseTimestamp(v.addedAt);
+            if (added > 0) return added;
+
+            const dateAdded = parseTimestamp(v.dateAdded);
+            if (dateAdded > 0) return dateAdded;
+
+            return 0;
         }
 
         function renderSavedVocab() {
@@ -1461,11 +1463,17 @@
             else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
             else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0 || getAllBeanRepliesFor(v.hanzi).length > 0);
 
-            // Robust sorting by original addition time
+            // Sorting logic matching extension order exactly
             if (sortVal === 'time_desc') {
-                filtered.sort((a,b) => getOriginalAddedTime(b) - getOriginalAddedTime(a));
+                filtered.sort((a,b) => {
+                    const diff = getExtensionMatchedTime(b) - getExtensionMatchedTime(a);
+                    return diff !== 0 ? diff : (a.hanzi || '').localeCompare(b.hanzi || '');
+                });
             } else if (sortVal === 'time_asc') {
-                filtered.sort((a,b) => getOriginalAddedTime(a) - getOriginalAddedTime(b));
+                filtered.sort((a,b) => {
+                    const diff = getExtensionMatchedTime(a) - getExtensionMatchedTime(b);
+                    return diff !== 0 ? diff : (a.hanzi || '').localeCompare(b.hanzi || '');
+                });
             } else if (sortVal === 'pinyin_asc') {
                 filtered.sort((a,b) => (a.pinyin || '').localeCompare(b.pinyin || ''));
             } else if (sortVal === 'pinyin_desc') {
