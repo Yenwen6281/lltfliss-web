@@ -32,7 +32,7 @@
             -webkit-touch-callout: none;
         }
 
-        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn {
+        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn {
             -webkit-user-select: none;
             user-select: none;
             cursor: pointer;
@@ -81,24 +81,26 @@
         .nav-tabs {
             display: flex;
             background: rgba(245, 205, 226, 0.35);
-            padding: 5px;
+            padding: 4px;
             border-radius: 24px;
-            gap: 6px;
+            gap: 4px;
             margin: 12px 18px 0;
             box-shadow: inset 0 2px 4px rgba(220, 160, 180, 0.15);
+            overflow-x: auto;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 8px 12px;
+            padding: 8px 10px;
             border: none;
             border-radius: 18px;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: #7b6267;
             background: transparent;
             outline: none;
+            white-space: nowrap;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
 
@@ -215,6 +217,7 @@
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: 0 4px 12px rgba(200, 150, 160, 0.12);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
         }
 
         .vocab-header {
@@ -284,7 +287,7 @@
             margin-top: 4px;
         }
 
-        .bean-note-box {
+        .bean-reply-box {
             margin-top: 10px;
             background: #eef7fc;
             border: 1.5px solid #c9e4f5;
@@ -293,6 +296,52 @@
             font-size: 12.5px;
             color: #406277;
             line-height: 1.4;
+            position: relative;
+        }
+
+        .bean-nav-btn {
+            cursor: pointer;
+            background: rgba(139, 166, 182, 0.2);
+            border: none;
+            border-radius: 4px;
+            color: #406277;
+            font-size: 10px;
+            padding: 2px 6px;
+            font-weight: bold;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            outline: none;
+        }
+        .bean-nav-btn:hover {
+            background: #e08b9b;
+            color: white;
+            transform: scale(1.15);
+        }
+        .bean-nav-btn:active {
+            transform: scale(0.9) translateY(1px);
+        }
+
+        .woodstock-btn {
+            background: none;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .woodstock-btn img {
+            width: 38px;
+            height: auto;
+            filter: drop-shadow(1px 2px 4px rgba(200, 150, 160, 0.35));
+        }
+        .woodstock-btn:active {
+            transform: translateY(2px) scale(0.85) rotate(4deg);
         }
 
         .card-actions {
@@ -302,6 +351,7 @@
             margin-top: 12px;
             padding-top: 8px;
             border-top: 1px dashed rgba(245, 205, 226, 0.6);
+            gap: 8px;
         }
 
         .deck-badge {
@@ -329,6 +379,25 @@
         .deck-badge.in-deck:active {
             transform: translateY(2.5px) scale(0.94) !important;
             box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35);
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(245, 205, 226, 0.25);
+            box-shadow: 0 2px 0 rgba(200, 150, 160, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            user-select: none;
+            outline: none;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
+        }
+        .icon-btn:active {
+            transform: translateY(2px) scale(0.88);
+            box-shadow: 0 0.5px 0 rgba(200, 150, 160, 0.2), inset 0 1.5px 2px rgba(180, 120, 130, 0.25);
         }
 
         /* Mode Picker Art Cards */
@@ -370,7 +439,7 @@
             box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
         }
 
-        /* 3D Flashcard Module - Exact Netflix 300x280 Aspect Frame */
+        /* Flashcard Proportions */
         #fc-session-box, #fc-setup-box {
             width: 100%;
             max-width: 300px;
@@ -432,7 +501,6 @@
             width: 100%;
         }
 
-        /* 3D Physical Squish Feedback on Buttons */
         .fc-btn {
             flex: 1;
             padding: 12px;
@@ -499,6 +567,24 @@
             box-shadow: 0 0.5px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
+        .jump-back-btn {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #8ba6b6;
+            background: rgba(139, 166, 182, 0.15);
+            padding: 4px 9px;
+            border-radius: 8px;
+            user-select: none;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .jump-back-btn:active {
+            transform: translateY(2px) scale(0.9);
+        }
+
         .sync-box {
             background: #fff;
             border: 2px solid #f5cde2;
@@ -520,6 +606,60 @@
             border-radius: 12px;
             margin: 8px 0 14px;
             word-break: break-all;
+        }
+
+        /* Animations */
+        @keyframes jellyShakeOnce {
+            0%   { transform: scale(1, 1); }
+            15%  { transform: scale(1.13, 0.87) rotate(-3deg); }
+            30%  { transform: scale(0.89, 1.11) rotate(2.5deg); }
+            45%  { transform: scale(1.06, 0.95) rotate(-1.5deg); }
+            60%  { transform: scale(0.97, 1.03) rotate(1deg); }
+            75%  { transform: scale(1.02, 0.98) rotate(-0.5deg); }
+            90%  { transform: scale(0.99, 1.01) rotate(0.2deg); }
+            100% { transform: scale(1, 1) rotate(0deg); }
+        }
+
+        .jelly-shake-once {
+            animation: jellyShakeOnce 1.05s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1 forwards !important;
+        }
+
+        .card-highlight-persistent {
+            border: 2.5px solid #e08b9b !important;
+            background: rgba(255, 240, 245, 0.96) !important;
+            box-shadow: 0 6px 20px rgba(224, 139, 155, 0.32) !important;
+        }
+
+        /* Report / Ask Bean Modal */
+        #report-modal {
+            position: fixed;
+            display: none;
+            z-index: 100000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
+            border: 2px solid #f5cde2;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 14px 35px rgba(200, 150, 160, 0.35);
+            font-family: inherit;
+            width: 310px;
+            color: #5c4a4d;
+            box-sizing: border-box;
+        }
+
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(3px);
+            z-index: 99999;
+            display: none;
         }
     </style>
 </head>
@@ -551,6 +691,7 @@
     <div id="app-view" style="display: none; flex-direction: column; flex: 1;">
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
+            <button class="tab-btn" id="tab-btn-replies">Bean's Notes</button>
             <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
             <button class="tab-btn" id="tab-btn-sync">Sync Key</button>
         </div>
@@ -570,6 +711,8 @@
                         <select id="vocab-sort" class="filter-select">
                             <option value="time_desc">Newest First</option>
                             <option value="time_asc">Oldest First</option>
+                            <option value="pinyin_asc">Pinyin: A-Z</option>
+                            <option value="pinyin_desc">Pinyin: Z-A</option>
                             <option value="hsk_asc">HSK: 1 ➔ 6</option>
                             <option value="hsk_desc">HSK: 6 ➔ 1</option>
                         </select>
@@ -579,7 +722,12 @@
                 <div id="vocab-list-container"></div>
             </section>
 
-            <!-- 2. Flashcards View -->
+            <!-- 2. Bean's Notes View -->
+            <section id="replies-view" style="display: none; flex-direction: column;">
+                <div id="replies-list-container"></div>
+            </section>
+
+            <!-- 3. Flashcards View -->
             <section id="flash-view" style="display: none; flex-direction: column; align-items: center;">
                 <div id="fc-setup-box">
                     <div style="margin-bottom: 14px; text-align: center;">
@@ -624,7 +772,7 @@
                 </div>
             </section>
 
-            <!-- 3. Sync Key View -->
+            <!-- 4. Sync Key View -->
             <section id="sync-view" style="display: none;">
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
@@ -638,14 +786,32 @@
         </main>
     </div>
 
+    <!-- Ask Bean Modal Overlay -->
+    <div id="modal-overlay"></div>
+    <div id="report-modal">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px dashed #f5cde2; padding-bottom: 8px;">
+            <span style="font-weight: 800; font-size: 16px; color: #e08b9b;">Ask Bean about this! 💌</span>
+            <span id="close-report-btn" style="cursor: pointer; color: #9c8085; font-weight: 800; font-size: 15px;">✕</span>
+        </div>
+        <div style="margin-bottom: 12px; font-size: 14px;">
+            <span style="color: #a38c90;">Word: </span>
+            <b id="report-target-hanzi" style="color: #e08b9b; font-size: 22px;"></b>
+        </div>
+        <textarea id="report-input-msg" rows="3" placeholder="What feels confusing or needs a better explanation? (optional)" style="width: 100%; border: 1px solid #f5cde2; border-radius: 10px; padding: 10px; font-family: inherit; font-size: 13px; color: #5c4a4d; outline: none; resize: none; margin-bottom: 14px; line-height: 1.4;"></textarea>
+        <button id="send-report-btn" class="login-btn" style="background: linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%); color: white; border: none;">
+            Send to Bean 🧸
+        </button>
+    </div>
+
     <script>
-        // Enable instantaneous iOS Safari / PWA :active states on touch
+        // Enable immediate touch responses on iOS PWA
         document.addEventListener("touchstart", function() {}, { passive: true });
 
-        // --- 0. ASSET CONSTANTS ---
+        // --- 0. CONSTANTS ---
         const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
         const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
+        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
 
         const FLASHCARD_BG_IMAGES_HANZI = [
             'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d1.png',
@@ -662,6 +828,12 @@
             'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e4.jpg',
             'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e5.jpg'
         ];
+
+        // Toneless pinyin helper for robust searching
+        function stripPinyinTones(str) {
+            if (!str) return '';
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '');
+        }
 
         // --- 1. FIREBASE INITIALIZATION ---
         const firebaseConfig = {
@@ -683,7 +855,43 @@
         let currentUser = null;
         let unsubscribeVocab = null;
         let vocabList = [];
+        let beanRepliesList = [];
+        let askedWordsList = [];
         let flashcardSessionCount = 0;
+
+        // Fetch Bean's Explanations from Google Apps Script
+        function fetchBeanReplies(onComplete) {
+            fetch(GOOGLE_APP_SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        beanRepliesList = data;
+                        renderSavedVocab();
+                        renderBeanRepliesTab();
+                    }
+                    if (typeof onComplete === 'function') onComplete();
+                })
+                .catch(err => {
+                    console.error("Error loading Bean replies:", err);
+                    if (typeof onComplete === 'function') onComplete();
+                });
+        }
+        fetchBeanReplies();
+
+        function getAllBeanRepliesFor(hanzi) {
+            return beanRepliesList.filter(r => r.hanzi === hanzi && r.reply);
+        }
+
+        function getReportIconStatus(hanzi) {
+            const answers = getAllBeanRepliesFor(hanzi);
+            if (answers.length > 0) {
+                return { color: '#e08b9b', title: "Bean answered! 💌" };
+            }
+            if (askedWordsList.includes(hanzi)) {
+                return { color: '#e6a23c', title: "Question sent to Bean 💌" };
+            }
+            return { color: '#b89c9e', title: "Ask Bean / Report Word" };
+        }
 
         // --- 2. AUTH FLOW ---
         const authView = document.getElementById('auth-view');
@@ -737,30 +945,70 @@
                     vocabList = [];
                     snapshot.forEach(doc => vocabList.push({ id: doc.id, ...doc.data() }));
                     renderSavedVocab();
+                    renderBeanRepliesTab();
                     updateFlashcardCounts();
                 }, err => console.error("Firestore sync error:", err));
         }
 
         // --- 4. TABS NAVIGATION ---
         const tabBtnVocab = document.getElementById('tab-btn-vocab');
+        const tabBtnReplies = document.getElementById('tab-btn-replies');
         const tabBtnFlash = document.getElementById('tab-btn-flash');
         const tabBtnSync = document.getElementById('tab-btn-sync');
         const vocabView = document.getElementById('vocab-view');
+        const repliesView = document.getElementById('replies-view');
         const flashView = document.getElementById('flash-view');
         const syncView = document.getElementById('sync-view');
 
         function switchTab(activeBtn, activeSection) {
-            [tabBtnVocab, tabBtnFlash, tabBtnSync].forEach(b => b.classList.remove('active'));
-            [vocabView, flashView, syncView].forEach(s => s.style.display = 'none');
+            [tabBtnVocab, tabBtnReplies, tabBtnFlash, tabBtnSync].forEach(b => b.classList.remove('active'));
+            [vocabView, repliesView, flashView, syncView].forEach(s => s.style.display = 'none');
             activeBtn.classList.add('active');
-            activeSection.style.display = activeSection === flashView ? 'flex' : 'block';
+            activeSection.style.display = (activeSection === flashView || activeSection === repliesView) ? 'flex' : 'block';
         }
 
         tabBtnVocab.addEventListener('click', () => switchTab(tabBtnVocab, vocabView));
+        tabBtnReplies.addEventListener('click', () => {
+            switchTab(tabBtnReplies, repliesView);
+            fetchBeanReplies();
+        });
         tabBtnFlash.addEventListener('click', () => switchTab(tabBtnFlash, flashView));
         tabBtnSync.addEventListener('click', () => switchTab(tabBtnSync, syncView));
 
-        // --- 5. SAVED WORDS MODULE WITH IN-APP EDITING ---
+        // Jump directly to Bean's Note tab and focus target card
+        function jumpToBeanReply(targetHanzi) {
+            switchTab(tabBtnReplies, repliesView);
+            setTimeout(() => {
+                document.querySelectorAll('.card-highlight-persistent').forEach(el => el.classList.remove('card-highlight-persistent'));
+                const targetCard = document.querySelector(`[data-reply-hanzi="${targetHanzi}"]`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetCard.classList.remove('jelly-shake-once');
+                    void targetCard.offsetWidth;
+                    targetCard.classList.add('jelly-shake-once');
+                    targetCard.classList.add('card-highlight-persistent');
+                }
+            }, 100);
+        }
+
+        // Jump back to Saved Words tab and focus target word card
+        function jumpBackToSavedWord(targetHanzi) {
+            searchInput.value = '';
+            switchTab(tabBtnVocab, vocabView);
+            setTimeout(() => {
+                document.querySelectorAll('.card-highlight-persistent').forEach(el => el.classList.remove('card-highlight-persistent'));
+                const targetCard = document.querySelector(`[data-vocab-hanzi="${targetHanzi}"]`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetCard.classList.remove('jelly-shake-once');
+                    void targetCard.offsetWidth;
+                    targetCard.classList.add('jelly-shake-once');
+                    targetCard.classList.add('card-highlight-persistent');
+                }
+            }, 100);
+        }
+
+        // --- 5. SAVED WORDS MODULE (WITH FULL PINYIN & MEANING SEARCH) ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -770,29 +1018,40 @@
 
         function renderSavedVocab() {
             let filtered = [...vocabList];
-            const query = (searchInput.value || '').toLowerCase().trim();
+            const rawQuery = (searchInput.value || '').toLowerCase().trim();
+            const cleanQuery = stripPinyinTones(rawQuery);
             const filterVal = filterSelect.value;
             const sortVal = sortSelect.value;
 
-            if (query) {
-                filtered = filtered.filter(v => 
-                    (v.hanzi || '').includes(query) ||
-                    (v.pinyin || '').toLowerCase().includes(query) ||
-                    (v.translations || []).some(t => t.toLowerCase().includes(query))
-                );
+            // Full-spectrum Search (Hanzi, Toned Pinyin, Toneless Pinyin, Definitions, Notes)
+            if (rawQuery) {
+                filtered = filtered.filter(vocab => {
+                    const matchHanzi = (vocab.hanzi || '').includes(rawQuery);
+                    const matchDef = (vocab.translations || []).some(t => t.toLowerCase().includes(rawQuery));
+                    const rawPinyin = (vocab.pinyin || '').toLowerCase();
+                    const cleanPinyin = stripPinyinTones(vocab.pinyin || '');
+                    const matchPinyin = rawPinyin.includes(rawQuery) || (cleanQuery && cleanPinyin.includes(cleanQuery));
+                    const matchNote = (vocab.note || '').toLowerCase().includes(rawQuery);
+                    const matchBean = (vocab.beanReply || '').toLowerCase().includes(rawQuery);
+                    return matchHanzi || matchDef || matchPinyin || matchNote || matchBean;
+                });
             }
 
+            // Filters
             if (filterVal === 'deck') filtered = filtered.filter(v => !!v.inDeck);
             else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
-            else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0);
+            else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0 || getAllBeanRepliesFor(v.hanzi).length > 0);
 
+            // Sorting
             if (sortVal === 'time_desc') filtered.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
             else if (sortVal === 'time_asc') filtered.sort((a,b) => (a.updatedAt || 0) - (b.updatedAt || 0));
+            else if (sortVal === 'pinyin_asc') filtered.sort((a,b) => (a.pinyin || '').localeCompare(b.pinyin || ''));
+            else if (sortVal === 'pinyin_desc') filtered.sort((a,b) => (b.pinyin || '').localeCompare(a.pinyin || ''));
             else if (sortVal === 'hsk_asc') filtered.sort((a,b) => (a.level || 99) - (b.level || 99));
             else if (sortVal === 'hsk_desc') filtered.sort((a,b) => (b.level || 99) - (a.level || 99));
 
             if (filtered.length === 0) {
-                vocabListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No words found 🐣</div>`;
+                vocabListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No words match your search or filter 🐣</div>`;
                 return;
             }
 
@@ -800,9 +1059,13 @@
             filtered.forEach(vocab => {
                 const card = document.createElement('div');
                 card.className = 'vocab-card';
+                card.setAttribute('data-vocab-hanzi', vocab.hanzi);
 
                 const defsHtml = (vocab.translations || []).map(t => `<li style="margin-bottom:2px;">${t}</li>`).join('');
                 const currentNote = vocab.note || '';
+                const allReplies = getAllBeanRepliesFor(vocab.hanzi);
+                const reportStatus = getReportIconStatus(vocab.hanzi);
+                let replyIdx = allReplies.length - 1;
 
                 card.innerHTML = `
                     <div class="vocab-header">
@@ -825,13 +1088,21 @@
                         </div>
                     </div>
 
-                    ${vocab.beanReply ? `
-                        <div class="bean-note-box">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                    ${allReplies.length > 0 ? `
+                        <div class="bean-reply-box">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
                                 <b style="color:#2e5973;">💬 Bean's Note:</b>
-                                <img src="${WOODSTOCK_IMG_URL}" style="width:28px; height:auto;" alt="Woodstock">
+                                <button class="woodstock-btn card-jump-btn" title="Jump to Bean's Notes tab!">
+                                    <img src="${WOODSTOCK_IMG_URL}" alt="Woodstock">
+                                </button>
                             </div>
-                            <div>${vocab.beanReply}</div>
+                            <div class="card-reply-text" style="word-break: break-word;">${allReplies[replyIdx].reply}</div>${allReplies.length > 1 ? `
+                                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 6px; border-top: 1px dashed #c9e4f5; padding-top: 4px;">
+                                    <button class="bean-nav-btn card-prev-reply">◀</button>
+                                    <span class="card-reply-counter" style="font-size: 11px; font-weight: bold; color: #6b8ea2;">${replyIdx + 1}/${allReplies.length}</span>
+                                    <button class="bean-nav-btn card-next-reply">▶</button>
+                                </div>
+                            ` : ''}
                         </div>
                     ` : ''}
 
@@ -839,7 +1110,12 @@
                         <button class="deck-badge ${vocab.inDeck ? 'in-deck' : ''}">
                             ${vocab.inDeck ? '✓ Flashcard' : '+ Flashcard'}
                         </button>
-                        <button class="ghost-btn delete-vocab-btn" style="color: #ba6273;">Unsave</button>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="icon-btn ask-bean-btn" title="${reportStatus.title}" style="color: ${reportStatus.color};">
+                                <svg viewBox="0 0 24 24" width="17" height="17"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                            </div>
+                            <button class="ghost-btn delete-vocab-btn" style="color: #ba6273;">Unsave</button>
+                        </div>
                     </div>
                 `;
 
@@ -854,6 +1130,37 @@
                     });
                 });
 
+                // Jump to Bean's Note
+                const jumpBtn = card.querySelector('.card-jump-btn');
+                if (jumpBtn) {
+                    jumpBtn.addEventListener('click', () => jumpToBeanReply(vocab.hanzi));
+                }
+
+                // Slide answers if multiple replies exist
+                if (allReplies.length > 1) {
+                    const replyText = card.querySelector('.card-reply-text');
+                    const counter = card.querySelector('.card-reply-counter');
+                    const prevBtn = card.querySelector('.card-prev-reply');
+                    const nextBtn = card.querySelector('.card-next-reply');
+
+                    prevBtn.addEventListener('click', () => {
+                        replyIdx = (replyIdx - 1 + allReplies.length) % allReplies.length;
+                        replyText.textContent = allReplies[replyIdx].reply;
+                        counter.textContent = `${replyIdx + 1}/${allReplies.length}`;
+                    });
+
+                    nextBtn.addEventListener('click', () => {
+                        replyIdx = (replyIdx + 1) % allReplies.length;
+                        replyText.textContent = allReplies[replyIdx].reply;
+                        counter.textContent = `${replyIdx + 1}/${allReplies.length}`;
+                    });
+                }
+
+                // Ask Bean Modal Trigger
+                card.querySelector('.ask-bean-btn').addEventListener('click', () => {
+                    openReportModal(vocab.hanzi);
+                });
+
                 // Unsave Word
                 card.querySelector('.delete-vocab-btn').addEventListener('click', () => {
                     if (confirm(`Remove "${vocab.hanzi}" from saved words?`)) {
@@ -861,7 +1168,7 @@
                     }
                 });
 
-                // Sticky Note Live Edit
+                // Sticky Note Live Edit (Debounced to Firestore)
                 const textarea = card.querySelector('.sticky-note-input');
                 const charCount = card.querySelector('.char-count');
                 const noteStatus = card.querySelector('.note-status');
@@ -887,7 +1194,154 @@
             });
         }
 
-        // --- 6. 3D FLASHCARDS WITH GESTURE SWIPES & THEMES ---
+        // --- 6. BEAN'S NOTES TAB VIEW ---
+        const repliesListContainer = document.getElementById('replies-list-container');
+
+        function renderBeanRepliesTab() {
+            if (!repliesListContainer) return;
+
+            if (beanRepliesList.length === 0) {
+                repliesListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No explanations from Bean yet! Ask about any word anytime. 💌</div>`;
+                return;
+            }
+
+            repliesListContainer.innerHTML = '';
+
+            const groupedMap = new Map();
+            beanRepliesList.forEach(item => {
+                if (!item.hanzi || !item.reply) return;
+                if (!groupedMap.has(item.hanzi)) groupedMap.set(item.hanzi, []);
+                groupedMap.get(item.hanzi).push(item);
+            });
+
+            const uniqueWords = Array.from(groupedMap.keys()).reverse();
+
+            uniqueWords.forEach(hanzi => {
+                const replies = groupedMap.get(hanzi);
+                let currentIdx = replies.length - 1;
+
+                const card = document.createElement('div');
+                card.className = 'vocab-card';
+                card.setAttribute('data-reply-hanzi', hanzi);
+
+                const renderContent = () => {
+                    const item = replies[currentIdx];
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span class="vocab-title">${hanzi}</span>
+                            <div class="jump-back-btn" title="Back to Saved Word">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 14 4 9 9 4"></polyline>
+                                    <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                                </svg>
+                                <span>Back</span>
+                            </div>
+                        </div>
+                        <div style="font-size:12.5px; color:#d09b9f; margin-bottom:8px;">
+                            ${item.user_query ? `<b>Question:</b> ${item.user_query}` : ''}
+                        </div>
+                        <div class="bean-reply-box" style="margin-top:6px;">
+                            <b style="color:#2e5973;">💬 Bean's Note:</b>
+                            <div style="word-break:break-word; margin-top:3px;">${item.reply}</div>
+                            ${replies.length > 1 ? `
+                                <div style="display:flex; justify-content:flex-end; align-items:center; gap:6px; margin-top:6px; border-top:1px dashed #c9e4f5; padding-top:4px;">
+                                    <button class="bean-nav-btn tab-prev-reply">◀</button>
+                                    <span style="font-size:11px; font-weight:bold; color:#6b8ea2;">${currentIdx + 1}/${replies.length}</span>
+                                    <button class="bean-nav-btn tab-next-reply">▶</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+
+                    card.querySelector('.jump-back-btn').addEventListener('click', () => {
+                        jumpBackToSavedWord(hanzi);
+                    });
+
+                    if (replies.length > 1) {
+                        card.querySelector('.tab-prev-reply').addEventListener('click', () => {
+                            currentIdx = (currentIdx - 1 + replies.length) % replies.length;
+                            renderContent();
+                        });
+                        card.querySelector('.tab-next-reply').addEventListener('click', () => {
+                            currentIdx = (currentIdx + 1) % replies.length;
+                            renderContent();
+                        });
+                    }
+                };
+
+                renderContent();
+                repliesListContainer.appendChild(card);
+            });
+        }
+
+        // --- 7. ASK BEAN MODAL LOGIC ---
+        const reportModal = document.getElementById('report-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const reportTargetHanzi = document.getElementById('report-target-hanzi');
+        const reportInputMsg = document.getElementById('report-input-msg');
+        const sendReportBtn = document.getElementById('send-report-btn');
+        const closeReportBtn = document.getElementById('close-report-btn');
+
+        let currentAskingHanzi = null;
+
+        function openReportModal(hanzi) {
+            currentAskingHanzi = hanzi;
+            reportTargetHanzi.textContent = hanzi;
+            reportInputMsg.value = '';
+            sendReportBtn.disabled = false;
+            sendReportBtn.textContent = 'Send to Bean 🧸';
+            sendReportBtn.style.background = 'linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%)';
+            modalOverlay.style.display = 'block';
+            reportModal.style.display = 'block';
+            setTimeout(() => reportInputMsg.focus(), 80);
+        }
+
+        function closeReportModal() {
+            modalOverlay.style.display = 'none';
+            reportModal.style.display = 'none';
+            currentAskingHanzi = null;
+        }
+
+        closeReportBtn.addEventListener('click', closeReportModal);
+        modalOverlay.addEventListener('click', closeReportModal);
+
+        sendReportBtn.addEventListener('click', () => {
+            if (!currentAskingHanzi) return;
+
+            sendReportBtn.disabled = true;
+            sendReportBtn.textContent = 'Sending... 💌';
+            sendReportBtn.style.background = '#d09b9f';
+
+            const payload = {
+                id: 'rep_' + Date.now(),
+                hanzi: currentAskingHanzi,
+                sentence: '',
+                user_query: reportInputMsg.value.trim()
+            };
+
+            fetch(GOOGLE_APP_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                mode: 'no-cors'
+            }).then(() => {
+                if (!askedWordsList.includes(currentAskingHanzi)) {
+                    askedWordsList.push(currentAskingHanzi);
+                }
+                sendReportBtn.textContent = 'Sent to Bean! 🧸';
+                sendReportBtn.style.background = '#a6cbb5';
+                setTimeout(() => {
+                    closeReportModal();
+                    renderSavedVocab();
+                }, 1000);
+            }).catch(err => {
+                console.error("Report error:", err);
+                sendReportBtn.textContent = 'Oops, error! Try again.';
+                sendReportBtn.disabled = false;
+            });
+        });
+
+        // --- 8. 3D FLASHCARDS WITH GESTURE SWIPES & THEMES ---
         const fcSetupBox = document.getElementById('fc-setup-box');
         const fcSessionBox = document.getElementById('fc-session-box');
         const fcCountPill = document.getElementById('fc-count-pill');
@@ -968,7 +1422,7 @@
             const vocab = fcQueue[0];
             fcLeftCounter.textContent = `Cards Left: ${fcQueue.length}`;
 
-            // Rotating Background Texture
+            // Rotating Background Art
             const activeSet = fcMode === 'en' ? FLASHCARD_BG_IMAGES_ENGLISH : FLASHCARD_BG_IMAGES_HANZI;
             const bgImg = activeSet[flashcardSessionCount % activeSet.length];
             const bgPosition = bgImg.includes('d5.png') ? 'left center' : 'center center';
@@ -996,6 +1450,9 @@
             }
 
             const defsBack = (vocab.translations || []).map(t => `<li>${t}</li>`).join('');
+            const allReplies = getAllBeanRepliesFor(vocab.hanzi);
+            let fcReplyIdx = allReplies.length - 1;
+
             fcFaceBack.innerHTML = `
                 <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
                     <div>
@@ -1008,7 +1465,18 @@
                 </div>
                 <ul style="margin: 6px 0 10px; padding-left: 18px; font-size: 13px; line-height: 1.4;">${defsBack}</ul>
                 ${vocab.note ? `<div class="sticky-note-box" style="margin-bottom:6px; font-size:11px; padding:6px 8px;">📌 ${vocab.note}</div>` : ''}
-                ${vocab.beanReply ? `<div class="bean-note-box" style="font-size:11px; padding:6px 8px;">💬 Bean: ${vocab.beanReply}</div>` : ''}
+                ${allReplies.length > 0 ? `
+                    <div class="bean-reply-box" style="margin-top:6px; font-size:11px; padding:6px 8px; width:100%;">
+                        <b style="color:#2e5973;">💬 Bean's Note:</b>
+                        <div class="fc-reply-text" style="word-break:break-word; margin-top:2px;">${allReplies[fcReplyIdx].reply}</div>${allReplies.length > 1 ? `
+                            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 5px; margin-top: 5px; border-top: 1px dashed #c9e4f5; padding-top: 3px;">
+                                <button class="bean-nav-btn fc-prev-reply">◀</button>
+                                <span class="fc-reply-counter" style="font-size: 10px; font-weight: bold; color: #6b8ea2;">${fcReplyIdx + 1}/${allReplies.length}</span>
+                                <button class="bean-nav-btn fc-next-reply">▶</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
             `;
 
             fcFaceFront.querySelector('.fc-speak-btn')?.addEventListener('click', (e) => {
@@ -1019,11 +1487,32 @@
                 e.stopPropagation();
                 playTTS(vocab.hanzi);
             });
+
+            if (allReplies.length > 1) {
+                const replyText = fcFaceBack.querySelector('.fc-reply-text');
+                const counter = fcFaceBack.querySelector('.fc-reply-counter');
+                const prevBtn = fcFaceBack.querySelector('.fc-prev-reply');
+                const nextBtn = fcFaceBack.querySelector('.fc-next-reply');
+
+                prevBtn?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    fcReplyIdx = (fcReplyIdx - 1 + allReplies.length) % allReplies.length;
+                    replyText.textContent = allReplies[fcReplyIdx].reply;
+                    counter.textContent = `${fcReplyIdx + 1}/${allReplies.length}`;
+                });
+
+                nextBtn?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    fcReplyIdx = (fcReplyIdx + 1) % allReplies.length;
+                    replyText.textContent = allReplies[fcReplyIdx].reply;
+                    counter.textContent = `${fcReplyIdx + 1}/${allReplies.length}`;
+                });
+            }
         }
 
-        // Tap to Flip Card with Optional Haptics
+        // Tap to Flip Card
         fcCardInner.addEventListener('click', (e) => {
-            if (e.target.closest('.ponyo-btn')) return;
+            if (e.target.closest('.ponyo-btn') || e.target.closest('.bean-nav-btn')) return;
 
             if (!fcIsFlipped) {
                 fcIsFlipped = true;
@@ -1038,7 +1527,6 @@
             }
         });
 
-        // Still Learning (Push to end)
         function markStillLearning() {
             if (navigator.vibrate) navigator.vibrate(15);
             const card = fcQueue.shift();
@@ -1047,7 +1535,6 @@
             renderNextFlashcard();
         }
 
-        // Got It (Mastered)
         function markGotIt() {
             if (navigator.vibrate) navigator.vibrate([10, 30]);
             fcQueue.shift();
@@ -1058,7 +1545,7 @@
         fcBtnLearn.addEventListener('click', markStillLearning);
         fcBtnGotit.addEventListener('click', markGotIt);
 
-        // --- 7. MOBILE TOUCH SWIPE GESTURES ---
+        // Mobile Touch Swipes
         let touchStartX = 0;
         let touchStartY = 0;
 
@@ -1082,7 +1569,7 @@
             }
         }, { passive: true });
 
-        // --- 8. AUDIO SYNTHESIS (TTS) ---
+        // --- 9. AUDIO SYNTHESIS (TTS) ---
         function playTTS(text) {
             try {
                 window.speechSynthesis.cancel();
