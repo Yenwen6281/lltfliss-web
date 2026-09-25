@@ -32,11 +32,12 @@
             -webkit-touch-callout: none;
         }
 
-        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn {
+        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn, .chat-reaction-badge {
             touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
             cursor: pointer;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
 
         body {
@@ -49,7 +50,6 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            touch-action: pan-y;
         }
 
         header {
@@ -102,7 +102,6 @@
             background: transparent;
             outline: none;
             white-space: nowrap;
-            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
 
         .tab-btn:active, .tab-btn.is-pressed {
@@ -167,7 +166,7 @@
             box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2) !important;
         }
 
-        /* Controls */
+        /* Vocabulary Controls */
         .controls-card {
             display: flex;
             flex-direction: column;
@@ -216,41 +215,11 @@
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .vocab-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .vocab-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: #e08b9b;
-        }
-
-        .vocab-pinyin {
-            font-size: 14px;
-            color: #d09b9f;
-            font-style: italic;
-            margin: 2px 0 8px;
-        }
-
-        .vocab-level {
-            font-size: 11px;
-            background: #f5cde2;
-            color: #5c4a4d;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-weight: 700;
-        }
-
-        .vocab-defs {
-            margin: 0;
-            padding-left: 18px;
-            font-size: 14px;
-            line-height: 1.5;
-            color: #5c4a4d;
-        }
+        .vocab-header { display: flex; justify-content: space-between; align-items: center; }
+        .vocab-title { font-size: 24px; font-weight: 800; color: #e08b9b; }
+        .vocab-pinyin { font-size: 14px; color: #d09b9f; font-style: italic; margin: 2px 0 8px; }
+        .vocab-level { font-size: 11px; background: #f5cde2; color: #5c4a4d; padding: 3px 10px; border-radius: 12px; font-weight: 700; }
+        .vocab-defs { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.5; color: #5c4a4d; }
 
         .sticky-note-box {
             margin-top: 10px;
@@ -307,7 +276,9 @@
             align-items: center;
             justify-content: center;
             outline: none;
-            transition: transform 0.12s ease, background 0.15s ease;
+        }
+        .bean-nav-btn:active, .bean-nav-btn.is-pressed {
+            transform: scale(0.88) translateY(1px) !important;
         }
 
         .woodstock-btn {
@@ -318,12 +289,14 @@
             align-items: center;
             justify-content: center;
             outline: none;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .woodstock-btn img {
             width: 38px;
             height: auto;
             filter: drop-shadow(1px 2px 4px rgba(200, 150, 160, 0.35));
+        }
+        .woodstock-btn:active, .woodstock-btn.is-pressed {
+            transform: translateY(2px) scale(0.85) rotate(4deg) !important;
         }
 
         .card-actions {
@@ -346,13 +319,20 @@
             color: #7b6267;
             box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             outline: none;
-            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+        }
+        .deck-badge:active, .deck-badge.is-pressed {
+            transform: translateY(2.5px) scale(0.94) !important;
+            box-shadow: 0 0.5px 0 #d9a8b6, inset 0 1.5px 2px rgba(180, 110, 125, 0.25) !important;
         }
         .deck-badge.in-deck {
             background: linear-gradient(180deg, #ffc7d5 0%, #e08b9b 100%);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        }
+        .deck-badge.in-deck:active, .deck-badge.in-deck.is-pressed {
+            transform: translateY(2.5px) scale(0.94) !important;
+            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35) !important;
         }
 
         .icon-btn {
@@ -365,6 +345,10 @@
             background: rgba(245, 205, 226, 0.25);
             box-shadow: 0 2px 0 rgba(200, 150, 160, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.8);
             outline: none;
+        }
+        .icon-btn:active, .icon-btn.is-pressed {
+            transform: translateY(2px) scale(0.88) !important;
+            box-shadow: 0 0.5px 0 rgba(200, 150, 160, 0.2), inset 0 1.5px 2px rgba(180, 120, 130, 0.25) !important;
         }
 
         .ghost-btn {
@@ -379,6 +363,10 @@
             outline: none;
             box-shadow: 0 2.5px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15), inset 0 1px 1px #ffffff;
         }
+        .ghost-btn:active, .ghost-btn.is-pressed {
+            transform: translateY(2px) scale(0.93) !important;
+            box-shadow: 0 0.5px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2) !important;
+        }
 
         .jump-back-btn {
             display: inline-flex;
@@ -390,6 +378,9 @@
             background: rgba(139, 166, 182, 0.15);
             padding: 4px 9px;
             border-radius: 8px;
+        }
+        .jump-back-btn:active, .jump-back-btn.is-pressed {
+            transform: translateY(2px) scale(0.9) !important;
         }
 
         .sync-box {
@@ -458,15 +449,15 @@
             box-shadow: 0 4px 12px rgba(200, 150, 160, 0.14);
             user-select: none;
             -webkit-user-select: none;
-            /* Smooth transitions for physics */
-            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
             transform-origin: center center;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
         }
 
-        /* iMessage-style physical squish when long pressing */
+        /* iOS-style physical squish when touching bubble */
         .chat-bubble.bubble-pressing {
             transform: scale(0.94) !important;
             box-shadow: 0 1px 4px rgba(200, 150, 160, 0.2) !important;
+            transition: transform 0.1s ease-out !important;
         }
 
         .chat-bubble.from-user {
@@ -572,11 +563,10 @@
             box-shadow: 0 3px 8px rgba(180, 130, 140, 0.25);
             display: inline-flex;
             align-items: center;
-            cursor: pointer;
             animation: jellyShakeOnce 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
         }
-        .chat-reaction-badge:active {
-            transform: scale(0.9);
+        .chat-reaction-badge:active, .chat-reaction-badge.is-pressed {
+            transform: scale(0.9) !important;
         }
         .chat-bubble.from-user + .chat-reaction-badge {
             right: 8px;
@@ -620,6 +610,10 @@
             box-shadow: 0 3px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15);
             outline: none;
         }
+        .chat-attach-btn:active, .chat-attach-btn.is-pressed {
+            transform: translateY(2px) scale(0.9) !important;
+            box-shadow: 0 0.5px 0 #e2becb !important;
+        }
 
         .chat-input-field {
             flex: 1;
@@ -645,6 +639,10 @@
             font-size: 13.5px;
             box-shadow: 0 3px 0 #ba6273, 0 4px 10px rgba(224, 139, 155, 0.3);
             outline: none;
+        }
+        .chat-send-btn:active, .chat-send-btn.is-pressed {
+            transform: translateY(2.5px) scale(0.93) !important;
+            box-shadow: 0 0.5px 0 #ba6273, inset 0 1.5px 3px rgba(140, 50, 65, 0.35) !important;
         }
 
         /* --- LONG-PRESS CONTEXT MENU & REACTION BAR --- */
@@ -699,26 +697,9 @@
             font-size: 24px;
             padding: 2px 4px;
             outline: none;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
-        .chat-react-btn:active {
+        .chat-react-btn:active, .chat-react-btn.is-pressed {
             transform: scale(1.35) !important;
-        }
-
-        /* Robust In-App Emoji Picker Grid */
-        #chat-emoji-picker-grid {
-            display: none;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            padding: 10px;
-            background: #faf4f6;
-            border-radius: 18px;
-            border: 1.5px solid #fcdbe9;
-            max-height: 160px;
-            overflow-y: auto;
         }
 
         .chat-menu-actions-list {
@@ -741,10 +722,10 @@
             font-weight: 700;
             font-family: inherit;
             outline: none;
-            transition: background 0.12s ease;
         }
-        .chat-menu-btn:active {
-            background: #fdf0f4;
+        .chat-menu-btn:active, .chat-menu-btn.is-pressed {
+            background: #fdf0f4 !important;
+            transform: scale(0.98) !important;
         }
         .chat-menu-btn.destructive {
             color: #d85268;
@@ -790,171 +771,32 @@
             box-shadow: 0 6px 20px rgba(224, 139, 155, 0.32) !important;
         }
 
-        /* Flashcard Proportions (300x280) */
-        #fc-session-box, #fc-setup-box {
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-        }
+        /* Flashcards and Modals */
+        #fc-session-box, #fc-setup-box { width: 100%; max-width: 300px; margin: 0 auto; }
+        .flashcard-wrapper { perspective: 1200px; width: 100%; max-width: 300px; height: 280px; margin: 10px auto 0; position: relative; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; cursor: pointer; will-change: transform; }
+        .flashcard-inner.is-flipped { transform: rotateY(180deg); }
+        .flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 18px; box-shadow: 0 8px 25px rgba(200, 150, 160, 0.2); border: 2px solid #f5cde2; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; background-size: cover !important; background-repeat: no-repeat !important; }
+        .flashcard-back { transform: rotateY(180deg); align-items: flex-start; text-align: left; overflow-y: auto; }
+        .fc-controls { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
+        .fc-btn { flex: 1; padding: 12px; border-radius: 14px; border: 1.5px solid rgba(255, 255, 255, 0.85); font-weight: 800; font-size: 13.5px; letter-spacing: 0.3px; font-family: inherit; outline: none; box-shadow: 0 4.5px 0 #b38c94, 0 6px 12px rgba(180, 140, 150, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9); text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9); }
+        .fc-btn-learn { background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f1.jpeg'); background-size: cover; color: #5c4a4d; }
+        .fc-btn-gotit { background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f2.jpg'); background-size: cover; color: #5c4a4d; }
+        .fc-btn:active, .fc-btn.is-pressed { transform: translateY(4px) scale(0.95) !important; box-shadow: 0 0.5px 0 #b38c94, inset 0 2px 4px rgba(140, 100, 110, 0.3) !important; }
+        
+        .ponyo-btn { background: none; border: none; padding: 0; display: inline-flex; align-items: center; justify-content: center; outline: none; }
+        .ponyo-btn img { width: 50px; height: auto; filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4)); }
+        .ponyo-btn:active, .ponyo-btn.is-pressed { transform: translateY(2px) scale(0.86, 0.82) !important; }
 
-        .flashcard-wrapper {
-            perspective: 1200px;
-            width: 100%;
-            max-width: 300px;
-            height: 280px;
-            margin: 10px auto 0;
-            position: relative;
-        }
+        .mode-picker-card { border-radius: 18px; padding: 20px 16px; margin-bottom: 14px; border: 1.5px solid rgba(245, 205, 226, 0.85); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; min-height: 135px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3); }
+        .mode-picker-card.card-b1 { background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png'); }
+        .mode-picker-card.card-b2 { background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/8651c6a44f1b8e7f87d4654e96e8bdc7c4ef52ae/b2.png'); }
+        .mode-picker-card:active, .mode-picker-card.is-pressed { transform: translateY(5px) scale(0.96) !important; box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2) !important; }
 
-        .flashcard-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-style: preserve-3d;
-            cursor: pointer;
-            will-change: transform;
-        }
+        .fc-start-pill { background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 6px 20px; font-weight: 800; font-size: 13.5px; box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff; }
 
-        .flashcard-inner.is-flipped {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(200, 150, 160, 0.2);
-            border: 2px solid #f5cde2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-        }
-
-        .flashcard-back {
-            transform: rotateY(180deg);
-            align-items: flex-start;
-            text-align: left;
-            overflow-y: auto;
-        }
-
-        .fc-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        .fc-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.85);
-            font-weight: 800;
-            font-size: 13.5px;
-            letter-spacing: 0.3px;
-            font-family: inherit;
-            outline: none;
-            box-shadow: 0 4.5px 0 #b38c94, 0 6px 12px rgba(180, 140, 150, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
-        }
-        .fc-btn-learn {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f1.jpeg');
-            background-size: cover;
-            color: #5c4a4d;
-        }
-        .fc-btn-gotit {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f2.jpg');
-            background-size: cover;
-            color: #5c4a4d;
-        }
-
-        .ponyo-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            outline: none;
-        }
-        .ponyo-btn img {
-            width: 50px;
-            height: auto;
-            filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4));
-        }
-
-        .mode-picker-card {
-            border-radius: 18px;
-            padding: 20px 16px;
-            margin-bottom: 14px;
-            border: 1.5px solid rgba(245, 205, 226, 0.85);
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 135px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3);
-        }
-        .mode-picker-card.card-b1 {
-            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
-        }
-        .mode-picker-card.card-b2 {
-            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/8651c6a44f1b8e7f87d4654e96e8bdc7c4ef52ae/b2.png');
-        }
-
-        .fc-start-pill {
-            background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
-            color: #e08b9b;
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 6px 20px;
-            font-weight: 800;
-            font-size: 13.5px;
-            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
-        }
-
-        /* Report Modal */
-        #report-modal {
-            position: fixed;
-            display: none;
-            z-index: 100000;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(12px);
-            border: 2px solid #f5cde2;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 14px 35px rgba(200, 150, 160, 0.35);
-            font-family: inherit;
-            width: 310px;
-            color: #5c4a4d;
-            box-sizing: border-box;
-        }
-
-        #modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(3px);
-            z-index: 99999;
-            display: none;
-        }
+        #report-modal { position: fixed; display: none; z-index: 100000; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border: 2px solid #f5cde2; padding: 20px; border-radius: 20px; box-shadow: 0 14px 35px rgba(200, 150, 160, 0.35); font-family: inherit; width: 310px; color: #5c4a4d; box-sizing: border-box; }
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(3px); z-index: 99999; display: none; }
     </style>
 </head>
 <body>
@@ -1115,43 +957,18 @@
     <!-- Long-press Action Sheet Modal -->
     <div id="chat-action-menu-overlay">
         <div class="chat-action-menu-card">
-            <!-- 5 Quick Reactions + Plus (Built-in Picker Trigger) -->
+            <!-- 5 Quick Reactions + Plus (Native iOS Keyboard Trigger) -->
             <div class="chat-quick-reaction-bar">
                 <button class="chat-react-btn" data-emoji="❤️">❤️</button>
                 <button class="chat-react-btn" data-emoji="😂">😂</button>
                 <button class="chat-react-btn" data-emoji="👍">👍</button>
                 <button class="chat-react-btn" data-emoji="😢">😢</button>
                 <button class="chat-react-btn" data-emoji="😡">😡</button>
-                <button class="chat-react-btn" id="toggle-more-emojis-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
+                <button class="chat-react-btn" id="native-emoji-picker-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
             </div>
-
-            <!-- Custom In-App Emoji Picker Grid (Replaces Native Keyboard) -->
-            <div id="chat-emoji-picker-grid">
-                <button class="chat-react-btn" data-emoji="🥰">🥰</button>
-                <button class="chat-react-btn" data-emoji="🥳">🥳</button>
-                <button class="chat-react-btn" data-emoji="😮">😮</button>
-                <button class="chat-react-btn" data-emoji="🙏">🙏</button>
-                <button class="chat-react-btn" data-emoji="🔥">🔥</button>
-                <button class="chat-react-btn" data-emoji="🌸">🌸</button>
-                <button class="chat-react-btn" data-emoji="🧸">🧸</button>
-                <button class="chat-react-btn" data-emoji="🐣">🐣</button>
-                <button class="chat-react-btn" data-emoji="✨">✨</button>
-                <button class="chat-react-btn" data-emoji="💯">💯</button>
-                <button class="chat-react-btn" data-emoji="👀">👀</button>
-                <button class="chat-react-btn" data-emoji="🎉">🎉</button>
-                <button class="chat-react-btn" data-emoji="💖">💖</button>
-                <button class="chat-react-btn" data-emoji="🥺">🥺</button>
-                <button class="chat-react-btn" data-emoji="🙌">🙌</button>
-                <button class="chat-react-btn" data-emoji="💀">💀</button>
-                <button class="chat-react-btn" data-emoji="😭">😭</button>
-                <button class="chat-react-btn" data-emoji="🤪">🤪</button>
-                <button class="chat-react-btn" data-emoji="😎">😎</button>
-                <button class="chat-react-btn" data-emoji="🤔">🤔</button>
-                <button class="chat-react-btn" data-emoji="🤮">🤮</button>
-                <button class="chat-react-btn" data-emoji="💩">💩</button>
-                <button class="chat-react-btn" data-emoji="👻">👻</button>
-                <button class="chat-react-btn" data-emoji="🐷">🐷</button>
-            </div>
+            
+            <!-- Hidden input to pop Native iOS Keyboard without shifting screen -->
+            <input type="text" id="native-emoji-input" style="opacity: 0; position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; padding: 0; border: none;" />
 
             <!-- Actions: Reply, Copy, Unsend -->
             <div class="chat-menu-actions-list">
@@ -1191,22 +1008,29 @@
     </div>
 
     <script>
-        // --- 0. PHYSICAL SQUISH HANDLER FOR IOS HOME SCREEN APP ---
-        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn';
+        // --- 0. GLOBAL PHYSICAL SQUISH HANDLER (RESTORED FOR IOS) ---
+        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn, .chat-reaction-badge';
 
-        document.addEventListener('pointerdown', (e) => {
+        const addSquish = (e) => {
             const btn = e.target.closest(SQUISH_TARGETS);
             if (!btn) return;
             btn.classList.add('is-pressed');
+            if (navigator.vibrate) navigator.vibrate(10); // Global light haptic tap for supported devices
             
             const release = () => {
                 btn.classList.remove('is-pressed');
-                window.removeEventListener('pointerup', release);
-                window.removeEventListener('pointercancel', release);
+                window.removeEventListener('touchend', release);
+                window.removeEventListener('touchcancel', release);
+                window.removeEventListener('mouseup', release);
             };
-            window.addEventListener('pointerup', release);
-            window.addEventListener('pointercancel', release);
-        }, { passive: true });
+            window.addEventListener('touchend', release);
+            window.addEventListener('touchcancel', release);
+            window.addEventListener('mouseup', release);
+        };
+
+        // Using touchstart restores the native squishy active physics in iOS PWAs
+        document.addEventListener('touchstart', addSquish, { passive: true });
+        document.addEventListener('mousedown', addSquish);
 
         // --- 1. ASSET CONSTANTS & ADMIN CONFIG ---
         const ADMIN_EMAIL = 'yenwen6281plus@gmail.com';
@@ -1693,8 +1517,8 @@
         const menuActReply = document.getElementById('menu-act-reply');
         const menuActCopy = document.getElementById('menu-act-copy');
         const menuActUnsend = document.getElementById('menu-act-unsend');
-        const toggleMoreEmojisBtn = document.getElementById('toggle-more-emojis-btn');
-        const chatEmojiPickerGrid = document.getElementById('chat-emoji-picker-grid');
+        const nativeEmojiPickerBtn = document.getElementById('native-emoji-picker-btn');
+        const nativeEmojiInput = document.getElementById('native-emoji-input');
 
         function scrollChatToBottom() {
             setTimeout(() => {
@@ -1778,13 +1602,13 @@
 
                         const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                         
-                        // 1. Read receipt
+                        // Read receipt
                         let receiptHTML = '';
                         if (isMe && msg.read) {
                             receiptHTML = `<span class="chat-read-label">Read</span>`;
                         }
 
-                        // 3. Modern 3-Row Reply Layout
+                        // 3-Row Modern Reply Quote
                         let replyCardHTML = '';
                         if (msg.replyTo) {
                             let relationText = 'Replied';
@@ -1824,7 +1648,7 @@
                             </div>
                         `;
 
-                        // Parse Single Reaction safely ignoring old numeric data types (Fixes the "1" bug)
+                        // SAFE EMOJI PARSING: Ignore legacy "1" counters and strictly grab the real emoji character.
                         const reactions = msg.reactions || {};
                         let currentEmoji = null;
                         const uid = currentUser ? currentUser.uid : 'default';
@@ -1832,14 +1656,13 @@
                         if (reactions[uid] && typeof reactions[uid] === 'string') {
                             currentEmoji = reactions[uid];
                         } else {
-                            // Extract first valid string emoji to prevent legacy numbers like "1" showing up
                             const entries = Object.entries(reactions);
                             for (let i = 0; i < entries.length; i++) {
                                 if (typeof entries[i][1] === 'string') {
                                     currentEmoji = entries[i][1];
                                     break;
                                 } else if (typeof entries[i][1] === 'number') {
-                                    currentEmoji = entries[i][0]; // the key is the emoji in legacy format
+                                    currentEmoji = entries[i][0]; // Fixes legacy {"❤️": 1} bug
                                     break;
                                 }
                             }
@@ -1855,7 +1678,7 @@
                             bubbleWrapper.insertAdjacentHTML('beforeend', reactionBadgeHTML);
                         }
 
-                        // Tapping reaction badge allows removal locally and remotely
+                        // Local instant removal of reaction on badge tap
                         const badgeEl = bubbleWrapper.querySelector('.chat-reaction-badge');
                         if (badgeEl) {
                             badgeEl.addEventListener('click', (e) => {
@@ -1875,7 +1698,7 @@
                             });
                         }
 
-                        // Attach Haptic Long-Press Gestures
+                        // Attach High-Fidelity Long Press
                         bindLongPress(bubble, {
                             id: doc.id,
                             text: msg.text || '',
@@ -1916,7 +1739,7 @@
             }
         }
 
-        // --- 4. HAPTIC LONG-PRESS & INSTANT OPTIMISTIC REACTIONS ---
+        // --- 4. HIGH-FIDELITY IOS LONG-PRESS & OPTIMISTIC REACTIONS ---
         function bindLongPress(element, msgData) {
             let pressTimer = null;
             let startX = 0;
@@ -1930,19 +1753,19 @@
                 startY = e.clientY || (e.touches && e.touches[0].clientY);
                 
                 isPressing = true;
-                element.classList.add('bubble-pressing');
+                element.classList.add('bubble-pressing'); // Instantly shrinks like iMessage
 
                 pressTimer = setTimeout(() => {
                     if (isPressing) {
                         isPressing = false;
                         element.classList.remove('bubble-pressing');
                         
-                        // Fire exact physical haptic tap right as the threshold activates menu
+                        // Fire exact physical haptic snap as the menu deploys
                         if (navigator.vibrate) navigator.vibrate([15, 20]); 
                         
                         openActionMenu(msgData);
                     }
-                }, 380); // Precise duration for iOS feel
+                }, 380); // Exact tuned duration for an iOS feel
             };
 
             const cancelPress = () => {
@@ -1982,7 +1805,6 @@
 
         function openActionMenu(msgData) {
             menuTargetMsg = msgData;
-            chatEmojiPickerGrid.style.display = 'none';
 
             if (msgData.isMe) {
                 menuActUnsend.style.display = 'flex';
@@ -2007,19 +1829,36 @@
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
                 if (menuTargetMsg && emoji) {
-                    if (navigator.vibrate) navigator.vibrate(10); // Tap vibration
+                    if (navigator.vibrate) navigator.vibrate(10);
                     applyReaction(menuTargetMsg.id, emoji);
                     closeActionMenu();
                 }
             });
         });
 
-        // Robust built-in emoji grid instead of native keyboard hack
-        toggleMoreEmojisBtn.addEventListener('click', () => {
-            chatEmojiPickerGrid.style.display = chatEmojiPickerGrid.style.display === 'grid' ? 'none' : 'grid';
+        // Trigger native device emoji picker perfectly seamlessly
+        nativeEmojiPickerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            nativeEmojiInput.value = '';
+            nativeEmojiInput.focus();
         });
 
-        // Single reaction per user with INSTANT local optimistic rendering
+        nativeEmojiInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (val && menuTargetMsg) {
+                // Grab the very first emoji character input and use it instantly
+                const emojiArray = Array.from(val);
+                if (emojiArray.length > 0) {
+                    if (navigator.vibrate) navigator.vibrate(10);
+                    applyReaction(menuTargetMsg.id, emojiArray[0]);
+                    closeActionMenu();
+                }
+            }
+            nativeEmojiInput.value = '';
+            nativeEmojiInput.blur();
+        });
+
+        // Single reaction per user with INSTANT ZERO-DELAY local rendering
         function applyReaction(msgId, emoji) {
             if (!activeChatUserId || !msgId || !currentUser) return;
             const uid = currentUser.uid;
@@ -2030,15 +1869,15 @@
             if (wrapper) {
                 let badge = wrapper.querySelector('.chat-reaction-badge');
                 if (badge && badge.textContent === emoji) {
-                    badge.remove(); // Toggle off if identical
+                    badge.remove(); // Toggle off if tapping identical emoji
                 } else if (badge) {
-                    badge.textContent = emoji; // Swap to new emoji
+                    badge.textContent = emoji; // Swap to new emoji seamlessly
                 } else {
                     wrapper.insertAdjacentHTML('beforeend', `<div class="chat-reaction-badge">${emoji}</div>`);
                 }
             }
 
-            // Sync with Firestore safely
+            // Sync with Firestore in the background
             db.runTransaction(transaction => {
                 return transaction.get(ref).then(doc => {
                     if (!doc.exists) return;
@@ -2048,11 +1887,11 @@
                     if (reactions[uid] === emoji) {
                         delete reactions[uid]; // Toggle off
                     } else {
-                        reactions[uid] = emoji; // Single selection per user overwrite
+                        reactions[uid] = emoji; // Assign exact emoji string (not a number)
                     }
                     transaction.update(ref, { reactions });
                 });
-            }).catch(err => console.error("Reaction failed:", err));
+            }).catch(err => console.error("Reaction sync failed:", err));
         }
 
         // Action menu button clicks
