@@ -937,7 +937,7 @@
                 </div>
             </section>
 
-            <!-- 5. Sync & Settings View (Includes Web Push Notifications Setup) -->
+            <!-- 5. Sync & Settings View -->
             <section id="sync-view" style="display: none;">
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
@@ -948,7 +948,7 @@
                     </div>
                 </div>
 
-                <!-- Web Push Notifications Toggle Card -->
+                <!-- Web Push Notifications Card -->
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Push Notifications 🔔</h3>
                     <p style="margin: 0 0 12px; font-size: 13px; color: #7b6267;">Get notifications on your lock screen when Bean replies to your questions or sends messages.</p>
@@ -1333,7 +1333,7 @@
             }, 100);
         }
 
-        // --- 6. SAVED WORDS MODULE ---
+        // --- 6. SAVED WORDS MODULE (UNIFIED TIMESTAMP ORDERING) ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -1365,8 +1365,11 @@
             else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
             else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0 || getAllBeanRepliesFor(v.hanzi).length > 0);
 
-            if (sortVal === 'time_desc') filtered.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-            else if (sortVal === 'time_asc') filtered.sort((a,b) => (a.updatedAt || 0) - (b.updatedAt || 0));
+            // Unified Time Sorter: Match Safari extension timestamp prioritization
+            const getTime = (v) => v.createdAt || v.timestamp || v.updatedAt || 0;
+
+            if (sortVal === 'time_desc') filtered.sort((a,b) => getTime(b) - getTime(a));
+            else if (sortVal === 'time_asc') filtered.sort((a,b) => getTime(a) - getTime(b));
             else if (sortVal === 'pinyin_asc') filtered.sort((a,b) => (a.pinyin || '').localeCompare(b.pinyin || ''));
             else if (sortVal === 'pinyin_desc') filtered.sort((a,b) => (b.pinyin || '').localeCompare(a.pinyin || ''));
             else if (sortVal === 'hsk_asc') filtered.sort((a,b) => (a.level || 99) - (b.level || 99));
