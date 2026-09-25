@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin (v1.1.5)</title>
+    <title>Eggy's Mandarin 🌸 (v1.1.5)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -576,15 +576,27 @@
             letter-spacing: 0.2px;
         }
 
-        .chat-reaction-badge {
+        /* Overlapping Reaction Cluster (Max 2 Badges) */
+        .chat-reactions-strip {
             position: absolute;
-            bottom: -10px;
+            bottom: -11px;
             z-index: 5;
+            display: flex;
+            gap: 4px;
+        }
+        .from-user-strip {
+            right: 8px;
+        }
+        .from-admin-strip {
+            left: 8px;
+        }
+
+        .chat-reaction-badge {
             background: #ffffff;
             border: 1px solid #f5cde2;
             border-radius: 16px;
-            padding: 2px 8px;
-            font-size: 14px;
+            padding: 2px 7px;
+            font-size: 13px;
             box-shadow: 0 3px 8px rgba(180, 130, 140, 0.25);
             display: inline-flex;
             align-items: center;
@@ -592,12 +604,6 @@
         }
         .chat-reaction-badge:active, .chat-reaction-badge.is-pressed {
             transform: scale(0.9) !important;
-        }
-        .chat-bubble.from-user + .chat-reaction-badge {
-            right: 8px;
-        }
-        .chat-bubble.from-admin + .chat-reaction-badge {
-            left: 8px;
         }
 
         #chat-reply-preview-bar {
@@ -695,7 +701,7 @@
             box-shadow: 0 16px 40px rgba(160, 90, 110, 0.35);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             transform-origin: bottom center;
             animation: menuPopup 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) 1 forwards;
         }
@@ -724,6 +730,27 @@
         }
         .chat-react-btn:active, .chat-react-btn.is-pressed {
             transform: scale(1.35) !important;
+        }
+
+        /* Scrollable Full-Emoji Tray for ➕ Button */
+        #chat-scrollable-emoji-tray {
+            display: none;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            padding: 10px;
+            background: #fdf5f8;
+            border-radius: 18px;
+            border: 1.5px solid #fcdbe9;
+            max-height: 155px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        #chat-scrollable-emoji-tray .chat-react-btn {
+            font-size: 22px;
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .chat-menu-actions-list {
@@ -828,7 +855,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.4</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.5</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -975,20 +1002,20 @@
                     </div>
                 </div>
 
-                <!-- Web Push Notifications Card -->
+                <!-- Web Push Notifications Card (Cleaned) -->
                 <div class="sync-box">
                     <h3 style="margin: 0 0 10px; color: #e08b9b;">Push Notifications 🔔</h3>
                     <button id="enable-push-btn" class="login-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border: 1.5px solid #f5cde2; font-size: 13px;">
                         🔔 Enable Push Notifications
                     </button>
-                    <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 600;">Status: Ready to enable</div>
+                    <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 700;">Status: Ready to enable</div>
                 </div>
 
-                <!-- App Version & Cache Status Card -->
+                <!-- App Version & Cache Status Card (Cleaned) -->
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.1.4</b>
+                        <b id="settings-version-display">v1.1.5</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1003,18 +1030,49 @@
     <!-- Long-press Action Sheet Modal -->
     <div id="chat-action-menu-overlay">
         <div class="chat-action-menu-card">
-            <!-- 5 Quick Reactions + Plus (Native iOS Keyboard Trigger) -->
+            <!-- 5 Quick Reactions + Plus (Toggles Expanded Tray) -->
             <div class="chat-quick-reaction-bar">
                 <button class="chat-react-btn" data-emoji="❤️">❤️</button>
                 <button class="chat-react-btn" data-emoji="😂">😂</button>
                 <button class="chat-react-btn" data-emoji="👍">👍</button>
                 <button class="chat-react-btn" data-emoji="😢">😢</button>
                 <button class="chat-react-btn" data-emoji="😡">😡</button>
-                <button class="chat-react-btn" id="native-emoji-picker-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
+                <button class="chat-react-btn" id="toggle-more-emojis-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
             </div>
-            
-            <!-- Hidden input to pop Native iOS Keyboard without shifting screen -->
-            <input type="text" id="native-emoji-input" style="opacity: 0; position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; padding: 0; border: none;" />
+
+            <!-- Scrollable Full Emoji Tray for ➕ Button -->
+            <div id="chat-scrollable-emoji-tray">
+                <button class="chat-react-btn" data-emoji="🥰">🥰</button>
+                <button class="chat-react-btn" data-emoji="🥳">🥳</button>
+                <button class="chat-react-btn" data-emoji="😮">😮</button>
+                <button class="chat-react-btn" data-emoji="🙏">🙏</button>
+                <button class="chat-react-btn" data-emoji="🔥">🔥</button>
+                <button class="chat-react-btn" data-emoji="🌸">🌸</button>
+                <button class="chat-react-btn" data-emoji="🧸">🧸</button>
+                <button class="chat-react-btn" data-emoji="🐣">🐣</button>
+                <button class="chat-react-btn" data-emoji="✨">✨</button>
+                <button class="chat-react-btn" data-emoji="💯">💯</button>
+                <button class="chat-react-btn" data-emoji="👀">👀</button>
+                <button class="chat-react-btn" data-emoji="🎉">🎉</button>
+                <button class="chat-react-btn" data-emoji="💖">💖</button>
+                <button class="chat-react-btn" data-emoji="🥺">🥺</button>
+                <button class="chat-react-btn" data-emoji="🙌">🙌</button>
+                <button class="chat-react-btn" data-emoji="💀">💀</button>
+                <button class="chat-react-btn" data-emoji="😭">😭</button>
+                <button class="chat-react-btn" data-emoji="🤪">🤪</button>
+                <button class="chat-react-btn" data-emoji="😎">😎</button>
+                <button class="chat-react-btn" data-emoji="🤔">🤔</button>
+                <button class="chat-react-btn" data-emoji="🤮">🤮</button>
+                <button class="chat-react-btn" data-emoji="💩">💩</button>
+                <button class="chat-react-btn" data-emoji="👻">👻</button>
+                <button class="chat-react-btn" data-emoji="🐷">🐷</button>
+                <button class="chat-react-btn" data-emoji="☕">☕</button>
+                <button class="chat-react-btn" data-emoji="💪">💪</button>
+                <button class="chat-react-btn" data-emoji="😴">😴</button>
+                <button class="chat-react-btn" data-emoji="🤩">🤩</button>
+                <button class="chat-react-btn" data-emoji="😇">😇</button>
+                <button class="chat-react-btn" data-emoji="😻">😻</button>
+            </div>
 
             <!-- Actions: Reply, Copy, Unsend -->
             <div class="chat-menu-actions-list">
@@ -1055,7 +1113,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.1.4';
+        const APP_VERSION = 'v1.1.5';
 
         document.getElementById('force-update-btn')?.addEventListener('click', () => {
             if ('serviceWorker' in navigator) {
@@ -1397,7 +1455,7 @@
             }, 100);
         }
 
-        // --- 6. SAVED WORDS MODULE (EXACT ADDED TIME SORTING - v1.1.4) ---
+        // --- 6. SAVED WORDS MODULE (EXACT ADDED TIME SORTING) ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -1698,7 +1756,7 @@
             });
         }
 
-        // --- 8. MODERNIZED CHAT MODULE ---
+        // --- 8. MODERNIZED CHAT MODULE (MODIFIED V1.1.5) ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
@@ -1717,8 +1775,8 @@
         const menuActReply = document.getElementById('menu-act-reply');
         const menuActCopy = document.getElementById('menu-act-copy');
         const menuActUnsend = document.getElementById('menu-act-unsend');
-        const nativeEmojiPickerBtn = document.getElementById('native-emoji-picker-btn');
-        const nativeEmojiInput = document.getElementById('native-emoji-input');
+        const toggleMoreEmojisBtn = document.getElementById('toggle-more-emojis-btn');
+        const chatScrollableEmojiTray = document.getElementById('chat-scrollable-emoji-tray');
 
         function scrollChatToBottom() {
             setTimeout(() => {
@@ -1774,7 +1832,6 @@
             if (unsubscribeChat) unsubscribeChat();
             if (unsubscribeLiveAlerts) unsubscribeLiveAlerts();
 
-            // Real-time chat messages display
             unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
@@ -1834,11 +1891,16 @@
                             mediaHTML = `<img src="${msg.imageUrl}" class="chat-media-img" alt="Chat attachment" />`;
                         }
 
-                        bubble.innerHTML = `
-                            ${replyCardHTML}
+                        // 4. Don't show your own name on your text bubbles
+                        const senderHeaderHTML = isMe ? '' : `
                             <div style="font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.85;">
                                 ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
                             </div>
+                        `;
+
+                        bubble.innerHTML = `
+                            ${replyCardHTML}
+                            ${senderHeaderHTML}
                             ${msg.text ? `<div class="chat-actual-body">${escapeHtml(msg.text)}</div>` : ''}
                             ${mediaHTML}
                             <div class="chat-meta">
@@ -1847,43 +1909,44 @@
                             </div>
                         `;
 
+                        // 2. Maximum 2 Reactions Display (1 from User, 1 from Bean)
                         const reactions = msg.reactions || {};
-                        let currentEmoji = null;
-                        const uid = currentUser ? currentUser.uid : 'default';
+                        let reactionPillsHTML = '';
+                        const roles = ['user', 'admin'];
 
-                        if (reactions[uid] && typeof reactions[uid] === 'string') {
-                            currentEmoji = reactions[uid];
-                        } else {
-                            const entries = Object.entries(reactions);
-                            for (let i = 0; i < entries.length; i++) {
-                                if (typeof entries[i][1] === 'string') {
-                                    currentEmoji = entries[i][1];
-                                    break;
-                                } else if (typeof entries[i][1] === 'number') {
-                                    currentEmoji = entries[i][0];
-                                    break;
-                                }
+                        roles.forEach(role => {
+                            const emoji = reactions[role];
+                            if (emoji && typeof emoji === 'string') {
+                                reactionPillsHTML += `
+                                    <span class="chat-reaction-badge" data-reactor-role="${role}" title="Tap to remove your reaction">
+                                        ${emoji}
+                                    </span>
+                                `;
                             }
-                        }
-
-                        let reactionBadgeHTML = '';
-                        if (currentEmoji) {
-                            reactionBadgeHTML = `<div class="chat-reaction-badge" data-reaction-emoji="${currentEmoji}">${currentEmoji}</div>`;
-                        }
+                        });
 
                         bubbleWrapper.appendChild(bubble);
-                        if (reactionBadgeHTML) {
-                            bubbleWrapper.insertAdjacentHTML('beforeend', reactionBadgeHTML);
+                        if (reactionPillsHTML) {
+                            bubbleWrapper.insertAdjacentHTML('beforeend', `
+                                <div class="chat-reactions-strip ${isMe ? 'from-user-strip' : 'from-admin-strip'}">
+                                    ${reactionPillsHTML}
+                                </div>
+                            `);
                         }
 
-                        const badgeEl = bubbleWrapper.querySelector('.chat-reaction-badge');
-                        if (badgeEl) {
-                            badgeEl.addEventListener('click', (e) => {
+                        // 3. Cancel Reaction on Click (Only your own)
+                        bubbleWrapper.querySelectorAll('.chat-reaction-badge').forEach(badge => {
+                            badge.addEventListener('click', (e) => {
                                 e.stopPropagation();
-                                if (navigator.vibrate) navigator.vibrate(10);
-                                applyReaction(doc.id, currentEmoji);
+                                const reactorRole = badge.getAttribute('data-reactor-role');
+                                const myRole = currentUser.email === ADMIN_EMAIL ? 'admin' : 'user';
+
+                                if (reactorRole === myRole) {
+                                    if (navigator.vibrate) navigator.vibrate(10);
+                                    removeReaction(doc.id, myRole);
+                                }
                             });
-                        }
+                        });
 
                         const replyCardEl = bubble.querySelector('.chat-reply-card');
                         if (replyCardEl) {
@@ -1921,7 +1984,6 @@
                     scrollChatToBottom();
                 }, err => console.error("Chat sync error:", err));
 
-            // In-App Foreground Push Listener: Vibrates & fires notifications when receiving a message
             let isFirstLoad = true;
             unsubscribeLiveAlerts = db.collection('users').doc(targetUid).collection('messages')
                 .where('read', '==', false)
@@ -2024,6 +2086,7 @@
 
         function openActionMenu(msgData) {
             menuTargetMsg = msgData;
+            chatScrollableEmojiTray.style.display = 'none';
 
             if (msgData.isMe) {
                 menuActUnsend.style.display = 'flex';
@@ -2043,6 +2106,7 @@
             if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
+        // 1. Quick Reaction Selection (Top 5 + Extended Tray)
         document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
@@ -2054,42 +2118,16 @@
             });
         });
 
-        nativeEmojiPickerBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            nativeEmojiInput.value = '';
-            nativeEmojiInput.focus();
+        // Toggle Scrollable Emoji Tray on ➕
+        toggleMoreEmojisBtn.addEventListener('click', () => {
+            chatScrollableEmojiTray.style.display = chatScrollableEmojiTray.style.display === 'grid' ? 'none' : 'grid';
         });
 
-        nativeEmojiInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            if (val && menuTargetMsg) {
-                const emojiArray = Array.from(val);
-                if (emojiArray.length > 0) {
-                    if (navigator.vibrate) navigator.vibrate(10);
-                    applyReaction(menuTargetMsg.id, emojiArray[0]);
-                    closeActionMenu();
-                }
-            }
-            nativeEmojiInput.value = '';
-            nativeEmojiInput.blur();
-        });
-
+        // Save reaction to role (Max 1 per role)
         function applyReaction(msgId, emoji) {
             if (!activeChatUserId || !msgId || !currentUser) return;
-            const uid = currentUser.uid;
+            const myRole = currentUser.email === ADMIN_EMAIL ? 'admin' : 'user';
             const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
-
-            const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
-            if (wrapper) {
-                let badge = wrapper.querySelector('.chat-reaction-badge');
-                if (badge && badge.textContent === emoji) {
-                    badge.remove();
-                } else if (badge) {
-                    badge.textContent = emoji;
-                } else {
-                    wrapper.insertAdjacentHTML('beforeend', `<div class="chat-reaction-badge">${emoji}</div>`);
-                }
-            }
 
             db.runTransaction(transaction => {
                 return transaction.get(ref).then(doc => {
@@ -2097,14 +2135,30 @@
                     const data = doc.data();
                     const reactions = data.reactions || {};
                     
-                    if (reactions[uid] === emoji) {
-                        delete reactions[uid];
+                    if (reactions[myRole] === emoji) {
+                        delete reactions[myRole];
                     } else {
-                        reactions[uid] = emoji;
+                        reactions[myRole] = emoji;
                     }
                     transaction.update(ref, { reactions });
                 });
-            }).catch(err => console.error("Reaction sync failed:", err));
+            }).catch(err => console.error("Reaction update failed:", err));
+        }
+
+        // Cancel own reaction
+        function removeReaction(msgId, role) {
+            if (!activeChatUserId || !msgId) return;
+            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
+
+            db.runTransaction(transaction => {
+                return transaction.get(ref).then(doc => {
+                    if (!doc.exists) return;
+                    const data = doc.data();
+                    const reactions = data.reactions || {};
+                    delete reactions[role];
+                    transaction.update(ref, { reactions });
+                });
+            }).catch(err => console.error("Reaction removal failed:", err));
         }
 
         menuActReply.addEventListener('click', () => {
