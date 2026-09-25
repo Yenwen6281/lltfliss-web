@@ -309,9 +309,6 @@
             outline: none;
             transition: transform 0.12s ease, background 0.15s ease;
         }
-        .bean-nav-btn:active, .bean-nav-btn.is-pressed {
-            transform: scale(0.88) translateY(1px) !important;
-        }
 
         .woodstock-btn {
             background: none;
@@ -434,9 +431,9 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            padding: 16px 10px;
-            border-radius: 18px;
+            gap: 16px;
+            padding: 16px 12px 24px;
+            border-radius: 20px;
             background: rgba(255, 255, 255, 0.65);
             border: 1px solid rgba(245, 205, 226, 0.7);
             margin-bottom: 8px;
@@ -461,7 +458,13 @@
             box-shadow: 0 4px 12px rgba(200, 150, 160, 0.14);
             user-select: none;
             -webkit-user-select: none;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+        }
+
+        /* Haptic physical squish state when pressing bubble */
+        .chat-bubble.bubble-pressing {
+            transform: scale(0.96) !important;
+            box-shadow: 0 2px 6px rgba(200, 150, 160, 0.25) !important;
         }
 
         .chat-bubble.from-user {
@@ -484,7 +487,7 @@
         .chat-reply-card {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
             background: rgba(255, 255, 255, 0.65);
             border-left: 3.5px solid #e08b9b;
             padding: 5px 9px;
@@ -547,7 +550,6 @@
             margin-top: 4px;
         }
 
-        /* Read Receipts: Clean "Read" label */
         .chat-read-label {
             font-weight: 800;
             font-size: 9.5px;
@@ -555,39 +557,30 @@
             letter-spacing: 0.2px;
         }
 
-        /* Reaction Sticker Pills Overlapping Bubble */
-        .chat-reactions-strip {
+        /* Single Sticker Reaction Overlapping Bubble */
+        .chat-reaction-badge {
             position: absolute;
-            bottom: -9px;
-            display: flex;
-            gap: 3px;
+            bottom: -10px;
             z-index: 5;
-        }
-        .chat-bubble.from-user + .chat-reactions-strip,
-        .from-user-strip {
-            right: 8px;
-        }
-        .from-admin-strip {
-            left: 8px;
-        }
-
-        .chat-reaction-pill {
             background: #ffffff;
             border: 1px solid #f5cde2;
-            border-radius: 14px;
-            padding: 1px 6px;
-            font-size: 12px;
-            box-shadow: 0 2px 6px rgba(180, 130, 140, 0.2);
+            border-radius: 16px;
+            padding: 2px 8px;
+            font-size: 14px;
+            box-shadow: 0 3px 8px rgba(180, 130, 140, 0.25);
             display: inline-flex;
             align-items: center;
-            gap: 2px;
-            transform: scale(0.95);
-            animation: jellyShakeOnce 0.3s ease-out 1;
+            cursor: pointer;
+            animation: jellyShakeOnce 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
         }
-        .chat-reaction-count {
-            font-size: 10px;
-            font-weight: 800;
-            color: #8a7176;
+        .chat-reaction-badge:active {
+            transform: scale(0.9);
+        }
+        .chat-bubble.from-user + .chat-reaction-badge {
+            right: 8px;
+        }
+        .chat-bubble.from-admin + .chat-reaction-badge {
+            left: 8px;
         }
 
         /* Reply Preview Bar above input */
@@ -659,8 +652,8 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(40, 20, 25, 0.38);
-            backdrop-filter: blur(4px);
+            background: rgba(30, 15, 20, 0.35);
+            backdrop-filter: blur(5px);
             z-index: 999999;
             display: none;
             justify-content: center;
@@ -739,19 +732,6 @@
         }
         .chat-menu-btn.destructive {
             color: #d85268;
-        }
-
-        /* Expanded Emoji Picker Box */
-        #chat-emoji-picker-grid {
-            display: none;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            padding: 8px;
-            background: #faf4f6;
-            border-radius: 14px;
-            border: 1px dashed #f5cde2;
-            max-height: 120px;
-            overflow-y: auto;
         }
 
         /* Lightbox & Animations */
@@ -1119,31 +1099,18 @@
     <!-- Long-press Action Sheet Modal -->
     <div id="chat-action-menu-overlay">
         <div class="chat-action-menu-card">
-            <!-- 5 Quick Reactions + Plus -->
+            <!-- 5 Quick Reactions + Plus (Native System Emoji Picker Trigger) -->
             <div class="chat-quick-reaction-bar">
                 <button class="chat-react-btn" data-emoji="❤️">❤️</button>
                 <button class="chat-react-btn" data-emoji="😂">😂</button>
                 <button class="chat-react-btn" data-emoji="👍">👍</button>
                 <button class="chat-react-btn" data-emoji="😢">😢</button>
                 <button class="chat-react-btn" data-emoji="😡">😡</button>
-                <button class="chat-react-btn" id="toggle-more-emojis-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
+                <button class="chat-react-btn" id="native-emoji-picker-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
             </div>
 
-            <!-- More Emojis Expansion Grid -->
-            <div id="chat-emoji-picker-grid">
-                <button class="chat-react-btn" data-emoji="🥰">🥰</button>
-                <button class="chat-react-btn" data-emoji="🥳">🥳</button>
-                <button class="chat-react-btn" data-emoji="😮">😮</button>
-                <button class="chat-react-btn" data-emoji="🙏">🙏</button>
-                <button class="chat-react-btn" data-emoji="🔥">🔥</button>
-                <button class="chat-react-btn" data-emoji="🌸">🌸</button>
-                <button class="chat-react-btn" data-emoji="🧸">🧸</button>
-                <button class="chat-react-btn" data-emoji="🐣">🐣</button>
-                <button class="chat-react-btn" data-emoji="✨">✨</button>
-                <button class="chat-react-btn" data-emoji="💯">💯</button>
-                <button class="chat-react-btn" data-emoji="👀">👀</button>
-                <button class="chat-react-btn" data-emoji="🎉">🎉</button>
-            </div>
+            <!-- Invisible native input to trigger system emoji keyboard -->
+            <input type="text" id="native-emoji-input" style="opacity: 0; position: absolute; pointer-events: none; width: 1px; height: 1px;">
 
             <!-- Actions: Reply, Copy, Unsend -->
             <div class="chat-menu-actions-list">
@@ -1254,8 +1221,6 @@
         let flashcardSessionCount = 0;
         let activeChatUserId = null;
         let activeReplyTarget = null;
-
-        // Long-Press context target
         let menuTargetMsg = null;
 
         function fetchBeanReplies(onComplete) {
@@ -1667,7 +1632,7 @@
             });
         }
 
-        // --- 8. MODERNIZED CHAT MODULE (READ RECEIPTS, 3-ROW QUOTES, LONG-PRESS, REACTIONS) ---
+        // --- 8. MODERNIZED CHAT MODULE ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
@@ -1687,8 +1652,8 @@
         const menuActReply = document.getElementById('menu-act-reply');
         const menuActCopy = document.getElementById('menu-act-copy');
         const menuActUnsend = document.getElementById('menu-act-unsend');
-        const toggleMoreEmojisBtn = document.getElementById('toggle-more-emojis-btn');
-        const chatEmojiPickerGrid = document.getElementById('chat-emoji-picker-grid');
+        const nativeEmojiPickerBtn = document.getElementById('native-emoji-picker-btn');
+        const nativeEmojiInput = document.getElementById('native-emoji-input');
 
         function scrollChatToBottom() {
             setTimeout(() => {
@@ -1782,14 +1747,12 @@
                         let replyCardHTML = '';
                         if (msg.replyTo) {
                             let relationText = 'Replied';
-                            const origSender = msg.replyTo.senderRole; // 'user' or 'admin'
-                            const currentSender = msg.sender;          // 'user' or 'admin'
+                            const origSender = msg.replyTo.senderRole;
+                            const currentSender = msg.sender;
 
                             if (isMe) {
-                                // I sent this reply
                                 relationText = (currentSender === origSender) ? 'Replied to yourself' : 'You replied';
                             } else {
-                                // The other person sent this reply
                                 relationText = (currentSender === origSender) ? 'Replied to themselves' : 'Replied to you';
                             }
 
@@ -1820,20 +1783,26 @@
                             </div>
                         `;
 
-                        // Reactions Sticker Strip
+                        // Single Reaction Sticker (1 per user/message)
                         const reactions = msg.reactions || {};
-                        const reactionEntries = Object.entries(reactions).filter(([_, count]) => count > 0);
-                        let reactionStripHTML = '';
-                        if (reactionEntries.length > 0) {
-                            const pills = reactionEntries.map(([emoji, count]) => `
-                                <span class="chat-reaction-pill">${emoji} <span class="chat-reaction-count">${count > 1 ? count : ''}</span></span>
-                            `).join('');
-                            reactionStripHTML = `<div class="chat-reactions-strip ${isMe ? 'from-user-strip' : 'from-admin-strip'}">${pills}</div>`;
+                        const currentEmoji = reactions[currentUser ? currentUser.uid : 'default'] || Object.values(reactions)[0];
+                        let reactionBadgeHTML = '';
+                        if (currentEmoji) {
+                            reactionBadgeHTML = `<div class="chat-reaction-badge" data-reaction-emoji="${currentEmoji}">${currentEmoji}</div>`;
                         }
 
                         bubbleWrapper.appendChild(bubble);
-                        if (reactionStripHTML) {
-                            bubbleWrapper.insertAdjacentHTML('beforeend', reactionStripHTML);
+                        if (reactionBadgeHTML) {
+                            bubbleWrapper.insertAdjacentHTML('beforeend', reactionBadgeHTML);
+                        }
+
+                        // Tapping reaction badge allows removal
+                        const badgeEl = bubbleWrapper.querySelector('.chat-reaction-badge');
+                        if (badgeEl) {
+                            badgeEl.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                applyReaction(doc.id, currentEmoji); // Clicking same emoji toggles it off
+                            });
                         }
 
                         // Jump to original message on reply card tap
@@ -1846,7 +1815,7 @@
                             });
                         }
 
-                        // Attach Long-Press Gestures & Right Click
+                        // Attach Long-Press Gestures & Right Click with Haptics
                         bindLongPress(bubble, {
                             id: doc.id,
                             text: msg.text || '',
@@ -1876,7 +1845,6 @@
                 }, err => console.error("Chat sync error:", err));
         }
 
-        // Jump to quoted original message with bounce
         function jumpToMessage(msgId) {
             if (!msgId) return;
             const targetEl = document.querySelector(`[data-msg-id="${msgId}"]`);
@@ -1888,7 +1856,7 @@
             }
         }
 
-        // --- 4. LONG-PRESS & CONTEXT MENU IMPLEMENTATION ---
+        // --- 4. HAPTIC LONG-PRESS & INSTANT OPTIMISTIC REACTIONS ---
         function bindLongPress(element, msgData) {
             let pressTimer = null;
             let startX = 0;
@@ -1899,13 +1867,18 @@
                 startX = e.clientX || (e.touches && e.touches[0].clientX);
                 startY = e.clientY || (e.touches && e.touches[0].clientY);
 
+                element.classList.add('bubble-pressing');
+
                 pressTimer = setTimeout(() => {
-                    if (navigator.vibrate) navigator.vibrate(25);
+                    element.classList.remove('bubble-pressing');
+                    // Physical haptic trigger
+                    if (navigator.vibrate) navigator.vibrate([15, 30]);
                     openActionMenu(msgData);
-                }, 450);
+                }, 420);
             };
 
-            const cancelPress = (e) => {
+            const cancelPress = () => {
+                element.classList.remove('bubble-pressing');
                 if (pressTimer) {
                     clearTimeout(pressTimer);
                     pressTimer = null;
@@ -1929,15 +1902,14 @@
             element.addEventListener('mouseleave', cancelPress);
             element.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
+                element.classList.remove('bubble-pressing');
                 openActionMenu(msgData);
             });
         }
 
         function openActionMenu(msgData) {
             menuTargetMsg = msgData;
-            chatEmojiPickerGrid.style.display = 'none';
 
-            // Show or hide unsend depending on ownership
             if (msgData.isMe) {
                 menuActUnsend.style.display = 'flex';
             } else {
@@ -1956,31 +1928,70 @@
             if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
-        // Quick reactions handler
+        // Quick reactions buttons
         document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
                 if (menuTargetMsg && emoji) {
+                    if (navigator.vibrate) navigator.vibrate(10);
                     applyReaction(menuTargetMsg.id, emoji);
                     closeActionMenu();
                 }
             });
         });
 
-        toggleMoreEmojisBtn.addEventListener('click', () => {
-            chatEmojiPickerGrid.style.display = chatEmojiPickerGrid.style.display === 'grid' ? 'none' : 'grid';
+        // Built-in device emoji picker trigger via "+"
+        nativeEmojiPickerBtn.addEventListener('click', () => {
+            nativeEmojiInput.value = '';
+            nativeEmojiInput.focus();
         });
 
+        nativeEmojiInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (val && menuTargetMsg) {
+                // Grab the first inputted emoji
+                const emoji = Array.from(val)[0];
+                if (emoji) {
+                    if (navigator.vibrate) navigator.vibrate(10);
+                    applyReaction(menuTargetMsg.id, emoji);
+                    closeActionMenu();
+                }
+            }
+            nativeEmojiInput.value = '';
+            nativeEmojiInput.blur();
+        });
+
+        // Single reaction per user with INSTANT local optimistic rendering
         function applyReaction(msgId, emoji) {
-            if (!activeChatUserId || !msgId) return;
+            if (!activeChatUserId || !msgId || !currentUser) return;
+            const uid = currentUser.uid;
             const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
-            
+
+            // Instant Optimistic UI Update on DOM
+            const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
+            if (wrapper) {
+                let badge = wrapper.querySelector('.chat-reaction-badge');
+                if (badge && badge.textContent === emoji) {
+                    badge.remove(); // Toggle off
+                } else if (badge) {
+                    badge.textContent = emoji; // Replace
+                } else {
+                    wrapper.insertAdjacentHTML('beforeend', `<div class="chat-reaction-badge">${emoji}</div>`);
+                }
+            }
+
+            // Sync with Firestore (Toggle if identical, replace if new)
             db.runTransaction(transaction => {
                 return transaction.get(ref).then(doc => {
                     if (!doc.exists) return;
                     const data = doc.data();
                     const reactions = data.reactions || {};
-                    reactions[emoji] = (reactions[emoji] || 0) + 1;
+                    
+                    if (reactions[uid] === emoji) {
+                        delete reactions[uid]; // Toggle off
+                    } else {
+                        reactions[uid] = emoji; // Single selection per user
+                    }
                     transaction.update(ref, { reactions });
                 });
             }).catch(err => console.error("Reaction failed:", err));
@@ -2071,7 +2082,7 @@
             }
 
             chatTextInput.value = '';
-            cancelReplyBtn.click(); // Reset reply bar
+            cancelReplyBtn.click();
 
             db.collection('users').doc(activeChatUserId).collection('messages').add(messagePayload)
                 .then(() => scrollChatToBottom())
