@@ -32,7 +32,8 @@
             -webkit-touch-callout: none;
         }
 
-        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn {
+        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn {
+            touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
             cursor: pointer;
@@ -104,7 +105,7 @@
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
 
-        .tab-btn:active {
+        .tab-btn:active, .tab-btn.is-pressed {
             transform: translateY(2.5px) scale(0.95) !important;
         }
 
@@ -115,14 +116,14 @@
             transform: translateY(-1px);
         }
 
-        .tab-btn.active:active {
+        .tab-btn.active:active, .tab-btn.active.is-pressed {
             transform: translateY(2px) scale(0.95) !important;
-            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
+            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2) !important;
         }
 
         main {
             flex: 1;
-            padding: 14px 18px calc(env(safe-area-inset-bottom, 20px) + 40px);
+            padding: 14px 18px calc(env(safe-area-inset-bottom, 20px) + 30px);
             display: flex;
             flex-direction: column;
         }
@@ -166,9 +167,9 @@
             box-shadow: 0 4px 0 #e2becb, 0 6px 12px rgba(200, 150, 160, 0.2), inset 0 1px 1px #ffffff;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
-        .login-btn:active {
+        .login-btn:active, .login-btn.is-pressed {
             transform: translateY(3.5px) scale(0.96) !important;
-            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
+            box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2) !important;
         }
 
         /* Controls */
@@ -308,40 +309,33 @@
             font-size: 10px;
             padding: 2px 6px;
             font-weight: bold;
-            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, color 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            user-select: none;
             outline: none;
+            transition: transform 0.12s ease, background 0.15s ease;
         }
-        .bean-nav-btn:hover {
-            background: #e08b9b;
-            color: white;
-            transform: scale(1.15);
-        }
-        .bean-nav-btn:active {
-            transform: scale(0.9) translateY(1px);
+        .bean-nav-btn:active, .bean-nav-btn.is-pressed {
+            transform: scale(0.88) translateY(1px) !important;
         }
 
         .woodstock-btn {
             background: none;
             border: none;
             padding: 2px;
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             outline: none;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .woodstock-btn img {
             width: 38px;
             height: auto;
             filter: drop-shadow(1px 2px 4px rgba(200, 150, 160, 0.35));
         }
-        .woodstock-btn:active {
-            transform: translateY(2px) scale(0.85) rotate(4deg);
+        .woodstock-btn:active, .woodstock-btn.is-pressed {
+            transform: translateY(2px) scale(0.85) rotate(4deg) !important;
         }
 
         .card-actions {
@@ -366,9 +360,9 @@
             outline: none;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
-        .deck-badge:active {
+        .deck-badge:active, .deck-badge.is-pressed {
             transform: translateY(2.5px) scale(0.94) !important;
-            box-shadow: 0 0.5px 0 #d9a8b6, inset 0 1.5px 2px rgba(180, 110, 125, 0.25);
+            box-shadow: 0 0.5px 0 #d9a8b6, inset 0 1.5px 2px rgba(180, 110, 125, 0.25) !important;
         }
         .deck-badge.in-deck {
             background: linear-gradient(180deg, #ffc7d5 0%, #e08b9b 100%);
@@ -376,13 +370,12 @@
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
         }
-        .deck-badge.in-deck:active {
+        .deck-badge.in-deck:active, .deck-badge.in-deck.is-pressed {
             transform: translateY(2.5px) scale(0.94) !important;
-            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35);
+            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35) !important;
         }
 
         .icon-btn {
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -391,13 +384,12 @@
             border-radius: 50%;
             background: rgba(245, 205, 226, 0.25);
             box-shadow: 0 2px 0 rgba(200, 150, 160, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.8);
-            user-select: none;
             outline: none;
             transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
         }
-        .icon-btn:active {
-            transform: translateY(2px) scale(0.88);
-            box-shadow: 0 0.5px 0 rgba(200, 150, 160, 0.2), inset 0 1.5px 2px rgba(180, 120, 130, 0.25);
+        .icon-btn:active, .icon-btn.is-pressed {
+            transform: translateY(2px) scale(0.88) !important;
+            box-shadow: 0 0.5px 0 rgba(200, 150, 160, 0.2), inset 0 1.5px 2px rgba(180, 120, 130, 0.25) !important;
         }
 
         /* Mode Picker Art Cards */
@@ -417,9 +409,9 @@
             box-shadow: 0 6px 0 #e4b8ca, 0 10px 18px rgba(200, 150, 160, 0.3);
             transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
         }
-        .mode-picker-card:active {
+        .mode-picker-card:active, .mode-picker-card.is-pressed {
             transform: translateY(5px) scale(0.96) !important;
-            box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2);
+            box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2) !important;
         }
         .mode-picker-card.card-b1 {
             background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
@@ -439,7 +431,7 @@
             box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.22), inset 0 1px 1px #ffffff;
         }
 
-        /* Flashcard Proportions */
+        /* Flashcard Proportions (300x280) */
         #fc-session-box, #fc-setup-box {
             width: 100%;
             max-width: 300px;
@@ -515,7 +507,7 @@
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
-        .fc-btn:active {
+        .fc-btn:active, .fc-btn.is-pressed {
             transform: translateY(4px) scale(0.95) !important;
             box-shadow: 0 0.5px 0 #b38c94, inset 0 2px 4px rgba(140, 100, 110, 0.3);
         }
@@ -545,7 +537,7 @@
             height: auto;
             filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4));
         }
-        .ponyo-btn:active {
+        .ponyo-btn:active, .ponyo-btn.is-pressed {
             transform: translateY(2px) scale(0.86, 0.82) !important;
         }
 
@@ -562,13 +554,12 @@
             box-shadow: 0 2.5px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15), inset 0 1px 1px #ffffff;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
         }
-        .ghost-btn:active {
+        .ghost-btn:active, .ghost-btn.is-pressed {
             transform: translateY(2px) scale(0.93) !important;
             box-shadow: 0 0.5px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2);
         }
 
         .jump-back-btn {
-            cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -578,11 +569,10 @@
             background: rgba(139, 166, 182, 0.15);
             padding: 4px 9px;
             border-radius: 8px;
-            user-select: none;
             transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .jump-back-btn:active {
-            transform: translateY(2px) scale(0.9);
+        .jump-back-btn:active, .jump-back-btn.is-pressed {
+            transform: translateY(2px) scale(0.9) !important;
         }
 
         .sync-box {
@@ -608,6 +598,100 @@
             word-break: break-all;
         }
 
+        /* CHAT BOX STYLES */
+        #chat-view {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 170px);
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .chat-messages-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px 6px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(245, 205, 226, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .chat-bubble {
+            max-width: 78%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13.5px;
+            line-height: 1.45;
+            position: relative;
+            word-break: break-word;
+            box-shadow: 0 2px 8px rgba(200, 150, 160, 0.12);
+        }
+
+        .chat-bubble.from-user {
+            align-self: flex-end;
+            background: linear-gradient(145deg, #ffdce5, #f5cde2);
+            color: #5c4a4d;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(224, 139, 155, 0.4);
+        }
+
+        .chat-bubble.from-admin {
+            align-self: flex-start;
+            background: #ffffff;
+            color: #406277;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #c9e4f5;
+        }
+
+        .chat-time {
+            font-size: 10px;
+            opacity: 0.65;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .chat-input-bar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            padding: 12px 14px;
+            border-radius: 20px;
+            border: 1.5px solid #f5cde2;
+            background: #ffffff;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: #5c4a4d;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(220, 160, 180, 0.12);
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 10px 18px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13.5px;
+            box-shadow: 0 3px 0 #ba6273, 0 4px 10px rgba(224, 139, 155, 0.3);
+            outline: none;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+        }
+        .chat-send-btn:active, .chat-send-btn.is-pressed {
+            transform: translateY(2.5px) scale(0.93) !important;
+            box-shadow: 0 0.5px 0 #ba6273, inset 0 1.5px 3px rgba(140, 50, 65, 0.35);
+        }
+
         /* Animations */
         @keyframes jellyShakeOnce {
             0%   { transform: scale(1, 1); }
@@ -630,7 +714,7 @@
             box-shadow: 0 6px 20px rgba(224, 139, 155, 0.32) !important;
         }
 
-        /* Report / Ask Bean Modal */
+        /* Report Modal */
         #report-modal {
             position: fixed;
             display: none;
@@ -679,7 +763,7 @@
         <div class="login-card">
             <img src="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png" style="width: 85px; height: auto; margin-bottom: 16px;" alt="Logo">
             <h2 style="margin: 0 0 6px; color: #e08b9b; font-size: 20px;">Welcome Bub!</h2>
-            <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words & flashcards on mobile.</p>
+            <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words, notes & chat on mobile.</p>
             <button id="google-login-btn" class="login-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
                 Sign in with Google
@@ -693,6 +777,7 @@
             <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
             <button class="tab-btn" id="tab-btn-replies">Bean's Notes</button>
             <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
+            <button class="tab-btn" id="tab-btn-chat">Chat 💬</button>
             <button class="tab-btn" id="tab-btn-sync">Sync Key</button>
         </div>
 
@@ -772,7 +857,24 @@
                 </div>
             </section>
 
-            <!-- 4. Sync Key View -->
+            <!-- 4. Persistent Chat View -->
+            <section id="chat-view" style="display: none;">
+                <div id="admin-user-selector" style="display: none; margin-bottom: 8px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #e08b9b;">Admin: Select Conversation:</span>
+                    <select id="admin-target-user-select" class="filter-select" style="margin-top: 4px;"></select>
+                </div>
+                <div class="chat-messages-container" id="chat-messages-box">
+                    <div style="text-align: center; color: #a38c90; font-size: 12.5px; margin-top: 30px; font-style: italic;">
+                        Say hi to Bean! Chat history is permanently saved with your Google account 🧸💌
+                    </div>
+                </div>
+                <div class="chat-input-bar">
+                    <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message...">
+                    <button id="chat-send-action-btn" class="chat-send-btn">Send</button>
+                </div>
+            </section>
+
+            <!-- 5. Sync Key View -->
             <section id="sync-view" style="display: none;">
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
@@ -804,10 +906,25 @@
     </div>
 
     <script>
-        // Enable immediate touch responses on iOS PWA
-        document.addEventListener("touchstart", function() {}, { passive: true });
+        // --- 0. PHYSICAL SQUISH HANDLER FOR IOS HOME SCREEN APP ---
+        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn';
 
-        // --- 0. CONSTANTS ---
+        document.addEventListener('pointerdown', (e) => {
+            const btn = e.target.closest(SQUISH_TARGETS);
+            if (!btn) return;
+            btn.classList.add('is-pressed');
+            
+            const release = () => {
+                btn.classList.remove('is-pressed');
+                window.removeEventListener('pointerup', release);
+                window.removeEventListener('pointercancel', release);
+            };
+            window.addEventListener('pointerup', release);
+            window.addEventListener('pointercancel', release);
+        }, { passive: true });
+
+        // --- 1. ASSET CONSTANTS & ADMIN CONFIG ---
+        const ADMIN_EMAIL = 'yenwen6281plus@gmail.com'; // Set as admin email to reply to any user
         const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
         const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
@@ -829,13 +946,12 @@
             'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e5.jpg'
         ];
 
-        // Toneless pinyin helper for robust searching
         function stripPinyinTones(str) {
             if (!str) return '';
             return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '');
         }
 
-        // --- 1. FIREBASE INITIALIZATION ---
+        // --- 2. FIREBASE INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyBGhMMd6fd2oK23J-YA27VYXFGh69R1PA0",
             authDomain: "lltfliss-ce07a.firebaseapp.com",
@@ -854,12 +970,13 @@
 
         let currentUser = null;
         let unsubscribeVocab = null;
+        let unsubscribeChat = null;
         let vocabList = [];
         let beanRepliesList = [];
         let askedWordsList = [];
         let flashcardSessionCount = 0;
+        let activeChatUserId = null;
 
-        // Fetch Bean's Explanations from Google Apps Script
         function fetchBeanReplies(onComplete) {
             fetch(GOOGLE_APP_SCRIPT_URL)
                 .then(res => res.json())
@@ -884,16 +1001,12 @@
 
         function getReportIconStatus(hanzi) {
             const answers = getAllBeanRepliesFor(hanzi);
-            if (answers.length > 0) {
-                return { color: '#e08b9b', title: "Bean answered! 💌" };
-            }
-            if (askedWordsList.includes(hanzi)) {
-                return { color: '#e6a23c', title: "Question sent to Bean 💌" };
-            }
+            if (answers.length > 0) return { color: '#e08b9b', title: "Bean answered! 💌" };
+            if (askedWordsList.includes(hanzi)) return { color: '#e6a23c', title: "Question sent to Bean 💌" };
             return { color: '#b89c9e', title: "Ask Bean / Report Word" };
         }
 
-        // --- 2. AUTH FLOW ---
+        // --- 3. AUTH FLOW ---
         const authView = document.getElementById('auth-view');
         const appView = document.getElementById('app-view');
         const googleLoginBtn = document.getElementById('google-login-btn');
@@ -919,10 +1032,19 @@
                 userDisplayEmail.textContent = user.email;
                 syncKeyDisplay.textContent = user.uid;
 
+                // Save profile to ensure presence in directory
+                db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                    displayName: user.displayName || user.email.split('@')[0],
+                    lastSeen: Date.now()
+                }, { merge: true });
+
                 listenToCloudData(user.uid);
+                initChat(user);
             } else {
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
+                if (unsubscribeChat) unsubscribeChat();
                 authView.style.display = 'flex';
                 appView.style.display = 'none';
                 logoutBtn.style.display = 'none';
@@ -936,7 +1058,7 @@
             }
         });
 
-        // --- 3. FIRESTORE REALTIME SYNC ---
+        // --- 4. FIRESTORE REALTIME SYNC ---
         function listenToCloudData(uid) {
             if (unsubscribeVocab) unsubscribeVocab();
 
@@ -950,21 +1072,27 @@
                 }, err => console.error("Firestore sync error:", err));
         }
 
-        // --- 4. TABS NAVIGATION ---
+        // --- 5. TABS NAVIGATION ---
         const tabBtnVocab = document.getElementById('tab-btn-vocab');
         const tabBtnReplies = document.getElementById('tab-btn-replies');
         const tabBtnFlash = document.getElementById('tab-btn-flash');
+        const tabBtnChat = document.getElementById('tab-btn-chat');
         const tabBtnSync = document.getElementById('tab-btn-sync');
         const vocabView = document.getElementById('vocab-view');
         const repliesView = document.getElementById('replies-view');
         const flashView = document.getElementById('flash-view');
+        const chatView = document.getElementById('chat-view');
         const syncView = document.getElementById('sync-view');
 
         function switchTab(activeBtn, activeSection) {
-            [tabBtnVocab, tabBtnReplies, tabBtnFlash, tabBtnSync].forEach(b => b.classList.remove('active'));
-            [vocabView, repliesView, flashView, syncView].forEach(s => s.style.display = 'none');
+            [tabBtnVocab, tabBtnReplies, tabBtnFlash, tabBtnChat, tabBtnSync].forEach(b => b.classList.remove('active'));
+            [vocabView, repliesView, flashView, chatView, syncView].forEach(s => s.style.display = 'none');
             activeBtn.classList.add('active');
-            activeSection.style.display = (activeSection === flashView || activeSection === repliesView) ? 'flex' : 'block';
+            activeSection.style.display = (activeSection === flashView || activeSection === repliesView || activeSection === chatView) ? 'flex' : 'block';
+
+            if (activeSection === chatView) {
+                scrollChatToBottom();
+            }
         }
 
         tabBtnVocab.addEventListener('click', () => switchTab(tabBtnVocab, vocabView));
@@ -973,9 +1101,9 @@
             fetchBeanReplies();
         });
         tabBtnFlash.addEventListener('click', () => switchTab(tabBtnFlash, flashView));
+        tabBtnChat.addEventListener('click', () => switchTab(tabBtnChat, chatView));
         tabBtnSync.addEventListener('click', () => switchTab(tabBtnSync, syncView));
 
-        // Jump directly to Bean's Note tab and focus target card
         function jumpToBeanReply(targetHanzi) {
             switchTab(tabBtnReplies, repliesView);
             setTimeout(() => {
@@ -991,7 +1119,6 @@
             }, 100);
         }
 
-        // Jump back to Saved Words tab and focus target word card
         function jumpBackToSavedWord(targetHanzi) {
             searchInput.value = '';
             switchTab(tabBtnVocab, vocabView);
@@ -1008,7 +1135,7 @@
             }, 100);
         }
 
-        // --- 5. SAVED WORDS MODULE (WITH FULL PINYIN & MEANING SEARCH) ---
+        // --- 6. SAVED WORDS MODULE WITH COMPREHENSIVE SEARCH ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -1023,7 +1150,6 @@
             const filterVal = filterSelect.value;
             const sortVal = sortSelect.value;
 
-            // Full-spectrum Search (Hanzi, Toned Pinyin, Toneless Pinyin, Definitions, Notes)
             if (rawQuery) {
                 filtered = filtered.filter(vocab => {
                     const matchHanzi = (vocab.hanzi || '').includes(rawQuery);
@@ -1037,12 +1163,10 @@
                 });
             }
 
-            // Filters
             if (filterVal === 'deck') filtered = filtered.filter(v => !!v.inDeck);
             else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
             else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0 || getAllBeanRepliesFor(v.hanzi).length > 0);
 
-            // Sorting
             if (sortVal === 'time_desc') filtered.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
             else if (sortVal === 'time_asc') filtered.sort((a,b) => (a.updatedAt || 0) - (b.updatedAt || 0));
             else if (sortVal === 'pinyin_asc') filtered.sort((a,b) => (a.pinyin || '').localeCompare(b.pinyin || ''));
@@ -1096,7 +1220,8 @@
                                     <img src="${WOODSTOCK_IMG_URL}" alt="Woodstock">
                                 </button>
                             </div>
-                            <div class="card-reply-text" style="word-break: break-word;">${allReplies[replyIdx].reply}</div>${allReplies.length > 1 ? `
+                            <div class="card-reply-text" style="word-break: break-word;">${allReplies[replyIdx].reply}</div>
+                            ${allReplies.length > 1 ? `
                                 <div style="display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 6px; border-top: 1px dashed #c9e4f5; padding-top: 4px;">
                                     <button class="bean-nav-btn card-prev-reply">◀</button>
                                     <span class="card-reply-counter" style="font-size: 11px; font-weight: bold; color: #6b8ea2;">${replyIdx + 1}/${allReplies.length}</span>
@@ -1119,10 +1244,8 @@
                     </div>
                 `;
 
-                // Audio
                 card.querySelector('.card-speak-btn').addEventListener('click', () => playTTS(vocab.hanzi));
 
-                // Deck Toggle
                 card.querySelector('.deck-badge').addEventListener('click', () => {
                     db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
                         inDeck: !vocab.inDeck,
@@ -1130,13 +1253,9 @@
                     });
                 });
 
-                // Jump to Bean's Note
                 const jumpBtn = card.querySelector('.card-jump-btn');
-                if (jumpBtn) {
-                    jumpBtn.addEventListener('click', () => jumpToBeanReply(vocab.hanzi));
-                }
+                if (jumpBtn) jumpBtn.addEventListener('click', () => jumpToBeanReply(vocab.hanzi));
 
-                // Slide answers if multiple replies exist
                 if (allReplies.length > 1) {
                     const replyText = card.querySelector('.card-reply-text');
                     const counter = card.querySelector('.card-reply-counter');
@@ -1156,19 +1275,14 @@
                     });
                 }
 
-                // Ask Bean Modal Trigger
-                card.querySelector('.ask-bean-btn').addEventListener('click', () => {
-                    openReportModal(vocab.hanzi);
-                });
+                card.querySelector('.ask-bean-btn').addEventListener('click', () => openReportModal(vocab.hanzi));
 
-                // Unsave Word
                 card.querySelector('.delete-vocab-btn').addEventListener('click', () => {
                     if (confirm(`Remove "${vocab.hanzi}" from saved words?`)) {
                         db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).delete();
                     }
                 });
 
-                // Sticky Note Live Edit (Debounced to Firestore)
                 const textarea = card.querySelector('.sticky-note-input');
                 const charCount = card.querySelector('.char-count');
                 const noteStatus = card.querySelector('.note-status');
@@ -1194,7 +1308,7 @@
             });
         }
 
-        // --- 6. BEAN'S NOTES TAB VIEW ---
+        // --- 7. BEAN'S NOTES TAB VIEW ---
         const repliesListContainer = document.getElementById('replies-list-container');
 
         function renderBeanRepliesTab() {
@@ -1253,9 +1367,7 @@
                         </div>
                     `;
 
-                    card.querySelector('.jump-back-btn').addEventListener('click', () => {
-                        jumpBackToSavedWord(hanzi);
-                    });
+                    card.querySelector('.jump-back-btn').addEventListener('click', () => jumpBackToSavedWord(hanzi));
 
                     if (replies.length > 1) {
                         card.querySelector('.tab-prev-reply').addEventListener('click', () => {
@@ -1274,7 +1386,123 @@
             });
         }
 
-        // --- 7. ASK BEAN MODAL LOGIC ---
+        // --- 8. PERSISTENT CHAT MODULE (REAL-TIME FIRESTORE) ---
+        const chatMessagesBox = document.getElementById('chat-messages-box');
+        const chatTextInput = document.getElementById('chat-text-input');
+        const chatSendActionBtn = document.getElementById('chat-send-action-btn');
+        const adminUserSelector = document.getElementById('admin-user-selector');
+        const adminTargetUserSelect = document.getElementById('admin-target-user-select');
+
+        function scrollChatToBottom() {
+            setTimeout(() => {
+                chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+            }, 50);
+        }
+
+        function initChat(user) {
+            activeChatUserId = user.uid;
+
+            // Admin Inspection Mode Check
+            if (user.email === ADMIN_EMAIL) {
+                adminUserSelector.style.display = 'block';
+                db.collection('users').get().then(snapshot => {
+                    adminTargetUserSelect.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const opt = document.createElement('option');
+                        opt.value = doc.id;
+                        opt.textContent = `${doc.data().displayName || doc.data().email || doc.id}`;
+                        if (doc.id === user.uid) opt.selected = true;
+                        adminTargetUserSelect.appendChild(opt);
+                    });
+                });
+
+                adminTargetUserSelect.addEventListener('change', (e) => {
+                    activeChatUserId = e.target.value;
+                    bindChatListener(activeChatUserId);
+                });
+            }
+
+            bindChatListener(activeChatUserId);
+        }
+
+        function bindChatListener(targetUid) {
+            if (unsubscribeChat) unsubscribeChat();
+
+            unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    if (snapshot.empty) {
+                        chatMessagesBox.innerHTML = `
+                            <div style="text-align: center; color: #a38c90; font-size: 12.5px; margin-top: 30px; font-style: italic;">
+                                Say hi to Bean! Chat history is permanently saved with your Google account 🧸💌
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    chatMessagesBox.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const msg = doc.data();
+                        const isMe = currentUser.email === ADMIN_EMAIL 
+                            ? msg.sender === 'admin'
+                            : msg.sender === 'user';
+
+                        const bubble = document.createElement('div');
+                        bubble.className = `chat-bubble ${isMe ? 'from-user' : 'from-admin'}`;
+
+                        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+                        bubble.innerHTML = `
+                            <div style="font-weight: 700; font-size: 11px; margin-bottom: 3px; opacity: 0.8;">
+                                ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
+                            </div>
+                            <div>${escapeHtml(msg.text)}</div>
+                            <div class="chat-time">${timeStr}</div>
+                        `;
+                        chatMessagesBox.appendChild(bubble);
+                    });
+                    scrollChatToBottom();
+                }, err => console.error("Chat sync error:", err));
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function sendChatMessage() {
+            const text = (chatTextInput.value || '').trim();
+            if (!text || !currentUser || !activeChatUserId) return;
+
+            const isCurrentAdmin = currentUser.email === ADMIN_EMAIL;
+            const messagePayload = {
+                text: text,
+                sender: isCurrentAdmin ? 'admin' : 'user',
+                senderEmail: currentUser.email,
+                senderName: currentUser.displayName || currentUser.email.split('@')[0],
+                timestamp: Date.now()
+            };
+
+            chatTextInput.value = '';
+            db.collection('users').doc(activeChatUserId).collection('messages').add(messagePayload)
+                .then(() => {
+                    scrollChatToBottom();
+                })
+                .catch(err => {
+                    alert("Send failed: " + err.message);
+                });
+        }
+
+        chatSendActionBtn.addEventListener('click', sendChatMessage);
+        chatTextInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+
+        // --- 9. ASK BEAN MODAL LOGIC ---
         const reportModal = document.getElementById('report-modal');
         const modalOverlay = document.getElementById('modal-overlay');
         const reportTargetHanzi = document.getElementById('report-target-hanzi');
@@ -1325,9 +1553,7 @@
                 body: JSON.stringify(payload),
                 mode: 'no-cors'
             }).then(() => {
-                if (!askedWordsList.includes(currentAskingHanzi)) {
-                    askedWordsList.push(currentAskingHanzi);
-                }
+                if (!askedWordsList.includes(currentAskingHanzi)) askedWordsList.push(currentAskingHanzi);
                 sendReportBtn.textContent = 'Sent to Bean! 🧸';
                 sendReportBtn.style.background = '#a6cbb5';
                 setTimeout(() => {
@@ -1341,7 +1567,7 @@
             });
         });
 
-        // --- 8. 3D FLASHCARDS WITH GESTURE SWIPES & THEMES ---
+        // --- 10. 3D FLASHCARDS WITH GESTURE SWIPES & THEMES ---
         const fcSetupBox = document.getElementById('fc-setup-box');
         const fcSessionBox = document.getElementById('fc-session-box');
         const fcCountPill = document.getElementById('fc-count-pill');
@@ -1569,7 +1795,7 @@
             }
         }, { passive: true });
 
-        // --- 9. AUDIO SYNTHESIS (TTS) ---
+        // --- 11. AUDIO SYNTHESIS (TTS) ---
         function playTTS(text) {
             try {
                 window.speechSynthesis.cancel();
