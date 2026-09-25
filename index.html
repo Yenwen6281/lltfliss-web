@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸</title>
+    <title>Eggy's Mandarin 🌸 (v1.1.1)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -71,6 +71,19 @@
             font-size: 20px;
             color: #e08b9b;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-version-tag {
+            font-size: 10px;
+            font-weight: 800;
+            background: rgba(245, 205, 226, 0.5);
+            color: #ba6273;
+            padding: 2px 6px;
+            border-radius: 8px;
+            letter-spacing: 0px;
         }
 
         .header-title-box p {
@@ -405,6 +418,20 @@
             border-radius: 12px;
             margin: 8px 0 14px;
             word-break: break-all;
+        }
+
+        .version-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fdf2f6;
+            border: 1.5px solid #fcdbe9;
+            color: #b56c7d;
+            font-weight: 800;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 16px;
+            margin: 6px 0 12px;
         }
 
         /* --- MODERNIZED CHAT STYLES --- */
@@ -801,7 +828,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin</h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.1</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -957,6 +984,19 @@
                     </button>
                     <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 600;">Status: Ready to enable</div>
                 </div>
+
+                <!-- App Version & Cache Status Card -->
+                <div class="sync-box">
+                    <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
+                    <div class="version-badge-pill">
+                        <span>🏷️ Current Build:</span>
+                        <b id="settings-version-display">v1.1.1</b>
+                    </div>
+                    <p style="margin: 0 0 12px; font-size: 12.5px; color: #7b6267;">If updates from GitHub do not appear immediately on iOS, tap below to clear the local service worker cache.</p>
+                    <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
+                        🔄 Check for Update
+                    </button>
+                </div>
             </section>
         </main>
     </div>
@@ -1015,7 +1055,27 @@
     </div>
 
     <script>
-        // --- 0. GLOBAL PHYSICAL SQUISH HANDLER (RESTORED FOR IOS) ---
+        // --- 0. VERSION TRACKING & CACHE REFRESH ---
+        const APP_VERSION = 'v1.1.1';
+
+        document.getElementById('force-update-btn')?.addEventListener('click', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    for (let name of names) caches.delete(name);
+                });
+            }
+            alert(`Checking for updates... Refreshing to verify latest version.`);
+            window.location.reload(true);
+        });
+
+        // --- GLOBAL PHYSICAL SQUISH HANDLER (RESTORED FOR IOS) ---
         const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn, .chat-reaction-badge';
 
         const addSquish = (e) => {
