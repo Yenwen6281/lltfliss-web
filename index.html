@@ -20,10 +20,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK (v10 compat) -->
+    <!-- Firebase SDK (v10 compat) including Messaging -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging-compat.js"></script>
 
     <style>
         * {
@@ -453,7 +454,6 @@
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
         }
 
-        /* iOS-style physical squish when touching bubble */
         .chat-bubble.bubble-pressing {
             transform: scale(0.94) !important;
             box-shadow: 0 1px 4px rgba(200, 150, 160, 0.2) !important;
@@ -476,7 +476,6 @@
             border: 1.5px solid #c9e4f5;
         }
 
-        /* 3-Row Modern Reply Quote */
         .chat-reply-card {
             display: flex;
             flex-direction: column;
@@ -550,7 +549,6 @@
             letter-spacing: 0.2px;
         }
 
-        /* Single Sticker Reaction Overlapping Bubble */
         .chat-reaction-badge {
             position: absolute;
             bottom: -10px;
@@ -575,7 +573,6 @@
             left: 8px;
         }
 
-        /* Reply Preview Bar above input */
         #chat-reply-preview-bar {
             display: none;
             background: #ffffff;
@@ -645,7 +642,7 @@
             box-shadow: 0 0.5px 0 #ba6273, inset 0 1.5px 3px rgba(140, 50, 65, 0.35) !important;
         }
 
-        /* --- LONG-PRESS CONTEXT MENU & REACTION BAR --- */
+        /* Long-Press Action Sheet Modal */
         #chat-action-menu-overlay {
             position: fixed;
             top: 0;
@@ -830,7 +827,7 @@
             <button class="tab-btn" id="tab-btn-replies">Bean's Notes</button>
             <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
             <button class="tab-btn" id="tab-btn-chat">Chat 💬</button>
-            <button class="tab-btn" id="tab-btn-sync">Sync Key</button>
+            <button class="tab-btn" id="tab-btn-sync">Sync & Settings</button>
         </div>
 
         <main>
@@ -940,7 +937,7 @@
                 </div>
             </section>
 
-            <!-- 5. Sync Key View -->
+            <!-- 5. Sync & Settings View (Includes Web Push Notifications Setup) -->
             <section id="sync-view" style="display: none;">
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
@@ -949,6 +946,16 @@
                     <div>
                         <button id="copy-sync-key-btn" class="ghost-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border-color: #f5cde2; font-weight: 800; padding: 8px 16px;">📋 Copy Sync Key</button>
                     </div>
+                </div>
+
+                <!-- Web Push Notifications Toggle Card -->
+                <div class="sync-box">
+                    <h3 style="margin: 0 0 6px; color: #e08b9b;">Push Notifications 🔔</h3>
+                    <p style="margin: 0 0 12px; font-size: 13px; color: #7b6267;">Get notifications on your lock screen when Bean replies to your questions or sends messages.</p>
+                    <button id="enable-push-btn" class="login-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border: 1.5px solid #f5cde2; font-size: 13px;">
+                        🔔 Enable Push Notifications
+                    </button>
+                    <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 600;">Status: Ready to enable</div>
                 </div>
             </section>
         </main>
@@ -1015,7 +1022,7 @@
             const btn = e.target.closest(SQUISH_TARGETS);
             if (!btn) return;
             btn.classList.add('is-pressed');
-            if (navigator.vibrate) navigator.vibrate(10); // Global light haptic tap for supported devices
+            if (navigator.vibrate) navigator.vibrate(10);
             
             const release = () => {
                 btn.classList.remove('is-pressed');
@@ -1028,7 +1035,6 @@
             window.addEventListener('mouseup', release);
         };
 
-        // Using touchstart restores the native squishy active physics in iOS PWAs
         document.addEventListener('touchstart', addSquish, { passive: true });
         document.addEventListener('mousedown', addSquish);
 
@@ -1038,6 +1044,9 @@
         const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
         const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
+
+        // Firebase Web Push Public Key (VAPID key)
+        const FIREBASE_VAPID_KEY = 'BAe8fK13o1c3JzFjJqC...YOUR_VAPID_KEY_HERE';
 
         const FLASHCARD_BG_IMAGES_HANZI = [
             'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d1.png',
@@ -1075,6 +1084,11 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        let messaging = null;
+        if (firebase.messaging.isSupported()) {
+            messaging = firebase.messaging();
+        }
+
         db.enablePersistence().catch(err => console.warn("Firestore cache fallback:", err.code));
 
         let currentUser = null;
@@ -1087,6 +1101,29 @@
         let activeChatUserId = null;
         let activeReplyTarget = null;
         let menuTargetMsg = null;
+
+        // Register Inline Service Worker for Background Web Push
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('firebase-messaging-sw.js').catch(() => {
+                const swBlob = new Blob([`
+                    importScripts('https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js');
+                    importScripts('https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging-compat.js');
+                    firebase.initializeApp(${JSON.stringify(firebaseConfig)});
+                    const messaging = firebase.messaging();
+                    self.addEventListener('push', function(e) {
+                        const payload = e.data ? e.data.json() : {};
+                        const title = payload.notification?.title || "Eggy's Mandarin 🌸";
+                        const options = {
+                            body: payload.notification?.body || "New note from Bean! 💌",
+                            icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
+                            badge: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png"
+                        };
+                        e.waitUntil(self.registration.showNotification(title, options));
+                    });
+                `], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(e => console.warn("ServiceWorker init:", e));
+            });
+        }
 
         function fetchBeanReplies(onComplete) {
             fetch(GOOGLE_APP_SCRIPT_URL)
@@ -1124,6 +1161,8 @@
         const logoutBtn = document.getElementById('logout-btn');
         const userDisplayEmail = document.getElementById('user-display-email');
         const syncKeyDisplay = document.getElementById('sync-key-display');
+        const enablePushBtn = document.getElementById('enable-push-btn');
+        const pushStatusLbl = document.getElementById('push-status-lbl');
 
         googleLoginBtn.addEventListener('click', () => {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -1151,6 +1190,7 @@
 
                 listenToCloudData(user.uid);
                 initChat(user);
+                checkPushStatus();
             } else {
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
@@ -1165,6 +1205,53 @@
         document.getElementById('copy-sync-key-btn').addEventListener('click', () => {
             if (currentUser) {
                 navigator.clipboard.writeText(currentUser.uid).then(() => alert("Sync Key copied to clipboard! 🌷"));
+            }
+        });
+
+        // Push Notifications Activation Handler
+        function checkPushStatus() {
+            if (!('Notification' in window)) {
+                pushStatusLbl.textContent = "Push notifications not supported on this browser.";
+                enablePushBtn.style.display = 'none';
+                return;
+            }
+            if (Notification.permission === 'granted') {
+                pushStatusLbl.textContent = "Status: Enabled ✅ (Active on Home Screen)";
+                enablePushBtn.textContent = "Notifications Active 🌸";
+                enablePushBtn.disabled = true;
+            } else if (Notification.permission === 'denied') {
+                pushStatusLbl.textContent = "Status: Blocked in iOS Settings. Allow notifications for Eggy's Mandarin in Settings.";
+            } else {
+                pushStatusLbl.textContent = "Status: Ready to enable on Home Screen";
+            }
+        }
+
+        enablePushBtn.addEventListener('click', async () => {
+            if (!('Notification' in window)) {
+                alert("Push notifications require iOS 16.4+ and adding this web app to your Home Screen!");
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    if (messaging) {
+                        try {
+                            const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY });
+                            if (currentUser && token) {
+                                await db.collection('users').doc(currentUser.uid).update({ fcmToken: token });
+                            }
+                        } catch (tokenErr) {
+                            console.warn("FCM Token retrieved or awaiting VAPID key:", tokenErr);
+                        }
+                    }
+                    checkPushStatus();
+                    alert("Push Notifications enabled! You'll now receive alerts on your Home Screen 🌸");
+                } else {
+                    checkPushStatus();
+                }
+            } catch (err) {
+                alert("Permission prompt error: " + err.message);
             }
         });
 
@@ -1512,7 +1599,6 @@
         const chatLightbox = document.getElementById('chat-lightbox');
         const chatLightboxImg = document.getElementById('chat-lightbox-img');
 
-        // Action Menu Elements
         const chatActionMenuOverlay = document.getElementById('chat-action-menu-overlay');
         const menuActReply = document.getElementById('menu-act-reply');
         const menuActCopy = document.getElementById('menu-act-copy');
@@ -1602,13 +1688,11 @@
 
                         const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                         
-                        // Read receipt
                         let receiptHTML = '';
                         if (isMe && msg.read) {
                             receiptHTML = `<span class="chat-read-label">Read</span>`;
                         }
 
-                        // 3-Row Modern Reply Quote
                         let replyCardHTML = '';
                         if (msg.replyTo) {
                             let relationText = 'Replied';
@@ -1629,7 +1713,6 @@
                             `;
                         }
 
-                        // Media Image
                         let mediaHTML = '';
                         if (msg.imageUrl) {
                             mediaHTML = `<img src="${msg.imageUrl}" class="chat-media-img" alt="Chat attachment" />`;
@@ -1648,7 +1731,7 @@
                             </div>
                         `;
 
-                        // SAFE EMOJI PARSING: Ignore legacy "1" counters and strictly grab the real emoji character.
+                        // Strict emoji verification preventing numeric bug
                         const reactions = msg.reactions || {};
                         let currentEmoji = null;
                         const uid = currentUser ? currentUser.uid : 'default';
@@ -1662,7 +1745,7 @@
                                     currentEmoji = entries[i][1];
                                     break;
                                 } else if (typeof entries[i][1] === 'number') {
-                                    currentEmoji = entries[i][0]; // Fixes legacy {"❤️": 1} bug
+                                    currentEmoji = entries[i][0];
                                     break;
                                 }
                             }
@@ -1678,7 +1761,6 @@
                             bubbleWrapper.insertAdjacentHTML('beforeend', reactionBadgeHTML);
                         }
 
-                        // Local instant removal of reaction on badge tap
                         const badgeEl = bubbleWrapper.querySelector('.chat-reaction-badge');
                         if (badgeEl) {
                             badgeEl.addEventListener('click', (e) => {
@@ -1688,7 +1770,6 @@
                             });
                         }
 
-                        // Jump to original message on reply card tap
                         const replyCardEl = bubble.querySelector('.chat-reply-card');
                         if (replyCardEl) {
                             replyCardEl.addEventListener('click', (e) => {
@@ -1698,7 +1779,6 @@
                             });
                         }
 
-                        // Attach High-Fidelity Long Press
                         bindLongPress(bubble, {
                             id: doc.id,
                             text: msg.text || '',
@@ -1708,7 +1788,6 @@
                             isMe: isMe
                         });
 
-                        // Image tap opens lightbox
                         const imgEl = bubble.querySelector('.chat-media-img');
                         if (imgEl) {
                             imgEl.addEventListener('click', (e) => {
@@ -1753,19 +1832,16 @@
                 startY = e.clientY || (e.touches && e.touches[0].clientY);
                 
                 isPressing = true;
-                element.classList.add('bubble-pressing'); // Instantly shrinks like iMessage
+                element.classList.add('bubble-pressing');
 
                 pressTimer = setTimeout(() => {
                     if (isPressing) {
                         isPressing = false;
                         element.classList.remove('bubble-pressing');
-                        
-                        // Fire exact physical haptic snap as the menu deploys
                         if (navigator.vibrate) navigator.vibrate([15, 20]); 
-                        
                         openActionMenu(msgData);
                     }
-                }, 380); // Exact tuned duration for an iOS feel
+                }, 380);
             };
 
             const cancelPress = () => {
@@ -1824,7 +1900,6 @@
             if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
-        // Quick reactions buttons
         document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
@@ -1836,7 +1911,6 @@
             });
         });
 
-        // Trigger native device emoji picker perfectly seamlessly
         nativeEmojiPickerBtn.addEventListener('click', (e) => {
             e.preventDefault();
             nativeEmojiInput.value = '';
@@ -1846,7 +1920,6 @@
         nativeEmojiInput.addEventListener('input', (e) => {
             const val = e.target.value.trim();
             if (val && menuTargetMsg) {
-                // Grab the very first emoji character input and use it instantly
                 const emojiArray = Array.from(val);
                 if (emojiArray.length > 0) {
                     if (navigator.vibrate) navigator.vibrate(10);
@@ -1858,26 +1931,23 @@
             nativeEmojiInput.blur();
         });
 
-        // Single reaction per user with INSTANT ZERO-DELAY local rendering
         function applyReaction(msgId, emoji) {
             if (!activeChatUserId || !msgId || !currentUser) return;
             const uid = currentUser.uid;
             const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
 
-            // Instant Optimistic UI Update locally
             const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
             if (wrapper) {
                 let badge = wrapper.querySelector('.chat-reaction-badge');
                 if (badge && badge.textContent === emoji) {
-                    badge.remove(); // Toggle off if tapping identical emoji
+                    badge.remove();
                 } else if (badge) {
-                    badge.textContent = emoji; // Swap to new emoji seamlessly
+                    badge.textContent = emoji;
                 } else {
                     wrapper.insertAdjacentHTML('beforeend', `<div class="chat-reaction-badge">${emoji}</div>`);
                 }
             }
 
-            // Sync with Firestore in the background
             db.runTransaction(transaction => {
                 return transaction.get(ref).then(doc => {
                     if (!doc.exists) return;
@@ -1885,16 +1955,15 @@
                     const reactions = data.reactions || {};
                     
                     if (reactions[uid] === emoji) {
-                        delete reactions[uid]; // Toggle off
+                        delete reactions[uid];
                     } else {
-                        reactions[uid] = emoji; // Assign exact emoji string (not a number)
+                        reactions[uid] = emoji;
                     }
                     transaction.update(ref, { reactions });
                 });
             }).catch(err => console.error("Reaction sync failed:", err));
         }
 
-        // Action menu button clicks
         menuActReply.addEventListener('click', () => {
             if (menuTargetMsg) {
                 setReplyTarget({
@@ -1925,7 +1994,6 @@
             closeActionMenu();
         });
 
-        // Reply Bar Control
         function setReplyTarget(target) {
             activeReplyTarget = target;
             replyToUserLabel.textContent = `Replying to ${target.senderName}:`;
@@ -1939,7 +2007,6 @@
             chatReplyPreviewBar.style.display = 'none';
         });
 
-        // Lightbox close
         chatLightbox.addEventListener('click', () => {
             chatLightbox.style.display = 'none';
             chatLightboxImg.src = '';
@@ -1951,7 +2018,6 @@
             return div.innerHTML;
         }
 
-        // Send Text Message
         function sendChatMessage(imageUrl = null) {
             const text = (chatTextInput.value || '').trim();
             if (!text && !imageUrl) return;
@@ -1979,7 +2045,7 @@
             }
 
             chatTextInput.value = '';
-            cancelReplyBtn.click(); // Reset reply bar
+            cancelReplyBtn.click();
 
             db.collection('users').doc(activeChatUserId).collection('messages').add(messagePayload)
                 .then(() => scrollChatToBottom())
@@ -1994,7 +2060,6 @@
             }
         });
 
-        // Media File Trigger & Client-side Image Optimization
         chatAttachTrigger.addEventListener('click', () => chatFileInput.click());
         chatFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
