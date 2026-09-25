@@ -5,18 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Eggy's Mandarin 🌸</title>
     
-    <!-- PWA / iOS WebApp 支援 -->
+    <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Eggy's Mandarin">
     <meta name="theme-color" content="#fcf8f5">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png">
     
-    <!-- 字體與圖標 -->
+    <!-- Inline Web App Manifest -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Eggy&#39;s Mandarin","short_name":"EggyMandarin","start_url":".","display":"standalone","background_color":"#fcf8f5","theme_color":"#fcf8f5","icons":[{"src":"https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png","sizes":"192x192","type":"image/png"}]}'>
+
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK (v9+ compat CDN) -->
+    <!-- Firebase SDK (v10 compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
@@ -37,17 +41,17 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            touch-action: pan-y;
         }
 
-        /* 頂部導航欄 */
         header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(252, 248, 245, 0.92);
-            backdrop-filter: blur(10px);
+            background: rgba(252, 248, 245, 0.94);
+            backdrop-filter: blur(12px);
             border-bottom: 2px dashed rgba(245, 205, 226, 0.8);
-            padding: env(safe-area-inset-top, 15px) 18px 12px;
+            padding: calc(env(safe-area-inset-top, 12px) + 8px) 18px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -55,19 +59,18 @@
 
         .header-title-box h1 {
             margin: 0;
-            font-size: 19px;
+            font-size: 20px;
             color: #e08b9b;
             letter-spacing: 0.5px;
         }
 
         .header-title-box p {
             margin: 2px 0 0;
-            font-size: 11px;
+            font-size: 11.5px;
             color: #a38c90;
             font-weight: 600;
         }
 
-        /* 導航分頁切換鈕 */
         .nav-tabs {
             display: flex;
             background: rgba(245, 205, 226, 0.35);
@@ -88,24 +91,24 @@
             color: #7b6267;
             background: transparent;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .tab-btn.active {
             background: #ffffff;
             color: #e08b9b;
             box-shadow: 0 3px 8px rgba(224, 139, 155, 0.22);
+            transform: scale(1.02);
         }
 
-        /* 主內容區 */
         main {
             flex: 1;
-            padding: 14px 18px 80px;
+            padding: 14px 18px calc(env(safe-area-inset-bottom, 20px) + 40px);
             display: flex;
             flex-direction: column;
         }
 
-        /* 登入畫面 */
+        /* Login Screen */
         #auth-view {
             flex: 1;
             display: flex;
@@ -148,7 +151,7 @@
             transform: scale(0.96);
         }
 
-        /* 控制項 (搜尋、篩選、排序) */
+        /* Controls */
         .controls-card {
             display: flex;
             flex-direction: column;
@@ -163,7 +166,7 @@
             border: 1px solid #f5cde2;
             background: rgba(255, 255, 255, 0.9);
             font-family: inherit;
-            font-size: 13px;
+            font-size: 13.5px;
             color: #5c4a4d;
             outline: none;
         }
@@ -185,15 +188,14 @@
             outline: none;
         }
 
-        /* 單字卡卡片清單樣式 */
+        /* Vocabulary Cards */
         .vocab-card {
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid rgba(250, 227, 239, 0.8);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(250, 227, 239, 0.85);
+            border-radius: 18px;
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: 0 4px 12px rgba(200, 150, 160, 0.12);
-            position: relative;
         }
 
         .vocab-header {
@@ -232,19 +234,39 @@
             color: #5c4a4d;
         }
 
-        .vocab-note-box {
-            margin-top: 8px;
+        /* Editable Sticky Note */
+        .sticky-note-box {
+            margin-top: 10px;
             background: #fff9e6;
             border: 1px solid #fbe7b2;
-            border-radius: 8px;
-            padding: 6px 10px;
-            font-size: 12px;
-            color: #b0743b;
-            font-weight: 600;
+            border-radius: 10px;
+            padding: 8px 10px;
+            box-shadow: 0 2px 6px rgba(220, 190, 140, 0.2);
+        }
+
+        .sticky-note-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            resize: none;
+            font-size: 12.5px;
+            color: #5c4a4d;
+            font-family: inherit;
+            outline: none;
+            line-height: 1.35;
+        }
+
+        .sticky-note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed rgba(220, 190, 140, 0.4);
+            padding-top: 4px;
+            margin-top: 4px;
         }
 
         .bean-note-box {
-            margin-top: 8px;
+            margin-top: 10px;
             background: #eef7fc;
             border: 1.5px solid #c9e4f5;
             border-radius: 10px;
@@ -266,35 +288,83 @@
         .deck-badge {
             font-size: 11.5px;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 16px;
-            border: 1px solid #f5cde2;
-            background: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
             color: #7b6267;
+            box-shadow: 0 3px 0 #d9a8b6, 0 3px 6px rgba(224, 139, 155, 0.2);
             cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-
+        .deck-badge:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #d9a8b6;
+        }
         .deck-badge.in-deck {
-            background: #e08b9b;
+            background: linear-gradient(180deg, #ffc7d5 0%, #e08b9b 100%);
             color: #fff;
-            border-color: #e08b9b;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 3px 0 #ba6273, 0 4px 8px rgba(224, 139, 155, 0.35);
         }
 
-        /* 3D 單字卡複習模組 */
+        /* Mode Picker Art Cards */
+        .mode-picker-card {
+            border-radius: 20px;
+            padding: 22px 18px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(200, 150, 160, 0.2);
+            border: 1.5px solid rgba(245, 205, 226, 0.8);
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 145px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .mode-picker-card:active {
+            transform: scale(0.97);
+        }
+        .mode-picker-card.card-b1 {
+            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
+        }
+        .mode-picker-card.card-b2 {
+            background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/8651c6a44f1b8e7f87d4654e96e8bdc7c4ef52ae/b2.png');
+        }
+
+        .fc-start-pill {
+            background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%);
+            color: #e08b9b;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-weight: 800;
+            font-size: 13.5px;
+            box-shadow: 0 3px 6px rgba(224, 139, 155, 0.22);
+        }
+
+        /* 3D Flashcard Module with Gestures */
         .flashcard-wrapper {
             perspective: 1200px;
             width: 100%;
             height: 380px;
-            margin-top: 15px;
+            margin-top: 10px;
+            position: relative;
         }
 
         .flashcard-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
             transform-style: preserve-3d;
             cursor: pointer;
+            will-change: transform;
         }
 
         .flashcard-inner.is-flipped {
@@ -307,15 +377,16 @@
             height: 100%;
             backface-visibility: hidden;
             border-radius: 22px;
-            box-shadow: 0 10px 30px rgba(200, 150, 160, 0.22);
+            box-shadow: 0 10px 28px rgba(200, 150, 160, 0.25);
             border: 2px solid #f5cde2;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 24px;
-            background: #ffffff;
-            text-align: center;
+            box-sizing: border-box;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
         }
 
         .flashcard-back {
@@ -335,7 +406,7 @@
             flex: 1;
             padding: 14px;
             border-radius: 16px;
-            border: none;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
             font-weight: 800;
             font-size: 14px;
             font-family: inherit;
@@ -344,29 +415,58 @@
             transition: transform 0.15s ease;
         }
         .fc-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.93) translateY(2px);
         }
-
         .fc-btn-learn {
-            background: #fff0f3;
-            color: #c75d71;
-            border: 1.5px solid #f7c6d1;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f1.jpeg');
+            background-size: cover;
+            color: #5c4a4d;
         }
-
         .fc-btn-gotit {
-            background: #eaf8f0;
-            color: #3f8a5c;
-            border: 1.5px solid #bce6cc;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/332fb8d639e5fc8f7fffc7bb2e1993fa67727681/f2.jpg');
+            background-size: cover;
+            color: #5c4a4d;
         }
 
-        /* 帳號設定面板 (顯示 Sync Key) */
+        .ponyo-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ponyo-btn img {
+            width: 54px;
+            height: auto;
+            filter: drop-shadow(1px 2px 3px rgba(150, 180, 200, 0.4));
+        }
+        .ponyo-btn:active {
+            transform: scale(0.85);
+        }
+
+        .ghost-btn {
+            background: #ffffff;
+            border: 1px solid #e2becb;
+            color: #7b6267;
+            border-radius: 12px;
+            padding: 5px 12px;
+            font-size: 11.5px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .sync-box {
             background: #fff;
             border: 2px solid #f5cde2;
             border-radius: 18px;
-            padding: 16px;
+            padding: 18px;
             margin-bottom: 16px;
             text-align: center;
+            box-shadow: 0 4px 14px rgba(200, 150, 160, 0.15);
         }
 
         .sync-key-pill {
@@ -376,28 +476,16 @@
             font-family: monospace;
             font-size: 13px;
             font-weight: 700;
-            padding: 6px 14px;
+            padding: 8px 14px;
             border-radius: 12px;
-            margin: 6px 0 10px;
+            margin: 8px 0 14px;
             word-break: break-all;
-        }
-
-        .ghost-btn {
-            background: none;
-            border: 1px solid #d9a8b6;
-            color: #7b6267;
-            border-radius: 14px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-family: inherit;
-            font-weight: 700;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- 頂部資訊列 -->
+    <!-- Header -->
     <header>
         <div class="header-title-box">
             <h1>Eggy's Mandarin</h1>
@@ -406,12 +494,12 @@
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
     </header>
 
-    <!-- 登入介面 (未登入時顯示) -->
+    <!-- Sign In View -->
     <div id="auth-view">
         <div class="login-card">
-            <img src="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png" style="width: 80px; height: auto; margin-bottom: 16px;" alt="Logo">
+            <img src="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png" style="width: 85px; height: auto; margin-bottom: 16px;" alt="Logo">
             <h2 style="margin: 0 0 6px; color: #e08b9b; font-size: 20px;">Welcome Bub!</h2>
-            <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words & flashcards from Netflix.</p>
+            <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words & flashcards on mobile.</p>
             <button id="google-login-btn" class="login-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
                 Sign in with Google
@@ -419,9 +507,8 @@
         </div>
     </div>
 
-    <!-- 已登入介面 -->
+    <!-- Main View -->
     <div id="app-view" style="display: none; flex-direction: column; flex: 1;">
-        <!-- 分頁切換 -->
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
             <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
@@ -454,23 +541,34 @@
 
             <!-- 2. Flashcards View -->
             <section id="flash-view" style="display: none; flex-direction: column; align-items: center;">
-                <div id="fc-setup-box" style="text-align: center; width: 100%; margin-top: 20px;">
-                    <div id="fc-count-pill" style="display: inline-block; font-size: 13px; font-weight: 700; color: #e08b9b; background: rgba(255, 240, 245, 0.9); padding: 4px 14px; border-radius: 14px; margin-bottom: 15px;">
-                        0 Words in Deck
+                <div id="fc-setup-box" style="text-align: center; width: 100%; max-width: 320px; margin: 10px auto;">
+                    <div style="margin-bottom: 14px;">
+                        <span id="fc-count-pill" style="font-size: 13px; font-weight: 700; color: #e08b9b; background: rgba(255, 240, 245, 0.95); border: 1px solid rgba(245, 205, 226, 0.7); padding: 4px 14px; border-radius: 14px;">
+                            0 Words
+                        </span>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px; max-width: 240px; margin: 0 auto;">
-                        <button id="fc-start-hanzi-btn" class="login-btn" style="background: #ffffff; border-color: #f5cde2; color: #e08b9b;">Start (Hanzi First) ▶</button>
-                        <button id="fc-start-en-btn" class="login-btn" style="background: #ffffff; border-color: #f5cde2; color: #5c7482;">Start (English First) ▶</button>
+
+                    <div id="fc-mode-hanzi" class="mode-picker-card card-b1">
+                        <div style="font-size: 21px; font-weight: 800; color: #5c4a4d; margin-bottom: 10px;">Hanzi First</div>
+                        <span class="fc-start-pill">Start ▶</span>
                     </div>
+
+                    <div id="fc-mode-english" class="mode-picker-card card-b2">
+                        <div style="font-size: 21px; font-weight: 800; color: #5c4a4d; margin-bottom: 10px;">English First</div>
+                        <span class="fc-start-pill">Start ▶</span>
+                    </div>
+
+                    <button id="fc-clear-deck-btn" class="ghost-btn" style="margin-top: 10px;">Clear Deck 🧹</button>
                 </div>
 
+                <!-- Flashcard Active Session -->
                 <div id="fc-session-box" style="display: none; width: 100%; max-width: 320px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
                         <span id="fc-left-counter">Cards Left: 0</span>
                         <span id="fc-quit-btn" style="color: #8ba6b6; cursor: pointer; text-decoration: underline;">Quit</span>
                     </div>
 
-                    <div class="flashcard-wrapper">
+                    <div class="flashcard-wrapper" id="fc-swipe-container">
                         <div class="flashcard-inner" id="fc-card-inner">
                             <div class="flashcard-face" id="fc-face-front"></div>
                             <div class="flashcard-face flashcard-back" id="fc-face-back"></div>
@@ -481,6 +579,9 @@
                         <button id="fc-btn-learn" class="fc-btn fc-btn-learn">Still Learning</button>
                         <button id="fc-btn-gotit" class="fc-btn fc-btn-gotit">Got It !</button>
                     </div>
+                    <div style="text-align: center; margin-top: 10px; font-size: 11px; color: #a38c90; font-style: italic;">
+                        👈 Swipe left: Learning | Swipe right: Got it 👉
+                    </div>
                 </div>
             </section>
 
@@ -488,10 +589,10 @@
             <section id="sync-view" style="display: none;">
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
-                    <p style="margin: 0 0 10px; font-size: 13px; color: #7b6267;">Copy this key and paste it into the Netflix UserScript settings on your Mac.</p>
+                    <p style="margin: 0 0 10px; font-size: 13px; color: #7b6267;">Copy this key and paste it into the Netflix UserScript menu on your Mac.</p>
                     <div class="sync-key-pill" id="sync-key-display">Loading...</div>
                     <div>
-                        <button id="copy-sync-key-btn" class="ghost-btn">📋 Copy Sync Key</button>
+                        <button id="copy-sync-key-btn" class="ghost-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border-color: #f5cde2; font-weight: 800; padding: 8px 16px;">📋 Copy Sync Key</button>
                     </div>
                 </div>
             </section>
@@ -499,7 +600,28 @@
     </div>
 
     <script>
-        // --- 1. FIREBASE 初始化 ---
+        // --- 0. ASSET CONSTANTS ---
+        const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
+        const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
+        const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
+
+        const FLASHCARD_BG_IMAGES_HANZI = [
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d1.png',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d2.png',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d3.png',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d4.png',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d5.png'
+        ];
+
+        const FLASHCARD_BG_IMAGES_ENGLISH = [
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e1.jpg',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e2.jpg',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e3.jpg',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e4.jpg',
+            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e5.jpg'
+        ];
+
+        // --- 1. FIREBASE INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyBGhMMd6fd2oK23J-YA27VYXFGh69R1PA0",
             authDomain: "lltfliss-ce07a.firebaseapp.com",
@@ -514,16 +636,14 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // 離線持久化支援
-        db.enablePersistence().catch(err => {
-            console.warn("Firestore persistence warning:", err.code);
-        });
+        db.enablePersistence().catch(err => console.warn("Firestore cache enabled fallback:", err.code));
 
         let currentUser = null;
-        let unsubscribeVocabListener = null;
+        let unsubscribeVocab = null;
         let vocabList = [];
+        let flashcardSessionCount = 0;
 
-        // --- 2. 身份驗證邏輯 ---
+        // --- 2. AUTH FLOW ---
         const authView = document.getElementById('auth-view');
         const appView = document.getElementById('app-view');
         const googleLoginBtn = document.getElementById('google-login-btn');
@@ -533,15 +653,11 @@
 
         googleLoginBtn.addEventListener('click', () => {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(error => {
-                alert("Login Error: " + error.message);
-            });
+            auth.signInWithPopup(provider).catch(err => alert("Login Error: " + err.message));
         });
 
         logoutBtn.addEventListener('click', () => {
-            if (confirm("Are you sure you want to sign out?")) {
-                auth.signOut();
-            }
+            if (confirm("Sign out of Eggy's Mandarin?")) auth.signOut();
         });
 
         auth.onAuthStateChanged(user => {
@@ -553,10 +669,10 @@
                 userDisplayEmail.textContent = user.email;
                 syncKeyDisplay.textContent = user.uid;
 
-                listenToUserData(user.uid);
+                listenToCloudData(user.uid);
             } else {
                 currentUser = null;
-                if (unsubscribeVocabListener) unsubscribeVocabListener();
+                if (unsubscribeVocab) unsubscribeVocab();
                 authView.style.display = 'flex';
                 appView.style.display = 'none';
                 logoutBtn.style.display = 'none';
@@ -564,33 +680,26 @@
             }
         });
 
-        // 複製 Sync Key
         document.getElementById('copy-sync-key-btn').addEventListener('click', () => {
             if (currentUser) {
-                navigator.clipboard.writeText(currentUser.uid).then(() => {
-                    alert("Sync Key copied to clipboard! 🌷");
-                });
+                navigator.clipboard.writeText(currentUser.uid).then(() => alert("Sync Key copied to clipboard! 🌷"));
             }
         });
 
-        // --- 3. FIRESTORE 即時資料監聽 (Realtime Sync) ---
-        function listenToUserData(uid) {
-            if (unsubscribeVocabListener) unsubscribeVocabListener();
+        // --- 3. FIRESTORE REALTIME SYNC ---
+        function listenToCloudData(uid) {
+            if (unsubscribeVocab) unsubscribeVocab();
 
-            unsubscribeVocabListener = db.collection('users').doc(uid).collection('vocab')
+            unsubscribeVocab = db.collection('users').doc(uid).collection('vocab')
                 .onSnapshot(snapshot => {
                     vocabList = [];
-                    snapshot.forEach(doc => {
-                        vocabList.push({ id: doc.id, ...doc.data() });
-                    });
+                    snapshot.forEach(doc => vocabList.push({ id: doc.id, ...doc.data() }));
                     renderSavedVocab();
                     updateFlashcardCounts();
-                }, error => {
-                    console.error("Firestore listen error:", error);
-                });
+                }, err => console.error("Firestore sync error:", err));
         }
 
-        // --- 4. 分頁切換 ---
+        // --- 4. TABS NAVIGATION ---
         const tabBtnVocab = document.getElementById('tab-btn-vocab');
         const tabBtnFlash = document.getElementById('tab-btn-flash');
         const tabBtnSync = document.getElementById('tab-btn-sync');
@@ -609,15 +718,13 @@
         tabBtnFlash.addEventListener('click', () => switchTab(tabBtnFlash, flashView));
         tabBtnSync.addEventListener('click', () => switchTab(tabBtnSync, syncView));
 
-        // --- 5. SAVED WORDS 渲染與互動 ---
+        // --- 5. SAVED WORDS MODULE WITH IN-APP EDITING ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
         const sortSelect = document.getElementById('vocab-sort');
 
-        [searchInput, filterSelect, sortSelect].forEach(el => {
-            el.addEventListener('input', renderSavedVocab);
-        });
+        [searchInput, filterSelect, sortSelect].forEach(el => el.addEventListener('input', renderSavedVocab));
 
         function renderSavedVocab() {
             let filtered = [...vocabList];
@@ -625,7 +732,6 @@
             const filterVal = filterSelect.value;
             const sortVal = sortSelect.value;
 
-            // 搜尋
             if (query) {
                 filtered = filtered.filter(v => 
                     (v.hanzi || '').includes(query) ||
@@ -634,12 +740,10 @@
                 );
             }
 
-            // 篩選
             if (filterVal === 'deck') filtered = filtered.filter(v => !!v.inDeck);
             else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
             else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0);
 
-            // 排序
             if (sortVal === 'time_desc') filtered.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
             else if (sortVal === 'time_asc') filtered.sort((a,b) => (a.updatedAt || 0) - (b.updatedAt || 0));
             else if (sortVal === 'hsk_asc') filtered.sort((a,b) => (a.level || 99) - (b.level || 99));
@@ -655,52 +759,102 @@
                 const card = document.createElement('div');
                 card.className = 'vocab-card';
 
-                const defsHtml = (vocab.translations || []).map(t => `<li>${t}</li>`).join('');
+                const defsHtml = (vocab.translations || []).map(t => `<li style="margin-bottom:2px;">${t}</li>`).join('');
+                const currentNote = vocab.note || '';
 
                 card.innerHTML = `
                     <div class="vocab-header">
-                        <span class="vocab-title">${vocab.hanzi}</span>
+                        <div style="display: flex; align-items: center; gap: 2px;">
+                            <span class="vocab-title">${vocab.hanzi}</span>
+                            <button class="ponyo-btn card-speak-btn" title="Listen">
+                                <img src="${PONYO_IMG_URL}" alt="Speak">
+                            </button>
+                        </div>
                         <span class="vocab-level">HSK ${vocab.level || '?'}</span>
                     </div>
                     <div class="vocab-pinyin">${vocab.pinyin || ''}</div>
                     <ul class="vocab-defs">${defsHtml}</ul>
-                    ${vocab.note ? `<div class="vocab-note-box">📌 ${vocab.note}</div>` : ''}
-                    ${vocab.beanReply ? `<div class="bean-note-box">💬 Bean's Note: ${vocab.beanReply}</div>` : ''}
+
+                    <div class="sticky-note-box">
+                        <textarea class="sticky-note-input" maxlength="50" rows="2" placeholder="Tap to write note (50 chars)...">${currentNote}</textarea>
+                        <div class="sticky-note-footer">
+                            <span class="char-count" style="font-size:10.5px; color:#cf9664; font-weight:700;">${currentNote.length}/50</span>
+                            <span class="note-status" style="font-size:10px; color:#a38c90;">Auto-saved</span>
+                        </div>
+                    </div>
+
+                    ${vocab.beanReply ? `
+                        <div class="bean-note-box">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                                <b style="color:#2e5973;">💬 Bean's Note:</b>
+                                <img src="${WOODSTOCK_IMG_URL}" style="width:28px; height:auto;" alt="Woodstock">
+                            </div>
+                            <div>${vocab.beanReply}</div>
+                        </div>
+                    ` : ''}
+
                     <div class="card-actions">
-                        <button class="deck-badge ${vocab.inDeck ? 'in-deck' : ''}" data-hanzi="${vocab.hanzi}">
+                        <button class="deck-badge ${vocab.inDeck ? 'in-deck' : ''}">
                             ${vocab.inDeck ? '✓ Flashcard' : '+ Flashcard'}
                         </button>
-                        <button class="ghost-btn speak-btn" data-hanzi="${vocab.hanzi}">🔊 Listen</button>
+                        <button class="ghost-btn delete-vocab-btn" style="color: #ba6273;">Unsave</button>
                     </div>
                 `;
 
-                // 切換牌組狀態
-                card.querySelector('.deck-badge').addEventListener('click', (e) => {
-                    const targetHanzi = e.target.getAttribute('data-hanzi');
-                    const newState = !vocab.inDeck;
-                    db.collection('users').doc(currentUser.uid).collection('vocab').doc(targetHanzi).update({
-                        inDeck: newState,
+                // Audio
+                card.querySelector('.card-speak-btn').addEventListener('click', () => playTTS(vocab.hanzi));
+
+                // Deck Toggle
+                card.querySelector('.deck-badge').addEventListener('click', () => {
+                    db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
+                        inDeck: !vocab.inDeck,
                         updatedAt: Date.now()
                     });
                 });
 
-                // 發音
-                card.querySelector('.speak-btn').addEventListener('click', () => {
-                    playTTS(vocab.hanzi);
+                // Unsave Word
+                card.querySelector('.delete-vocab-btn').addEventListener('click', () => {
+                    if (confirm(`Remove "${vocab.hanzi}" from saved words?`)) {
+                        db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).delete();
+                    }
+                });
+
+                // Sticky Note Live Edit
+                const textarea = card.querySelector('.sticky-note-input');
+                const charCount = card.querySelector('.char-count');
+                const noteStatus = card.querySelector('.note-status');
+                let debounceTimeout = null;
+
+                textarea.addEventListener('input', (e) => {
+                    const val = e.target.value;
+                    charCount.textContent = `${val.length}/50`;
+                    noteStatus.textContent = "Saving...";
+
+                    clearTimeout(debounceTimeout);
+                    debounceTimeout = setTimeout(() => {
+                        db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
+                            note: val,
+                            updatedAt: Date.now()
+                        }).then(() => {
+                            noteStatus.textContent = "Saved ☁️";
+                        });
+                    }, 650);
                 });
 
                 vocabListContainer.appendChild(card);
             });
         }
 
-        // --- 6. FLASHCARDS 模組 ---
+        // --- 6. 3D FLASHCARDS WITH GESTURE SWIPES & THEMES ---
         const fcSetupBox = document.getElementById('fc-setup-box');
         const fcSessionBox = document.getElementById('fc-session-box');
         const fcCountPill = document.getElementById('fc-count-pill');
-        const fcStartHanziBtn = document.getElementById('fc-start-hanzi-btn');
-        const fcStartEnBtn = document.getElementById('fc-start-en-btn');
+        const fcModeHanziBtn = document.getElementById('fc-mode-hanzi');
+        const fcModeEnBtn = document.getElementById('fc-mode-english');
+        const fcClearDeckBtn = document.getElementById('fc-clear-deck-btn');
         const fcQuitBtn = document.getElementById('fc-quit-btn');
         const fcLeftCounter = document.getElementById('fc-left-counter');
+        const fcSwipeContainer = document.getElementById('fc-swipe-container');
         const fcCardInner = document.getElementById('fc-card-inner');
         const fcFaceFront = document.getElementById('fc-face-front');
         const fcFaceBack = document.getElementById('fc-face-back');
@@ -717,21 +871,33 @@
             fcCountPill.textContent = `${deckWords.length} Words in Deck`;
         }
 
+        fcClearDeckBtn.addEventListener('click', () => {
+            if (confirm("Remove all words from the flashcard deck?")) {
+                const batch = db.batch();
+                vocabList.filter(v => v.inDeck).forEach(v => {
+                    const ref = db.collection('users').doc(currentUser.uid).collection('vocab').doc(v.hanzi);
+                    batch.update(ref, { inDeck: false, updatedAt: Date.now() });
+                });
+                batch.commit();
+            }
+        });
+
         function startFlashcardSession(mode) {
             const deckWords = vocabList.filter(v => v.inDeck);
             if (deckWords.length === 0) {
-                alert("Your study deck is empty! Add some words using '+ Flashcard' first 🌸");
+                alert("Your study deck is empty! Tap '+ Flashcard' on any saved word first 🌸");
                 return;
             }
             fcMode = mode;
             fcQueue = [...deckWords].sort(() => Math.random() - 0.5);
+            flashcardSessionCount = 0;
             fcSetupBox.style.display = 'none';
             fcSessionBox.style.display = 'block';
             renderNextFlashcard();
         }
 
-        fcStartHanziBtn.addEventListener('click', () => startFlashcardSession('hanzi'));
-        fcStartEnBtn.addEventListener('click', () => startFlashcardSession('en'));
+        fcModeHanziBtn.addEventListener('click', () => startFlashcardSession('hanzi'));
+        fcModeEnBtn.addEventListener('click', () => startFlashcardSession('en'));
 
         fcQuitBtn.addEventListener('click', () => {
             fcSessionBox.style.display = 'none';
@@ -740,8 +906,15 @@
 
         function renderNextFlashcard() {
             if (fcQueue.length === 0) {
-                alert("Deck complete! Well done bub! 🧸");
-                fcQuitBtn.click();
+                fcSessionBox.innerHTML = `
+                    <div style="text-align:center; padding:30px 10px;">
+                        <img src="${COMPLETE_DECK_IMG_URL}" style="width:75px; height:auto; border-radius:12px; margin-bottom:12px;" alt="Done">
+                        <h3 style="color:#e08b9b; margin:0 0 4px;">Deck Complete!</h3>
+                        <p style="color:#7b6267; font-size:13px; font-weight:700;">Well done bub!</p>
+                        <button id="fc-finish-btn" class="login-btn" style="margin-top:16px;">Back to Decks 🌷</button>
+                    </div>
+                `;
+                document.getElementById('fc-finish-btn').addEventListener('click', () => location.reload());
                 return;
             }
 
@@ -753,45 +926,65 @@
             const vocab = fcQueue[0];
             fcLeftCounter.textContent = `Cards Left: ${fcQueue.length}`;
 
-            // 正面
+            // Rotating Background Texture
+            const activeSet = fcMode === 'en' ? FLASHCARD_BG_IMAGES_ENGLISH : FLASHCARD_BG_IMAGES_HANZI;
+            const bgImg = activeSet[flashcardSessionCount % activeSet.length];
+            const bgStyle = `background: linear-gradient(rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.82)), url('${bgImg}');`;
+
+            fcFaceFront.style.cssText = bgStyle;
+            fcFaceBack.style.cssText = bgStyle;
+
             if (fcMode === 'hanzi') {
                 fcFaceFront.innerHTML = `
                     <span style="position:absolute; top:18px; right:18px; font-size:11px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700;">HSK ${vocab.level || '?'}</span>
-                    <div style="font-size: 48px; font-weight: 800; color: #e08b9b;">${vocab.hanzi}</div>
+                    <button class="ponyo-btn fc-speak-btn" style="position:absolute; top:12px; left:12px;" title="Listen">
+                        <img src="${PONYO_IMG_URL}" alt="Speak">
+                    </button>
+                    <div style="font-size: 48px; font-weight: 800; color: #e08b9b; margin-top: 15px;">${vocab.hanzi}</div>
                     <div style="position: absolute; bottom: 20px; font-size: 12px; color: #a38c90; font-style: italic;">(Tap to flip)</div>
                 `;
             } else {
                 const defs = (vocab.translations || []).map(t => `<li style="margin-bottom:4px;">${t}</li>`).join('');
                 fcFaceFront.innerHTML = `
                     <span style="position:absolute; top:18px; right:18px; font-size:11px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700;">HSK ${vocab.level || '?'}</span>
-                    <ul style="margin:0; padding-left:20px; font-size:16px; color:#5c4a4d; font-weight:700; text-align:left;">${defs}</ul>
+                    <ul style="margin:0; padding-left:20px; font-size:16px; color:#5c4a4d; font-weight:700; text-align:left; width:100%;">${defs}</ul>
                     <div style="position: absolute; bottom: 20px; font-size: 12px; color: #a38c90; font-style: italic;">(Tap to flip)</div>
                 `;
             }
 
-            // 背面
             const defsBack = (vocab.translations || []).map(t => `<li>${t}</li>`).join('');
             fcFaceBack.innerHTML = `
                 <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-                    <span style="font-size: 30px; font-weight: 800; color: #e08b9b;">${vocab.hanzi}</span>
-                    <button class="ghost-btn fc-speak-btn" style="padding:4px 8px;">🔊</button>
+                    <div>
+                        <div style="font-size: 32px; font-weight: 800; color: #e08b9b;">${vocab.hanzi}</div>
+                        <div style="font-size: 14px; color: #d09b9f; font-style: italic;">${vocab.pinyin || ''}</div>
+                    </div>
+                    <button class="ponyo-btn fc-speak-btn" title="Listen">
+                        <img src="${PONYO_IMG_URL}" alt="Speak">
+                    </button>
                 </div>
-                <div style="font-size: 15px; color: #d09b9f; font-style: italic; margin-bottom: 8px;">${vocab.pinyin || ''}</div>
-                <ul style="margin: 0 0 10px; padding-left: 18px; font-size: 14px; line-height: 1.4;">${defsBack}</ul>
-                ${vocab.note ? `<div class="vocab-note-box" style="margin-bottom:6px;">📌 ${vocab.note}</div>` : ''}
-                ${vocab.beanReply ? `<div class="bean-note-box">💬 Bean: ${vocab.beanReply}</div>` : ''}
+                <ul style="margin: 8px 0 10px; padding-left: 18px; font-size: 13.5px; line-height: 1.4;">${defsBack}</ul>
+                ${vocab.note ? `<div class="sticky-note-box" style="margin-bottom:6px; font-size:11.5px;">📌 ${vocab.note}</div>` : ''}
+                ${vocab.beanReply ? `<div class="bean-note-box" style="font-size:11.5px;">💬 Bean: ${vocab.beanReply}</div>` : ''}
             `;
 
-            fcFaceBack.querySelector('.fc-speak-btn').addEventListener('click', (e) => {
+            fcFaceFront.querySelector('.fc-speak-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                playTTS(vocab.hanzi);
+            });
+            fcFaceBack.querySelector('.fc-speak-btn')?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 playTTS(vocab.hanzi);
             });
         }
 
-        // 點擊卡片翻轉
-        fcCardInner.addEventListener('click', () => {
+        // Tap to Flip Card with Optional Haptics
+        fcCardInner.addEventListener('click', (e) => {
+            if (e.target.closest('.ponyo-btn')) return;
+
             if (!fcIsFlipped) {
                 fcIsFlipped = true;
+                if (navigator.vibrate) navigator.vibrate(10);
                 fcCardInner.classList.add('is-flipped');
                 fcControlsBar.style.opacity = '1';
                 fcControlsBar.style.pointerEvents = 'auto';
@@ -802,20 +995,54 @@
             }
         });
 
-        // Still Learning: 移至隊尾重練
-        fcBtnLearn.addEventListener('click', () => {
+        // Still Learning (Push to end)
+        function markStillLearning() {
+            if (navigator.vibrate) navigator.vibrate(15);
             const card = fcQueue.shift();
             fcQueue.push(card);
+            flashcardSessionCount++;
             renderNextFlashcard();
-        });
+        }
 
-        // Got It: 本輪過關 (並可選擇同步移出牌組)
-        fcBtnGotit.addEventListener('click', () => {
-            const card = fcQueue.shift();
+        // Got It (Mastered)
+        function markGotIt() {
+            if (navigator.vibrate) navigator.vibrate([10, 30]);
+            fcQueue.shift();
+            flashcardSessionCount++;
             renderNextFlashcard();
-        });
+        }
 
-        // --- 7. TTS 語音朗讀 ---
+        fcBtnLearn.addEventListener('click', markStillLearning);
+        fcBtnGotit.addEventListener('click', markGotIt);
+
+        // --- 7. MOBILE TOUCH SWIPE GESTURES ---
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        fcSwipeContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        fcSwipeContainer.addEventListener('touchend', (e) => {
+            if (!fcIsFlipped) return; // Only allow swipe after flipped
+
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            const deltaY = e.changedTouches[0].clientY - touchStartY;
+
+            // Horizontal swipe threshold: 60px
+            if (Math.abs(deltaX) > 60 && Math.abs(deltaY) < 50) {
+                if (deltaX < 0) {
+                    // Swipe Left ➔ Still Learning
+                    markStillLearning();
+                } else {
+                    // Swipe Right ➔ Got It !
+                    markGotIt();
+                }
+            }
+        }, { passive: true });
+
+        // --- 8. AUDIO SYNTHESIS (TTS) ---
         function playTTS(text) {
             try {
                 window.speechSynthesis.cancel();
