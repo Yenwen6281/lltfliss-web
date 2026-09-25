@@ -32,7 +32,7 @@
             -webkit-touch-callout: none;
         }
 
-        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn {
+        button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn {
             touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
@@ -257,7 +257,6 @@
             color: #5c4a4d;
         }
 
-        /* Editable Sticky Note */
         .sticky-note-box {
             margin-top: 10px;
             background: #fff9e6;
@@ -372,7 +371,7 @@
         }
         .deck-badge.in-deck:active, .deck-badge.in-deck.is-pressed {
             transform: translateY(2.5px) scale(0.94) !important;
-            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35) !important;
+            box-shadow: 0 0.5px 0 #ba6273, inset 0 2px 3px rgba(140, 50, 65, 0.35);
         }
 
         .icon-btn {
@@ -411,7 +410,7 @@
         }
         .mode-picker-card:active, .mode-picker-card.is-pressed {
             transform: translateY(5px) scale(0.96) !important;
-            box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2) !important;
+            box-shadow: 0 1px 0 #e4b8ca, 0 3px 6px rgba(200, 150, 160, 0.2);
         }
         .mode-picker-card.card-b1 {
             background-image: url('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/0e228accc04a786e15a9f8aa271166eee7a5f2b6/b1.png');
@@ -598,11 +597,11 @@
             word-break: break-all;
         }
 
-        /* CHAT BOX STYLES */
+        /* --- ENHANCED CHAT BOX STYLES --- */
         #chat-view {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 170px);
+            height: calc(100vh - 175px);
             max-width: 480px;
             width: 100%;
             margin: 0 auto;
@@ -614,22 +613,23 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding: 12px 6px;
+            padding: 14px 8px;
             border-radius: 18px;
             background: rgba(255, 255, 255, 0.65);
             border: 1px solid rgba(245, 205, 226, 0.7);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .chat-bubble {
-            max-width: 78%;
+            max-width: 80%;
             padding: 10px 14px;
             border-radius: 16px;
             font-size: 13.5px;
             line-height: 1.45;
             position: relative;
             word-break: break-word;
-            box-shadow: 0 2px 8px rgba(200, 150, 160, 0.12);
+            box-shadow: 0 3px 8px rgba(200, 150, 160, 0.15);
+            cursor: pointer;
         }
 
         .chat-bubble.from-user {
@@ -645,25 +645,92 @@
             background: #ffffff;
             color: #406277;
             border-bottom-left-radius: 4px;
-            border: 1px solid #c9e4f5;
+            border: 1.5px solid #c9e4f5;
         }
 
-        .chat-time {
-            font-size: 10px;
-            opacity: 0.65;
+        .chat-reply-quote {
+            background: rgba(0, 0, 0, 0.05);
+            border-left: 3px solid #e08b9b;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            margin-bottom: 6px;
+            opacity: 0.85;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-media-img {
+            max-width: 100%;
+            border-radius: 10px;
             margin-top: 4px;
-            text-align: right;
+            display: block;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .chat-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .chat-receipt {
+            font-weight: 800;
+            font-size: 11px;
+        }
+        .chat-receipt.is-read {
+            color: #e08b9b;
+        }
+
+        /* Reply Preview Bar above input */
+        #chat-reply-preview-bar {
+            display: none;
+            background: #ffffff;
+            border: 1.5px solid #f5cde2;
+            border-radius: 14px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #5c4a4d;
+            box-shadow: 0 2px 6px rgba(200, 150, 160, 0.15);
+            align-items: center;
+            justify-content: space-between;
         }
 
         .chat-input-bar {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
+        }
+
+        .chat-attach-btn {
+            background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%);
+            border: 1.5px solid #f5cde2;
+            color: #e08b9b;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: 0 3px 0 #e2becb, 0 3px 6px rgba(200, 150, 160, 0.15);
+            outline: none;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chat-attach-btn:active, .chat-attach-btn.is-pressed {
+            transform: translateY(2px) scale(0.9) !important;
+            box-shadow: 0 0.5px 0 #e2becb;
         }
 
         .chat-input-field {
             flex: 1;
-            padding: 12px 14px;
+            padding: 11px 14px;
             border-radius: 20px;
             border: 1.5px solid #f5cde2;
             background: #ffffff;
@@ -682,7 +749,7 @@
             padding: 10px 18px;
             font-family: inherit;
             font-weight: 800;
-            font-size: 13.5px;
+            font-size: 13px;
             box-shadow: 0 3px 0 #ba6273, 0 4px 10px rgba(224, 139, 155, 0.3);
             outline: none;
             transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
@@ -690,6 +757,27 @@
         .chat-send-btn:active, .chat-send-btn.is-pressed {
             transform: translateY(2.5px) scale(0.93) !important;
             box-shadow: 0 0.5px 0 #ba6273, inset 0 1.5px 3px rgba(140, 50, 65, 0.35);
+        }
+
+        /* Fullscreen Image Lightbox */
+        #chat-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        #chat-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         }
 
         /* Animations */
@@ -857,19 +945,32 @@
                 </div>
             </section>
 
-            <!-- 4. Persistent Chat View -->
+            <!-- 4. Persistent Chat View (With Read Receipts, Replies & Images) -->
             <section id="chat-view" style="display: none;">
                 <div id="admin-user-selector" style="display: none; margin-bottom: 8px;">
                     <span style="font-size: 11px; font-weight: 700; color: #e08b9b;">Admin: Select Conversation:</span>
                     <select id="admin-target-user-select" class="filter-select" style="margin-top: 4px;"></select>
                 </div>
+                
                 <div class="chat-messages-container" id="chat-messages-box">
                     <div style="text-align: center; color: #a38c90; font-size: 12.5px; margin-top: 30px; font-style: italic;">
                         Say hi to Bean! Chat history is permanently saved with your Google account 🧸💌
                     </div>
                 </div>
+
+                <!-- Quote Reply Preview Bar -->
+                <div id="chat-reply-preview-bar">
+                    <div style="overflow: hidden;">
+                        <span style="font-weight: 800; color: #e08b9b;" id="reply-to-user-label">Replying...</span>
+                        <div id="reply-to-text-label" style="opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;"></div>
+                    </div>
+                    <span id="cancel-reply-btn" style="font-weight: 800; font-size: 14px; color: #a38c90; cursor: pointer; padding: 2px 6px;">✕</span>
+                </div>
+
                 <div class="chat-input-bar">
-                    <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message...">
+                    <input type="file" id="chat-file-input" accept="image/*" style="display: none;">
+                    <button class="chat-attach-btn" id="chat-attach-trigger" title="Send Photo">📷</button>
+                    <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message (tap message to reply)...">
                     <button id="chat-send-action-btn" class="chat-send-btn">Send</button>
                 </div>
             </section>
@@ -886,6 +987,11 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Fullscreen Image Lightbox -->
+    <div id="chat-lightbox">
+        <img id="chat-lightbox-img" src="" alt="Fullscreen Image">
     </div>
 
     <!-- Ask Bean Modal Overlay -->
@@ -907,7 +1013,7 @@
 
     <script>
         // --- 0. PHYSICAL SQUISH HANDLER FOR IOS HOME SCREEN APP ---
-        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn';
+        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn';
 
         document.addEventListener('pointerdown', (e) => {
             const btn = e.target.closest(SQUISH_TARGETS);
@@ -924,7 +1030,7 @@
         }, { passive: true });
 
         // --- 1. ASSET CONSTANTS & ADMIN CONFIG ---
-        const ADMIN_EMAIL = 'yenwen6281plus@gmail.com'; // Set as admin email to reply to any user
+        const ADMIN_EMAIL = 'yenwen6281plus@gmail.com';
         const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
         const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
@@ -966,7 +1072,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        db.enablePersistence().catch(err => console.warn("Firestore cache enabled fallback:", err.code));
+        db.enablePersistence().catch(err => console.warn("Firestore cache fallback:", err.code));
 
         let currentUser = null;
         let unsubscribeVocab = null;
@@ -976,6 +1082,7 @@
         let askedWordsList = [];
         let flashcardSessionCount = 0;
         let activeChatUserId = null;
+        let activeReplyTarget = null; // Holds { id, text, senderName }
 
         function fetchBeanReplies(onComplete) {
             fetch(GOOGLE_APP_SCRIPT_URL)
@@ -1032,7 +1139,6 @@
                 userDisplayEmail.textContent = user.email;
                 syncKeyDisplay.textContent = user.uid;
 
-                // Save profile to ensure presence in directory
                 db.collection('users').doc(user.uid).set({
                     email: user.email,
                     displayName: user.displayName || user.email.split('@')[0],
@@ -1091,6 +1197,7 @@
             activeSection.style.display = (activeSection === flashView || activeSection === repliesView || activeSection === chatView) ? 'flex' : 'block';
 
             if (activeSection === chatView) {
+                markIncomingMessagesAsRead();
                 scrollChatToBottom();
             }
         }
@@ -1135,7 +1242,7 @@
             }, 100);
         }
 
-        // --- 6. SAVED WORDS MODULE WITH COMPREHENSIVE SEARCH ---
+        // --- 6. SAVED WORDS MODULE ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -1386,23 +1493,49 @@
             });
         }
 
-        // --- 8. PERSISTENT CHAT MODULE (REAL-TIME FIRESTORE) ---
+        // --- 8. PERSISTENT CHAT MODULE (READ RECEIPTS, REPLIES, MEDIA) ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
         const adminUserSelector = document.getElementById('admin-user-selector');
         const adminTargetUserSelect = document.getElementById('admin-target-user-select');
+        const chatFileInput = document.getElementById('chat-file-input');
+        const chatAttachTrigger = document.getElementById('chat-attach-trigger');
+        const chatReplyPreviewBar = document.getElementById('chat-reply-preview-bar');
+        const replyToUserLabel = document.getElementById('reply-to-user-label');
+        const replyToTextLabel = document.getElementById('reply-to-text-label');
+        const cancelReplyBtn = document.getElementById('cancel-reply-btn');
+        const chatLightbox = document.getElementById('chat-lightbox');
+        const chatLightboxImg = document.getElementById('chat-lightbox-img');
 
         function scrollChatToBottom() {
             setTimeout(() => {
                 chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
-            }, 50);
+            }, 60);
+        }
+
+        function markIncomingMessagesAsRead() {
+            if (!currentUser || !activeChatUserId) return;
+            const isCurrentAdmin = currentUser.email === ADMIN_EMAIL;
+            const targetSender = isCurrentAdmin ? 'user' : 'admin';
+
+            db.collection('users').doc(activeChatUserId).collection('messages')
+                .where('sender', '==', targetSender)
+                .where('read', '==', false)
+                .get()
+                .then(snapshot => {
+                    const batch = db.batch();
+                    snapshot.forEach(doc => {
+                        batch.update(doc.ref, { read: true });
+                    });
+                    return batch.commit();
+                })
+                .catch(err => console.warn("Read receipt update:", err));
         }
 
         function initChat(user) {
             activeChatUserId = user.uid;
 
-            // Admin Inspection Mode Check
             if (user.email === ADMIN_EMAIL) {
                 adminUserSelector.style.display = 'block';
                 db.collection('users').get().then(snapshot => {
@@ -1449,21 +1582,94 @@
 
                         const bubble = document.createElement('div');
                         bubble.className = `chat-bubble ${isMe ? 'from-user' : 'from-admin'}`;
+                        bubble.setAttribute('data-msg-id', doc.id);
 
                         const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+                        
+                        // Read Receipt checkmark
+                        let receiptHTML = '';
+                        if (isMe) {
+                            receiptHTML = msg.read ? `<span class="chat-receipt is-read" title="Read">✓✓</span>` : `<span class="chat-receipt" title="Sent">✓</span>`;
+                        }
+
+                        // Quote reply preview
+                        let replyHTML = '';
+                        if (msg.replyTo) {
+                            replyHTML = `
+                                <div class="chat-reply-quote">
+                                    <b>${escapeHtml(msg.replyTo.senderName)}:</b> ${escapeHtml(msg.replyTo.text || '[Image]')}
+                                </div>
+                            `;
+                        }
+
+                        // Media Image
+                        let mediaHTML = '';
+                        if (msg.imageUrl) {
+                            mediaHTML = `<img src="${msg.imageUrl}" class="chat-media-img" alt="Chat attachment" />`;
+                        }
 
                         bubble.innerHTML = `
-                            <div style="font-weight: 700; font-size: 11px; margin-bottom: 3px; opacity: 0.8;">
+                            ${replyHTML}
+                            <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px; opacity: 0.85;">
                                 ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
                             </div>
-                            <div>${escapeHtml(msg.text)}</div>
-                            <div class="chat-time">${timeStr}</div>
+                            ${msg.text ? `<div>${escapeHtml(msg.text)}</div>` : ''}
+                            ${mediaHTML}
+                            <div class="chat-meta">
+                                <span>${timeStr}</span>
+                                ${receiptHTML}
+                            </div>
                         `;
+
+                        // Tapping bubble initiates quote-reply
+                        bubble.addEventListener('click', () => {
+                            setReplyTarget({
+                                id: doc.id,
+                                text: msg.text || (msg.imageUrl ? '[Image]' : ''),
+                                senderName: msg.sender === 'admin' ? "Bean" : (msg.senderName || "Bub")
+                            });
+                        });
+
+                        // Image tap opens lightbox
+                        const imgEl = bubble.querySelector('.chat-media-img');
+                        if (imgEl) {
+                            imgEl.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                chatLightboxImg.src = msg.imageUrl;
+                                chatLightbox.style.display = 'flex';
+                            });
+                        }
+
                         chatMessagesBox.appendChild(bubble);
                     });
+
+                    // If tab is active, mark incoming unread messages as read
+                    if (chatView.style.display === 'flex') {
+                        markIncomingMessagesAsRead();
+                    }
                     scrollChatToBottom();
                 }, err => console.error("Chat sync error:", err));
         }
+
+        // Reply Bar Control
+        function setReplyTarget(target) {
+            activeReplyTarget = target;
+            replyToUserLabel.textContent = `Replying to ${target.senderName}:`;
+            replyToTextLabel.textContent = target.text;
+            chatReplyPreviewBar.style.display = 'flex';
+            chatTextInput.focus();
+        }
+
+        cancelReplyBtn.addEventListener('click', () => {
+            activeReplyTarget = null;
+            chatReplyPreviewBar.style.display = 'none';
+        });
+
+        // Lightbox close
+        chatLightbox.addEventListener('click', () => {
+            chatLightbox.style.display = 'none';
+            chatLightboxImg.src = '';
+        });
 
         function escapeHtml(str) {
             const div = document.createElement('div');
@@ -1471,9 +1677,11 @@
             return div.innerHTML;
         }
 
-        function sendChatMessage() {
+        // Send Text Message
+        function sendChatMessage(imageUrl = null) {
             const text = (chatTextInput.value || '').trim();
-            if (!text || !currentUser || !activeChatUserId) return;
+            if (!text && !imageUrl) return;
+            if (!currentUser || !activeChatUserId) return;
 
             const isCurrentAdmin = currentUser.email === ADMIN_EMAIL;
             const messagePayload = {
@@ -1481,25 +1689,61 @@
                 sender: isCurrentAdmin ? 'admin' : 'user',
                 senderEmail: currentUser.email,
                 senderName: currentUser.displayName || currentUser.email.split('@')[0],
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                read: false
             };
 
+            if (imageUrl) messagePayload.imageUrl = imageUrl;
+            if (activeReplyTarget) {
+                messagePayload.replyTo = {
+                    id: activeReplyTarget.id,
+                    text: activeReplyTarget.text,
+                    senderName: activeReplyTarget.senderName
+                };
+            }
+
             chatTextInput.value = '';
+            cancelReplyBtn.click(); // Reset reply bar
+
             db.collection('users').doc(activeChatUserId).collection('messages').add(messagePayload)
-                .then(() => {
-                    scrollChatToBottom();
-                })
-                .catch(err => {
-                    alert("Send failed: " + err.message);
-                });
+                .then(() => scrollChatToBottom())
+                .catch(err => alert("Send failed: " + err.message));
         }
 
-        chatSendActionBtn.addEventListener('click', sendChatMessage);
+        chatSendActionBtn.addEventListener('click', () => sendChatMessage());
         chatTextInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 sendChatMessage();
             }
+        });
+
+        // Media File Trigger & Client-side Image Optimization
+        chatAttachTrigger.addEventListener('click', () => chatFileInput.click());
+        chatFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 750;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
+                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+
+                    sendChatMessage(compressedDataUrl);
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+            chatFileInput.value = '';
         });
 
         // --- 9. ASK BEAN MODAL LOGIC ---
@@ -1648,7 +1892,6 @@
             const vocab = fcQueue[0];
             fcLeftCounter.textContent = `Cards Left: ${fcQueue.length}`;
 
-            // Rotating Background Art
             const activeSet = fcMode === 'en' ? FLASHCARD_BG_IMAGES_ENGLISH : FLASHCARD_BG_IMAGES_HANZI;
             const bgImg = activeSet[flashcardSessionCount % activeSet.length];
             const bgPosition = bgImg.includes('d5.png') ? 'left center' : 'center center';
@@ -1736,7 +1979,6 @@
             }
         }
 
-        // Tap to Flip Card
         fcCardInner.addEventListener('click', (e) => {
             if (e.target.closest('.ponyo-btn') || e.target.closest('.bean-nav-btn')) return;
 
@@ -1771,7 +2013,6 @@
         fcBtnLearn.addEventListener('click', markStillLearning);
         fcBtnGotit.addEventListener('click', markGotIt);
 
-        // Mobile Touch Swipes
         let touchStartX = 0;
         let touchStartY = 0;
 
