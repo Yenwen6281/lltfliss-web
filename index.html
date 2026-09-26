@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.1.9)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.0)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -873,7 +873,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.1.9</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.0</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1051,7 +1051,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.1.9</b>
+                        <b id="settings-version-display">v1.2.0</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1146,7 +1146,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.1.9';
+        const APP_VERSION = 'v1.2.0';
 
         // Safe update: Clears cache storage WITHOUT breaking the Apple Push Notification registration
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
@@ -1192,7 +1192,7 @@
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
         const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
 
-        // --> PASTE YOUR FIREBASE WEB PUSH (VAPID) KEY HERE <--
+        // Web Push (VAPID) Key
         const FIREBASE_VAPID_KEY = 'BLYp3tMR9bPlVwV-XQsZQfYhuDz7M6UxU8XI403skId6tAKRQx-hyVRh8PqDhM7msTOwftT7ESzGA0TAnCcmaQw';
 
         const FLASHCARD_BG_IMAGES_HANZI = [
@@ -1256,38 +1256,19 @@
         let menuTargetMsg = null;
         let swRegistration = null;
 
-        // Register Service Worker for Web Push & Notification Dispatch
+        // Register Service Worker for GitHub Pages repository scope
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('firebase-messaging-sw.js')
+            navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: './' })
                 .then(reg => {
                     swRegistration = reg;
+                    console.log("Service Worker registered successfully:", reg);
                 })
-                .catch(() => {
-                    const swBlob = new Blob([`
-                        importScripts('https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js');
-                        importScripts('https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging-compat.js');
-                        firebase.initializeApp(${JSON.stringify(firebaseConfig)});
-                        try {
-                            const messaging = firebase.messaging();
-                        } catch(e) {}
-                        self.addEventListener('push', function(e) {
-                            const payload = e.data ? e.data.json() : {};
-                            const title = payload.notification?.title || "Eggy's Mandarin 🌸";
-                            const options = {
-                                body: payload.notification?.body || "New note from Bean! 💌",
-                                icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
-                                badge: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png"
-                            };
-                            e.waitUntil(self.registration.showNotification(title, options));
-                        });
-                    `], { type: 'application/javascript' });
-                    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-                        .then(reg => { swRegistration = reg; })
-                        .catch(e => console.warn("ServiceWorker init error:", e));
+                .catch(err => {
+                    console.error("Service Worker registration failed:", err);
                 });
         }
 
-        // Robust notification trigger across all iOS WebKit & Android states
+        // Foreground notification trigger
         function triggerAppNotification(title, body) {
             if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
 
@@ -1380,7 +1361,6 @@
                 initChat(user);
                 initGlobalNotificationWatcher(user);
                 checkPushStatus();
-                // Automatically ensure FCM background push token is active in Firestore
                 autoSyncPushToken(user.uid);
             } else {
                 currentUser = null;
@@ -1434,22 +1414,61 @@
                 }, err => console.warn("Global alert watcher error:", err));
         }
 
-        // Automatic Token Refresh to ensure Apple never drops background notifications
-        async function autoSyncPushToken(uid) {
-            if (!('Notification' in window) || Notification.permission !== 'granted') return;
-            if (!messaging || !FIREBASE_VAPID_KEY) return;
+        // --- PUSH NOTIFICATION CORE REGISTRATION ---
+        async function requestAndSaveToken(interactive = false) {
+            if (!('Notification' in window)) {
+                if (interactive) alert("This device or browser does not support Web Push notifications (On iOS, add to Home Screen first)!");
+                return;
+            }
 
             try {
-                const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY });
-                if (token && uid) {
-                    await db.collection('users').doc(uid).update({ fcmToken: token });
+                let permission = Notification.permission;
+                if (interactive && permission !== 'granted') {
+                    permission = await Notification.requestPermission();
+                }
+
+                if (permission !== 'granted') {
+                    checkPushStatus();
+                    return;
+                }
+
+                const registration = await navigator.serviceWorker.ready;
+
+                if (!messaging) {
+                    console.warn("Firebase Messaging unsupported in this environment.");
+                    return;
+                }
+
+                const token = await messaging.getToken({
+                    vapidKey: FIREBASE_VAPID_KEY,
+                    serviceWorkerRegistration: registration
+                });
+
+                if (token && currentUser) {
+                    await db.collection('users').doc(currentUser.uid).set({
+                        fcmToken: token,
+                        tokenUpdatedAt: Date.now()
+                    }, { merge: true });
+
+                    if (interactive) {
+                        alert("Notifications enabled and token synced to Firestore! 🌸");
+                    }
+                    checkPushStatus();
+                } else {
+                    if (interactive) alert("Could not retrieve push token. Please check your VAPID key and network connection.");
                 }
             } catch (err) {
-                console.warn("Auto-sync FCM token notice:", err);
+                console.error("FCM Token Registration Error:", err);
+                if (interactive) alert("Registration Failed: " + err.message);
             }
         }
 
-        // Push Notifications Activation Handler
+        async function autoSyncPushToken(uid) {
+            if (Notification.permission === 'granted') {
+                await requestAndSaveToken(false);
+            }
+        }
+
         function checkPushStatus() {
             if (!('Notification' in window)) {
                 pushStatusLbl.textContent = "Status: Not supported on this browser";
@@ -1459,7 +1478,7 @@
             if (Notification.permission === 'granted') {
                 pushStatusLbl.textContent = "Status: Enabled";
                 enablePushBtn.textContent = "Notifications Active 🌸";
-                enablePushBtn.disabled = false; // Keep clickable to allow token refreshing
+                enablePushBtn.disabled = false;
             } else if (Notification.permission === 'denied') {
                 pushStatusLbl.textContent = "Status: Blocked in Settings";
             } else {
@@ -1468,32 +1487,7 @@
         }
 
         enablePushBtn.addEventListener('click', async () => {
-            if (!('Notification' in window)) {
-                alert("Push notifications require iOS 16.4+ and adding this web app to your Home Screen!");
-                return;
-            }
-
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    if (messaging && FIREBASE_VAPID_KEY) {
-                        try {
-                            const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY });
-                            if (currentUser && token) {
-                                await db.collection('users').doc(currentUser.uid).update({ fcmToken: token });
-                            }
-                        } catch (tokenErr) {
-                            console.warn("FCM Token registration error:", tokenErr);
-                        }
-                    }
-                    checkPushStatus();
-                    alert("Notifications enabled and refreshed! Background alerts are active 🌸");
-                } else {
-                    checkPushStatus();
-                }
-            } catch (err) {
-                alert("Permission error: " + err.message);
-            }
+            await requestAndSaveToken(true);
         });
 
         // --- 4. FIRESTORE REALTIME SYNC ---
@@ -1876,7 +1870,7 @@
             });
         }
 
-        // --- 8. MODERNIZED CHAT MODULE (INSTANT OPTIMISTIC EMOJI REACTIONS) ---
+        // --- 8. MODERNIZED CHAT MODULE ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
@@ -2134,7 +2128,6 @@
             }
         }
 
-        // --- 4. HIGH-FIDELITY IOS LONG-PRESS & OPTIMISTIC REACTIONS ---
         function bindLongPress(element, msgData) {
             let pressTimer = null;
             let startX = 0;
@@ -2217,7 +2210,7 @@
             if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
-        // Quick Reaction Selection (Top 5 + Extended Tray)
+        // Quick Reaction Selection
         document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
