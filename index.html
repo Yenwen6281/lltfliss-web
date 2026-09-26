@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.0)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.1)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -873,7 +873,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.0</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.1</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1051,7 +1051,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.0</b>
+                        <b id="settings-version-display">v1.2.1</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1146,7 +1146,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.0';
+        const APP_VERSION = 'v1.2.1';
 
         // Safe update: Clears cache storage WITHOUT breaking the Apple Push Notification registration
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
@@ -2210,7 +2210,6 @@
             if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
-        // Quick Reaction Selection
         document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const emoji = btn.getAttribute('data-emoji');
