@@ -1,0 +1,20 @@
+{
+  "name": "Eggy's Mandarin",
+  "short_name": "EggyMandarin",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcf8f5",
+  "theme_color": "#fcf8f5",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
