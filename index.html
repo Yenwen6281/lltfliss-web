@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.0)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.1)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,8 +12,8 @@
     <meta name="theme-color" content="#fcf8f5">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png">
     
-    <!-- Web App Manifest -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Eggy&#39;s Mandarin","short_name":"EggyMandarin","start_url":".","display":"standalone","background_color":"#fcf8f5","theme_color":"#fcf8f5","icons":[{"src":"https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png","sizes":"192x192","type":"image/png"}]}'>
+    <!-- Standalone Physical Web App Manifest for iOS PWA -->
+    <link rel="manifest" href="./manifest.json">
 
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -593,7 +593,7 @@
             letter-spacing: 0.2px;
         }
 
-        /* Overlapping Reaction Cluster (Max 2 Badges) */
+        /* Overlapping Reaction Cluster */
         .chat-reactions-strip {
             position: absolute;
             bottom: -11px;
@@ -872,7 +872,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.0</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.1</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1050,7 +1050,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.0</b>
+                        <b id="settings-version-display">v1.2.1</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1145,7 +1145,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.0';
+        const APP_VERSION = 'v1.2.1';
 
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
@@ -1257,14 +1257,14 @@
         let menuTargetMsg = null;
         let swRegistration = null;
 
-        // Register Standard Push Service Worker
+        // Auto-register service worker using relative path for GitHub Pages
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register('./sw.js')
                 .then(reg => {
                     swRegistration = reg;
-                    console.log("Service Worker registered successfully:", reg.scope);
+                    console.log("Service Worker registered on relative scope:", reg.scope);
                 })
-                .catch(err => console.warn("ServiceWorker registration error:", err));
+                .catch(err => console.warn("Relative SW register warning:", err));
         }
 
         function triggerAppNotification(title, body) {
@@ -1409,9 +1409,9 @@
                 }, err => console.warn("Global alert watcher error:", err));
         }
 
-        // Web Push Check & Activation
+        // Web Push Check & UI Status
         async function checkPushStatus() {
-            if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+            if (!('Notification' in window)) {
                 pushStatusLbl.textContent = "Status: Not supported on this browser";
                 enablePushBtn.style.display = 'none';
                 return;
@@ -1427,21 +1427,33 @@
             }
         }
 
+        // Standard Web Push Activation (Cross-compatible with iOS Safari standalone mode)
         enablePushBtn.addEventListener('click', async () => {
-            if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+            if (!('Notification' in window) || !('serviceWorker' in navigator)) {
                 alert("Push notifications require iOS 16.4+ and adding this web app to your Home Screen!");
                 return;
             }
 
             try {
-                const permission = await Notification.requestPermission();
+                // Request Permission (handles both Promise and Callback styles for older iOS Safari)
+                let permission;
+                try {
+                    permission = await Notification.requestPermission();
+                } catch (e) {
+                    permission = await new Promise(resolve => Notification.requestPermission(resolve));
+                }
+
                 if (permission !== 'granted') {
                     checkPushStatus();
-                    alert("Notification permission was denied.");
+                    alert("Notification permission was not granted (Status: " + permission + ").");
                     return;
                 }
 
-                const reg = await navigator.serviceWorker.ready;
+                // Register Service Worker with relative path
+                const reg = await navigator.serviceWorker.register('./sw.js');
+                await navigator.serviceWorker.ready;
+
+                // Subscribe via PushManager using our verified VAPID Key
                 const subscription = await reg.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
@@ -1456,7 +1468,7 @@
                         pushUpdatedAt: Date.now()
                     }, { merge: true });
 
-                    // Store on Render push server
+                    // Store on Render Push Server
                     await fetch(`${PUSH_SERVER_URL}/api/save-subscription`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1468,10 +1480,10 @@
                 }
 
                 checkPushStatus();
-                alert("Notifications enabled! You will now receive alerts when the app is closed 🌸");
+                alert("Notifications enabled! Background alerts are ready 🌸");
             } catch (err) {
                 console.error("Push registration error:", err);
-                alert("Push registration error: " + err.message);
+                alert("Push activation error: " + err.message);
             }
         });
 
@@ -2382,7 +2394,6 @@
                             const recipientDoc = await db.collection('users').doc(activeChatUserId).get();
                             recipientSub = recipientDoc.data()?.pushSubscription;
                         } else {
-                            // If user is sending to admin, find admin subscription
                             const adminSnap = await db.collection('users').where('email', '==', ADMIN_EMAIL).limit(1).get();
                             if (!adminSnap.empty) {
                                 recipientSub = adminSnap.docs[0].data()?.pushSubscription;
@@ -2398,7 +2409,7 @@
                                     directSubscription: recipientSub,
                                     title: isCurrentAdmin ? "Bean 🧸" : (currentUser.displayName || "Eggy 🌸"),
                                     body: text || "Sent a photo 📷",
-                                    url: "/"
+                                    url: "./"
                                 })
                             }).catch(err => console.warn("Push trigger notice:", err));
                         }
