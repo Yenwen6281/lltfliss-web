@@ -1,7 +1,8 @@
 {
   "name": "Eggy's Mandarin",
   "short_name": "EggyMandarin",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#fcf8f5",
   "theme_color": "#fcf8f5",
