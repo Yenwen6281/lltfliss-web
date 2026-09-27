@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.1)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.0)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#fcf8f5">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png">
     
-    <!-- Inline Web App Manifest -->
+    <!-- Web App Manifest -->
     <link rel="manifest" href='data:application/manifest+json,{"name":"Eggy&#39;s Mandarin","short_name":"EggyMandarin","start_url":".","display":"standalone","background_color":"#fcf8f5","theme_color":"#fcf8f5","icons":[{"src":"https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png","sizes":"192x192","type":"image/png"}]}'>
 
     <!-- Typography -->
@@ -20,11 +20,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK (v10 compat) including Messaging -->
+    <!-- Firebase SDK (v10 compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging-compat.js"></script>
 
     <style>
         * {
@@ -873,7 +872,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.1</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.0</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1051,7 +1050,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.1</b>
+                        <b id="settings-version-display">v1.2.0</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1146,9 +1145,8 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.1';
+        const APP_VERSION = 'v1.2.0';
 
-        // Safe update: Clears cache storage WITHOUT breaking the Apple Push Notification registration
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
                 const names = await caches.keys();
@@ -1185,15 +1183,16 @@
         document.addEventListener('touchstart', addSquish, { passive: true });
         document.addEventListener('mousedown', addSquish);
 
-        // --- 1. ASSET CONSTANTS & ADMIN CONFIG ---
+        // --- 1. ASSET CONSTANTS & CLOUD BACKEND CONFIG ---
         const ADMIN_EMAIL = 'yenwen6281plus@gmail.com';
         const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
         const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
         const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
         const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
 
-        // Web Push (VAPID) Key
-        const FIREBASE_VAPID_KEY = 'BLYp3tMR9bPlVwV-XQsZQfYhuDz7M6UxU8XI403skId6tAKRQx-hyVRh8PqDhM7msTOwftT7ESzGA0TAnCcmaQw';
+        // Dedicated Push Notification Server (Render) & VAPID Key
+        const PUSH_SERVER_URL = 'https://flissllt-push-server.onrender.com';
+        const PUBLIC_VAPID_KEY = 'BLL9lxz04NycS8kCs0tDQNeOU7VcUuBqcktqWcvxwLAW7DyZ4GeikXIkqj-jq8urDQqhv3SeaQcxdoSGKjkbsPs';
 
         const FLASHCARD_BG_IMAGES_HANZI = [
             'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d1.png',
@@ -1216,6 +1215,17 @@
             return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '');
         }
 
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
         // --- 2. FIREBASE INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyBGhMMd6fd2oK23J-YA27VYXFGh69R1PA0",
@@ -1230,15 +1240,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
-        let messaging = null;
-        try {
-            if (firebase.messaging.isSupported()) {
-                messaging = firebase.messaging();
-            }
-        } catch (mErr) {
-            console.warn("Firebase messaging unsupported:", mErr);
-        }
 
         db.enablePersistence().catch(err => console.warn("Firestore cache fallback:", err.code));
 
@@ -1256,22 +1257,18 @@
         let menuTargetMsg = null;
         let swRegistration = null;
 
-        // Register Service Worker for GitHub Pages repository scope
+        // Register Standard Push Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: './' })
+            navigator.serviceWorker.register('/sw.js')
                 .then(reg => {
                     swRegistration = reg;
-                    console.log("Service Worker registered successfully:", reg);
+                    console.log("Service Worker registered successfully:", reg.scope);
                 })
-                .catch(err => {
-                    console.error("Service Worker registration failed:", err);
-                });
+                .catch(err => console.warn("ServiceWorker registration error:", err));
         }
 
-        // Foreground notification trigger
         function triggerAppNotification(title, body) {
             if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
-
             if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
             const options = {
@@ -1361,7 +1358,6 @@
                 initChat(user);
                 initGlobalNotificationWatcher(user);
                 checkPushStatus();
-                autoSyncPushToken(user.uid);
             } else {
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
@@ -1381,7 +1377,6 @@
             }
         });
 
-        // App-wide Background Alert Watcher
         function initGlobalNotificationWatcher(user) {
             if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
 
@@ -1414,71 +1409,17 @@
                 }, err => console.warn("Global alert watcher error:", err));
         }
 
-        // --- PUSH NOTIFICATION CORE REGISTRATION ---
-        async function requestAndSaveToken(interactive = false) {
-            if (!('Notification' in window)) {
-                if (interactive) alert("This device or browser does not support Web Push notifications (On iOS, add to Home Screen first)!");
-                return;
-            }
-
-            try {
-                let permission = Notification.permission;
-                if (interactive && permission !== 'granted') {
-                    permission = await Notification.requestPermission();
-                }
-
-                if (permission !== 'granted') {
-                    checkPushStatus();
-                    return;
-                }
-
-                const registration = await navigator.serviceWorker.ready;
-
-                if (!messaging) {
-                    console.warn("Firebase Messaging unsupported in this environment.");
-                    return;
-                }
-
-                const token = await messaging.getToken({
-                    vapidKey: FIREBASE_VAPID_KEY,
-                    serviceWorkerRegistration: registration
-                });
-
-                if (token && currentUser) {
-                    await db.collection('users').doc(currentUser.uid).set({
-                        fcmToken: token,
-                        tokenUpdatedAt: Date.now()
-                    }, { merge: true });
-
-                    if (interactive) {
-                        alert("Notifications enabled and token synced to Firestore! 🌸");
-                    }
-                    checkPushStatus();
-                } else {
-                    if (interactive) alert("Could not retrieve push token. Please check your VAPID key and network connection.");
-                }
-            } catch (err) {
-                console.error("FCM Token Registration Error:", err);
-                if (interactive) alert("Registration Failed: " + err.message);
-            }
-        }
-
-        async function autoSyncPushToken(uid) {
-            if (Notification.permission === 'granted') {
-                await requestAndSaveToken(false);
-            }
-        }
-
-        function checkPushStatus() {
-            if (!('Notification' in window)) {
+        // Web Push Check & Activation
+        async function checkPushStatus() {
+            if (!('Notification' in window) || !('serviceWorker' in navigator)) {
                 pushStatusLbl.textContent = "Status: Not supported on this browser";
                 enablePushBtn.style.display = 'none';
                 return;
             }
+
             if (Notification.permission === 'granted') {
                 pushStatusLbl.textContent = "Status: Enabled";
                 enablePushBtn.textContent = "Notifications Active 🌸";
-                enablePushBtn.disabled = false;
             } else if (Notification.permission === 'denied') {
                 pushStatusLbl.textContent = "Status: Blocked in Settings";
             } else {
@@ -1487,7 +1428,51 @@
         }
 
         enablePushBtn.addEventListener('click', async () => {
-            await requestAndSaveToken(true);
+            if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+                alert("Push notifications require iOS 16.4+ and adding this web app to your Home Screen!");
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    checkPushStatus();
+                    alert("Notification permission was denied.");
+                    return;
+                }
+
+                const reg = await navigator.serviceWorker.ready;
+                const subscription = await reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+                });
+
+                if (currentUser) {
+                    const subClean = JSON.parse(JSON.stringify(subscription));
+
+                    // Store on Firestore
+                    await db.collection('users').doc(currentUser.uid).set({
+                        pushSubscription: subClean,
+                        pushUpdatedAt: Date.now()
+                    }, { merge: true });
+
+                    // Store on Render push server
+                    await fetch(`${PUSH_SERVER_URL}/api/save-subscription`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: currentUser.uid,
+                            subscription: subClean
+                        })
+                    });
+                }
+
+                checkPushStatus();
+                alert("Notifications enabled! You will now receive alerts when the app is closed 🌸");
+            } catch (err) {
+                console.error("Push registration error:", err);
+                alert("Push registration error: " + err.message);
+            }
         });
 
         // --- 4. FIRESTORE REALTIME SYNC ---
@@ -1571,7 +1556,7 @@
             }, 100);
         }
 
-        // --- 6. SAVED WORDS MODULE (EXACT ADDED TIME SORTING) ---
+        // --- 6. SAVED WORDS MODULE ---
         const vocabListContainer = document.getElementById('vocab-list-container');
         const searchInput = document.getElementById('vocab-search');
         const filterSelect = document.getElementById('vocab-filter');
@@ -1870,7 +1855,7 @@
             });
         }
 
-        // --- 8. MODERNIZED CHAT MODULE ---
+        // --- 8. CHAT MODULE WITH BACKGROUND DISPATCH ---
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
         const chatSendActionBtn = document.getElementById('chat-send-action-btn');
@@ -1947,7 +1932,6 @@
             if (unsubscribeChat) unsubscribeChat();
             if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
 
-            // 1. Wallpaper Listener
             unsubscribeChatWallpaper = db.collection('users').doc(targetUid)
                 .onSnapshot(doc => {
                     const data = doc.data() || {};
@@ -1958,7 +1942,6 @@
                     }
                 });
 
-            // 2. Messages Listener
             unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
@@ -1975,7 +1958,6 @@
                     snapshot.forEach(doc => {
                         const msg = doc.data();
 
-                        // System Announcements
                         if (msg.isSystem) {
                             const systemEl = document.createElement('div');
                             systemEl.className = 'chat-system-msg';
@@ -2388,7 +2370,42 @@
             cancelReplyBtn.click();
 
             db.collection('users').doc(activeChatUserId).collection('messages').add(messagePayload)
-                .then(() => scrollChatToBottom())
+                .then(async () => {
+                    scrollChatToBottom();
+
+                    // Dispatches push notification to recipient's device via Render
+                    try {
+                        const targetRecipientUid = isCurrentAdmin ? activeChatUserId : ADMIN_EMAIL;
+                        
+                        let recipientSub = null;
+                        if (isCurrentAdmin) {
+                            const recipientDoc = await db.collection('users').doc(activeChatUserId).get();
+                            recipientSub = recipientDoc.data()?.pushSubscription;
+                        } else {
+                            // If user is sending to admin, find admin subscription
+                            const adminSnap = await db.collection('users').where('email', '==', ADMIN_EMAIL).limit(1).get();
+                            if (!adminSnap.empty) {
+                                recipientSub = adminSnap.docs[0].data()?.pushSubscription;
+                            }
+                        }
+
+                        if (recipientSub) {
+                            fetch(`${PUSH_SERVER_URL}/api/send-notification`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    recipientId: targetRecipientUid,
+                                    directSubscription: recipientSub,
+                                    title: isCurrentAdmin ? "Bean 🧸" : (currentUser.displayName || "Eggy 🌸"),
+                                    body: text || "Sent a photo 📷",
+                                    url: "/"
+                                })
+                            }).catch(err => console.warn("Push trigger notice:", err));
+                        }
+                    } catch (pushErr) {
+                        console.warn("Push notification dispatch failed:", pushErr);
+                    }
+                })
                 .catch(err => alert("Send failed: " + err.message));
         }
 
