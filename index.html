@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.1)</title>
-    
+    <title>Eggy's Mandarin (v1.2.2)</title>
+
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Eggy's Mandarin">
     <meta name="theme-color" content="#fcf8f5">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png">
-    
+
     <!-- Standalone Physical Web App Manifest for iOS PWA -->
     <link rel="manifest" href="./manifest.json">
 
@@ -135,7 +135,6 @@
             flex-direction: column;
         }
 
-        /* Login Screen */
         #auth-view {
             flex: 1;
             display: flex;
@@ -179,7 +178,6 @@
             box-shadow: 0 1px 0 #e2becb, inset 0 1.5px 2px rgba(180, 120, 130, 0.2) !important;
         }
 
-        /* Controls */
         .controls-card {
             display: flex;
             flex-direction: column;
@@ -217,7 +215,6 @@
             outline: none;
         }
 
-        /* Vocabulary Cards */
         .vocab-card {
             background: rgba(255, 255, 255, 0.94);
             border: 1px solid rgba(250, 227, 239, 0.85);
@@ -749,7 +746,6 @@
             transform: scale(1.35) !important;
         }
 
-        /* Scrollable Full-Emoji Tray for ➕ Button */
         #chat-scrollable-emoji-tray {
             display: none;
             grid-template-columns: repeat(6, 1fr);
@@ -869,1967 +865,1421 @@
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.1</span></h1>
-            <p id="user-display-email">Connecting...</p>
-        </div>
-        <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
-    </header>
+<!-- Header -->
+<header>
+    <div class="header-title-box">
+        <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.2</span></h1>
+        <p id="user-display-email">Connecting...</p>
+    </div>
+    <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
+</header>
 
-    <!-- Sign In View -->
-    <div id="auth-view">
-        <div class="login-card">
-            <img src="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png" style="width: 85px; height: auto; margin-bottom: 16px;" alt="Logo">
-            <h2 style="margin: 0 0 6px; color: #e08b9b; font-size: 20px;">Welcome Bub!</h2>
-            <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words, notes & chat on mobile.</p>
-            <button id="google-login-btn" class="login-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                Sign in with Google
+<!-- Sign In View -->
+<div id="auth-view">
+    <div class="login-card">
+        <img src="https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png" style="width: 85px; height: auto; margin-bottom: 16px;" alt="Logo">
+        <h2 style="margin: 0 0 6px; color: #e08b9b; font-size: 20px;">Welcome Bub!</h2>
+        <p style="margin: 0 0 24px; font-size: 13px; color: #a38c90;">Sign in with Google to sync your saved words, notes & chat on mobile.</p>
+        <button id="google-login-btn" class="login-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            Sign in with Google
+        </button>
+    </div>
+</div>
+
+<!-- Main View -->
+<div id="app-view" style="display: none; flex-direction: column; flex: 1;">
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
+        <button class="tab-btn" id="tab-btn-replies">Bean's Notes</button>
+        <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
+        <button class="tab-btn" id="tab-btn-chat">Chat 💬</button>
+        <button class="tab-btn" id="tab-btn-sync">Sync & Settings</button>
+    </div>
+
+    <main>
+        <!-- 1. Saved Words View -->
+        <section id="vocab-view">
+            <div class="controls-card">
+                <input type="text" id="vocab-search" class="search-input" placeholder="🔍 Search word, pinyin, meaning...">
+                <div class="select-row">
+                    <select id="vocab-filter" class="filter-select">
+                        <option value="all">All Words</option>
+                        <option value="deck">In Flashcard Deck</option>
+                        <option value="notes">Has Note</option>
+                        <option value="bean">Has Bean's Note</option>
+                    </select>
+                    <select id="vocab-sort" class="filter-select">
+                        <option value="time_desc">Newest First</option>
+                        <option value="time_asc">Oldest First</option>
+                        <option value="pinyin_asc">Pinyin: A-Z</option>
+                        <option value="pinyin_desc">Pinyin: Z-A</option>
+                        <option value="hsk_asc">HSK: 1 ➔ 6</option>
+                        <option value="hsk_desc">HSK: 6 ➔ 1</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="vocab-list-container"></div>
+        </section>
+
+        <!-- 2. Bean's Notes View -->
+        <section id="replies-view" style="display: none; flex-direction: column;">
+            <div id="replies-list-container"></div>
+        </section>
+
+        <!-- 3. Flashcards View -->
+        <section id="flash-view" style="display: none; flex-direction: column; align-items: center;">
+            <div id="fc-setup-box">
+                <div style="margin-bottom: 14px; text-align: center;">
+                    <span id="fc-count-pill" style="font-size: 13px; font-weight: 700; color: #e08b9b; background: rgba(255, 240, 245, 0.95); border: 1px solid rgba(245, 205, 226, 0.7); padding: 4px 14px; border-radius: 14px;">
+                        0 Words
+                    </span>
+                </div>
+
+                <div id="fc-mode-hanzi" class="mode-picker-card card-b1">
+                    <div style="font-size: 21px; font-weight: 800; color: #5c4a4d; margin-bottom: 10px;">Hanzi First</div>
+                    <span class="fc-start-pill">Start ▶</span>
+                </div>
+
+                <div id="fc-mode-english" class="mode-picker-card card-b2">
+                    <div style="font-size: 21px; font-weight: 800; color: #5c4a4d; margin-bottom: 10px;">English First</div>
+                    <span class="fc-start-pill">Start ▶</span>
+                </div>
+
+                <div style="text-align: center;">
+                    <button id="fc-clear-deck-btn" class="ghost-btn" style="margin-top: 10px;">Clear Deck 🧹</button>
+                </div>
+            </div>
+
+            <!-- Flashcard Active Session -->
+            <div id="fc-session-box" style="display: none;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
+                    <span id="fc-left-counter">Cards Left: 0</span>
+                    <span id="fc-quit-btn" style="color: #8ba6b6; cursor: pointer; text-decoration: underline;">Quit</span>
+                </div>
+
+                <div class="flashcard-wrapper" id="fc-swipe-container">
+                    <div class="flashcard-inner" id="fc-card-inner">
+                        <div class="flashcard-face" id="fc-face-front"></div>
+                        <div class="flashcard-face flashcard-back" id="fc-face-back"></div>
+                    </div>
+                </div>
+
+                <div class="fc-controls" id="fc-controls-bar" style="opacity: 0.4; pointer-events: none;">
+                    <button id="fc-btn-learn" class="fc-btn fc-btn-learn">Still Learning</button>
+                    <button id="fc-btn-gotit" class="fc-btn fc-btn-gotit">Got It !</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Modernized Chat View -->
+        <section id="chat-view" style="display: none;">
+            <div id="admin-user-selector" style="display: none; margin-bottom: 8px;">
+                <span style="font-size: 11px; font-weight: 700; color: #e08b9b;">Admin: Select Conversation:</span>
+                <select id="admin-target-user-select" class="filter-select" style="margin-top: 4px;"></select>
+            </div>
+            
+            <div class="chat-messages-container" id="chat-messages-box">
+                <div style="text-align: center; color: #a38c90; font-size: 12.5px; margin-top: 30px; font-style: italic;">
+                    Say hi to Bean! Chat history is permanently saved with your Google account 🧸💌
+                </div>
+            </div>
+
+            <!-- Quote Reply Preview Bar -->
+            <div id="chat-reply-preview-bar">
+                <div style="overflow: hidden; padding-right: 10px;">
+                    <span style="font-weight: 800; font-size: 11px; color: #e08b9b;" id="reply-to-user-label">Replying</span>
+                    <div id="reply-to-text-label" style="opacity: 0.85; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;"></div>
+                </div>
+                <span id="cancel-reply-btn" style="font-weight: 800; font-size: 16px; color: #a38c90; cursor: pointer; padding: 4px 8px;">✕</span>
+            </div>
+
+            <!-- Simplified Typing Bar -->
+            <div class="chat-input-bar">
+                <input type="file" id="chat-file-input" accept="image/*" style="display: none;">
+                <button class="chat-attach-btn" id="chat-attach-trigger" title="Send Photo">📷</button>
+                <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message...">
+                <button id="chat-send-action-btn" class="chat-send-btn">Send</button>
+            </div>
+        </section>
+
+        <!-- 5. Sync & Settings View -->
+        <section id="sync-view" style="display: none;">
+            <div class="sync-box">
+                <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
+                <p style="margin: 0 0 10px; font-size: 13px; color: #7b6267;">Copy this key and paste it into the Netflix UserScript menu on your Mac.</p>
+                <div class="sync-key-pill" id="sync-key-display">Loading...</div>
+                <div>
+                    <button id="copy-sync-key-btn" class="ghost-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border-color: #f5cde2; font-weight: 800; padding: 8px 16px;">📋 Copy Sync Key</button>
+                </div>
+            </div>
+
+            <!-- Custom Chat Wallpaper Card -->
+            <div class="sync-box">
+                <h3 style="margin: 0 0 6px; color: #e08b9b;">Chat Wallpaper</h3>
+                <p style="margin: 0 0 12px; font-size: 12.5px; color: #7b6267;">
+                    Add the wallpaper to your chat!
+                </p>
+                
+                <input type="file" id="chat-bg-file-input" accept="image/*" style="display: none;">
+                <div style="display: flex; gap: 10px; justify-content: center; align-items: center; max-width: 310px; margin: 0 auto;">
+                    <button id="upload-bg-btn" class="login-btn" style="flex: 1; height: 42px; font-size: 13px; padding: 0;">
+                        Choose Photo
+                    </button>
+                    <button id="reset-bg-btn" class="ghost-btn" style="flex: 1; height: 42px; font-size: 13px; padding: 0; color: #ba6273; border-radius: 16px;">
+                        Reset Default
+                    </button>
+                </div>
+            </div>
+
+            <!-- Web Push Notifications Card -->
+            <div class="sync-box">
+                <h3 style="margin: 0 0 10px; color: #e08b9b;">Push Notifications 🔔</h3>
+                <button id="enable-push-btn" class="login-btn" style="background: linear-gradient(180deg, #ffffff 0%, #faeef3 100%); color: #e08b9b; border: 1.5px solid #f5cde2; font-size: 13px;">
+                    🔔 Enable Push Notifications
+                </button>
+                <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 700;">Status: Checking...</div>
+            </div>
+
+            <!-- App Version & Cache Status Card -->
+            <div class="sync-box">
+                <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
+                <div class="version-badge-pill">
+                    <b id="settings-version-display">v1.2.2</b>
+                </div>
+                <div>
+                    <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
+                        🔄 Check for Update
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Long-press Action Sheet Modal -->
+<div id="chat-action-menu-overlay">
+    <div class="chat-action-menu-card">
+        <div class="chat-quick-reaction-bar">
+            <button class="chat-react-btn" data-emoji="❤️">❤️</button>
+            <button class="chat-react-btn" data-emoji="😂">😂</button>
+            <button class="chat-react-btn" data-emoji="👍">👍</button>
+            <button class="chat-react-btn" data-emoji="😢">😢</button>
+            <button class="chat-react-btn" data-emoji="😡">😡</button>
+            <button class="chat-react-btn" id="toggle-more-emojis-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
+        </div>
+
+        <div id="chat-scrollable-emoji-tray">
+            <button class="chat-react-btn" data-emoji="🥰">🥰</button>
+            <button class="chat-react-btn" data-emoji="🥳">🥳</button>
+            <button class="chat-react-btn" data-emoji="😮">😮</button>
+            <button class="chat-react-btn" data-emoji="🙏">🙏</button>
+            <button class="chat-react-btn" data-emoji="🔥">🔥</button>
+            <button class="chat-react-btn" data-emoji="🌸">🌸</button>
+            <button class="chat-react-btn" data-emoji="🧸">🧸</button>
+            <button class="chat-react-btn" data-emoji="🐣">🐣</button>
+            <button class="chat-react-btn" data-emoji="✨">✨</button>
+            <button class="chat-react-btn" data-emoji="💯">💯</button>
+            <button class="chat-react-btn" data-emoji="👀">👀</button>
+            <button class="chat-react-btn" data-emoji="🎉">🎉</button>
+            <button class="chat-react-btn" data-emoji="💖">💖</button>
+            <button class="chat-react-btn" data-emoji="🥺">🥺</button>
+            <button class="chat-react-btn" data-emoji="🙌">🙌</button>
+            <button class="chat-react-btn" data-emoji="💀">💀</button>
+            <button class="chat-react-btn" data-emoji="😭">😭</button>
+            <button class="chat-react-btn" data-emoji="🤪">🤪</button>
+            <button class="chat-react-btn" data-emoji="😎">😎</button>
+            <button class="chat-react-btn" data-emoji="🤔">🤔</button>
+            <button class="chat-react-btn" data-emoji="🤮">🤮</button>
+            <button class="chat-react-btn" data-emoji="💩">💩</button>
+            <button class="chat-react-btn" data-emoji="👻">👻</button>
+            <button class="chat-react-btn" data-emoji="🐷">🐷</button>
+            <button class="chat-react-btn" data-emoji="☕">☕</button>
+            <button class="chat-react-btn" data-emoji="💪">💪</button>
+            <button class="chat-react-btn" data-emoji="😴">😴</button>
+            <button class="chat-react-btn" data-emoji="🤩">🤩</button>
+            <button class="chat-react-btn" data-emoji="😇">😇</button>
+            <button class="chat-react-btn" data-emoji="😻">😻</button>
+        </div>
+
+        <div class="chat-menu-actions-list">
+            <button class="chat-menu-btn" id="menu-act-reply">
+                <span>💬</span> <span>Reply</span>
+            </button>
+            <button class="chat-menu-btn" id="menu-act-copy">
+                <span>📋</span> <span>Copy Text</span>
+            </button>
+            <button class="chat-menu-btn destructive" id="menu-act-unsend" style="display: none;">
+                <span>🗑️</span> <span>Unsend Message</span>
             </button>
         </div>
     </div>
+</div>
 
-    <!-- Main View -->
-    <div id="app-view" style="display: none; flex-direction: column; flex: 1;">
-        <div class="nav-tabs">
-            <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
-            <button class="tab-btn" id="tab-btn-replies">Bean's Notes</button>
-            <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
-            <button class="tab-btn" id="tab-btn-chat">Chat 💬</button>
-            <button class="tab-btn" id="tab-btn-sync">Sync & Settings</button>
-        </div>
+<!-- Fullscreen Image Lightbox -->
+<div id="chat-lightbox">
+    <img id="chat-lightbox-img" src="" alt="Fullscreen Image">
+</div>
 
-        <main>
-            <!-- 1. Saved Words View -->
-            <section id="vocab-view">
-                <div class="controls-card">
-                    <input type="text" id="vocab-search" class="search-input" placeholder="🔍 Search word, pinyin, meaning...">
-                    <div class="select-row">
-                        <select id="vocab-filter" class="filter-select">
-                            <option value="all">All Words</option>
-                            <option value="deck">In Flashcard Deck</option>
-                            <option value="notes">Has Note</option>
-                            <option value="bean">Has Bean's Note</option>
-                        </select>
-                        <select id="vocab-sort" class="filter-select">
-                            <option value="time_desc">Newest First</option>
-                            <option value="time_asc">Oldest First</option>
-                            <option value="pinyin_asc">Pinyin: A-Z</option>
-                            <option value="pinyin_desc">Pinyin: Z-A</option>
-                            <option value="hsk_asc">HSK: 1 ➔ 6</option>
-                            <option value="hsk_desc">HSK: 6 ➔ 1</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="vocab-list-container"></div>
-            </section>
-
-            <!-- 2. Bean's Notes View -->
-            <section id="replies-view" style="display: none; flex-direction: column;">
-                <div id="replies-list-container"></div>
-            </section>
-
-            <!-- 3. Flashcards View -->
-            <section id="flash-view" style="display: none; flex-direction: column; align-items: center;">
-                <div id="fc-setup-box">
-                    <div style="margin-bottom: 14px; text-align: center;">
-                        <span id="fc-count-pill" style="font-size: 13px; font-weight: 700; color: #e08b9b; background: rgba(255, 240, 245, 0.95); border: 1px solid rgba(245, 205, 226, 0.7); padding: 4px 14px; border-radius: 14px;">
-                            0 Words
-                        </span>
-                    </div>
-
-                    <div id="fc-mode-hanzi" class="mode-picker-card card-b1">
-                        <div style="font-size: 21px; font-weight: 800; color: #5c4a4d; margin-bottom: 10px;">Hanzi First</div>
-                        <span class="fc-start-pill">Start ▶</span>
-                    </div>
-
-                    <div id="fc-mode-english" class="mode-picker-card card-b2">
-                        <div style="font-size: 21px; font-weight: 800; color: #5c4a4d; margin-bottom: 10px;">English First</div>
-                        <span class="fc-start-pill">Start ▶</span>
-                    </div>
-
-                    <div style="text-align: center;">
-                        <button id="fc-clear-deck-btn" class="ghost-btn" style="margin-top: 10px;">Clear Deck 🧹</button>
-                    </div>
-                </div>
-
-                <!-- Flashcard Active Session -->
-                <div id="fc-session-box" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #a38c90; font-weight: 700; margin-bottom: 6px;">
-                        <span id="fc-left-counter">Cards Left: 0</span>
-                        <span id="fc-quit-btn" style="color: #8ba6b6; cursor: pointer; text-decoration: underline;">Quit</span>
-                    </div>
-
-                    <div class="flashcard-wrapper" id="fc-swipe-container">
-                        <div class="flashcard-inner" id="fc-card-inner">
-                            <div class="flashcard-face" id="fc-face-front"></div>
-                            <div class="flashcard-face flashcard-back" id="fc-face-back"></div>
-                        </div>
-                    </div>
-
-                    <div class="fc-controls" id="fc-controls-bar" style="opacity: 0.4; pointer-events: none;">
-                        <button id="fc-btn-learn" class="fc-btn fc-btn-learn">Still Learning</button>
-                        <button id="fc-btn-gotit" class="fc-btn fc-btn-gotit">Got It !</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. Modernized Chat View -->
-            <section id="chat-view" style="display: none;">
-                <div id="admin-user-selector" style="display: none; margin-bottom: 8px;">
-                    <span style="font-size: 11px; font-weight: 700; color: #e08b9b;">Admin: Select Conversation:</span>
-                    <select id="admin-target-user-select" class="filter-select" style="margin-top: 4px;"></select>
-                </div>
-                
-                <div class="chat-messages-container" id="chat-messages-box">
-                    <div style="text-align: center; color: #a38c90; font-size: 12.5px; margin-top: 30px; font-style: italic;">
-                        Say hi to Bean! Chat history is permanently saved with your Google account 🧸💌
-                    </div>
-                </div>
-
-                <!-- Quote Reply Preview Bar -->
-                <div id="chat-reply-preview-bar">
-                    <div style="overflow: hidden; padding-right: 10px;">
-                        <span style="font-weight: 800; font-size: 11px; color: #e08b9b;" id="reply-to-user-label">Replying</span>
-                        <div id="reply-to-text-label" style="opacity: 0.85; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;"></div>
-                    </div>
-                    <span id="cancel-reply-btn" style="font-weight: 800; font-size: 16px; color: #a38c90; cursor: pointer; padding: 4px 8px;">✕</span>
-                </div>
-
-                <!-- Simplified Typing Bar -->
-                <div class="chat-input-bar">
-                    <input type="file" id="chat-file-input" accept="image/*" style="display: none;">
-                    <button class="chat-attach-btn" id="chat-attach-trigger" title="Send Photo">📷</button>
-                    <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message...">
-                    <button id="chat-send-action-btn" class="chat-send-btn">Send</button>
-                </div>
-            </section>
-
-            <!-- 5. Sync & Settings View -->
-            <section id="sync-view" style="display: none;">
-                <div class="sync-box">
-                    <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
-                    <p style="margin: 0 0 10px; font-size: 13px; color: #7b6267;">Copy this key and paste it into the Netflix UserScript menu on your Mac.</p>
-                    <div class="sync-key-pill" id="sync-key-display">Loading...</div>
-                    <div>
-                        <button id="copy-sync-key-btn" class="ghost-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border-color: #f5cde2; font-weight: 800; padding: 8px 16px;">📋 Copy Sync Key</button>
-                    </div>
-                </div>
-
-                <!-- Custom Chat Wallpaper Card -->
-                <div class="sync-box">
-                    <h3 style="margin: 0 0 6px; color: #e08b9b;">Chat Wallpaper</h3>
-                    <p style="margin: 0 0 12px; font-size: 12.5px; color: #7b6267;">
-                        Add the wallpaper to your chat!
-                    </p>
-                    
-                    <input type="file" id="chat-bg-file-input" accept="image/*" style="display: none;">
-                    <div style="display: flex; gap: 10px; justify-content: center; align-items: center; max-width: 310px; margin: 0 auto;">
-                        <button id="upload-bg-btn" class="login-btn" style="flex: 1; height: 42px; font-size: 13px; padding: 0;">
-                            Choose Photo
-                        </button>
-                        <button id="reset-bg-btn" class="ghost-btn" style="flex: 1; height: 42px; font-size: 13px; padding: 0; color: #ba6273; border-radius: 16px;">
-                            Reset Default
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Web Push Notifications Card -->
-                <div class="sync-box">
-                    <h3 style="margin: 0 0 10px; color: #e08b9b;">Push Notifications 🔔</h3>
-                    <button id="enable-push-btn" class="login-btn" style="background: linear-gradient(180deg, #ffffff 0%, #fae6ed 100%); color: #e08b9b; border: 1.5px solid #f5cde2; font-size: 13px;">
-                        🔔 Enable Push Notifications
-                    </button>
-                    <div id="push-status-lbl" style="font-size: 11.5px; color: #a38c90; margin-top: 10px; font-weight: 700;">Status: Checking...</div>
-                </div>
-
-                <!-- App Version & Cache Status Card -->
-                <div class="sync-box">
-                    <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
-                    <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.1</b>
-                    </div>
-                    <div>
-                        <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
-                            🔄 Check for Update
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </main>
+<!-- Ask Bean Modal Overlay -->
+<div id="modal-overlay"></div>
+<div id="report-modal">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px dashed #f5cde2; padding-bottom: 8px;">
+        <span style="font-weight: 800; font-size: 16px; color: #e08b9b;">Ask Bean about this! 💌</span>
+        <span id="close-report-btn" style="cursor: pointer; color: #9c8085; font-weight: 800; font-size: 15px;">✕</span>
     </div>
-
-    <!-- Long-press Action Sheet Modal -->
-    <div id="chat-action-menu-overlay">
-        <div class="chat-action-menu-card">
-            <div class="chat-quick-reaction-bar">
-                <button class="chat-react-btn" data-emoji="❤️">❤️</button>
-                <button class="chat-react-btn" data-emoji="😂">😂</button>
-                <button class="chat-react-btn" data-emoji="👍">👍</button>
-                <button class="chat-react-btn" data-emoji="😢">😢</button>
-                <button class="chat-react-btn" data-emoji="😡">😡</button>
-                <button class="chat-react-btn" id="toggle-more-emojis-btn" style="font-size: 20px; font-weight: 800; color: #b56c7d;">➕</button>
-            </div>
-
-            <div id="chat-scrollable-emoji-tray">
-                <button class="chat-react-btn" data-emoji="🥰">🥰</button>
-                <button class="chat-react-btn" data-emoji="🥳">🥳</button>
-                <button class="chat-react-btn" data-emoji="😮">😮</button>
-                <button class="chat-react-btn" data-emoji="🙏">🙏</button>
-                <button class="chat-react-btn" data-emoji="🔥">🔥</button>
-                <button class="chat-react-btn" data-emoji="🌸">🌸</button>
-                <button class="chat-react-btn" data-emoji="🧸">🧸</button>
-                <button class="chat-react-btn" data-emoji="🐣">🐣</button>
-                <button class="chat-react-btn" data-emoji="✨">✨</button>
-                <button class="chat-react-btn" data-emoji="💯">💯</button>
-                <button class="chat-react-btn" data-emoji="👀">👀</button>
-                <button class="chat-react-btn" data-emoji="🎉">🎉</button>
-                <button class="chat-react-btn" data-emoji="💖">💖</button>
-                <button class="chat-react-btn" data-emoji="🥺">🥺</button>
-                <button class="chat-react-btn" data-emoji="🙌">🙌</button>
-                <button class="chat-react-btn" data-emoji="💀">💀</button>
-                <button class="chat-react-btn" data-emoji="😭">😭</button>
-                <button class="chat-react-btn" data-emoji="🤪">🤪</button>
-                <button class="chat-react-btn" data-emoji="😎">😎</button>
-                <button class="chat-react-btn" data-emoji="🤔">🤔</button>
-                <button class="chat-react-btn" data-emoji="🤮">🤮</button>
-                <button class="chat-react-btn" data-emoji="💩">💩</button>
-                <button class="chat-react-btn" data-emoji="👻">👻</button>
-                <button class="chat-react-btn" data-emoji="🐷">🐷</button>
-                <button class="chat-react-btn" data-emoji="☕">☕</button>
-                <button class="chat-react-btn" data-emoji="💪">💪</button>
-                <button class="chat-react-btn" data-emoji="😴">😴</button>
-                <button class="chat-react-btn" data-emoji="🤩">🤩</button>
-                <button class="chat-react-btn" data-emoji="😇">😇</button>
-                <button class="chat-react-btn" data-emoji="😻">😻</button>
-            </div>
-
-            <div class="chat-menu-actions-list">
-                <button class="chat-menu-btn" id="menu-act-reply">
-                    <span>💬</span> <span>Reply</span>
-                </button>
-                <button class="chat-menu-btn" id="menu-act-copy">
-                    <span>📋</span> <span>Copy Text</span>
-                </button>
-                <button class="chat-menu-btn destructive" id="menu-act-unsend" style="display: none;">
-                    <span>🗑️</span> <span>Unsend Message</span>
-                </button>
-            </div>
-        </div>
+    <div style="margin-bottom: 12px; font-size: 14px;">
+        <span style="color: #a38c90;">Word: </span>
+        <b id="report-target-hanzi" style="color: #e08b9b; font-size: 22px;"></b>
     </div>
+    <textarea id="report-input-msg" rows="3" placeholder="What feels confusing or needs a better explanation? (optional)" style="width: 100%; border: 1px solid #f5cde2; border-radius: 10px; padding: 10px; font-family: inherit; font-size: 13px; color: #5c4a4d; outline: none; resize: none; margin-bottom: 14px; line-height: 1.4;"></textarea>
+    <button id="send-report-btn" class="login-btn" style="background: linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%); color: white; border: none;">
+        Send to Bean 🧸
+    </button>
+</div>
 
-    <!-- Fullscreen Image Lightbox -->
-    <div id="chat-lightbox">
-        <img id="chat-lightbox-img" src="" alt="Fullscreen Image">
-    </div>
+<script>
+    // --- 0. VERSION TRACKING & CACHE REFRESH ---
+    const APP_VERSION = 'v1.2.2';
 
-    <!-- Ask Bean Modal Overlay -->
-    <div id="modal-overlay"></div>
-    <div id="report-modal">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px dashed #f5cde2; padding-bottom: 8px;">
-            <span style="font-weight: 800; font-size: 16px; color: #e08b9b;">Ask Bean about this! 💌</span>
-            <span id="close-report-btn" style="cursor: pointer; color: #9c8085; font-weight: 800; font-size: 15px;">✕</span>
-        </div>
-        <div style="margin-bottom: 12px; font-size: 14px;">
-            <span style="color: #a38c90;">Word: </span>
-            <b id="report-target-hanzi" style="color: #e08b9b; font-size: 22px;"></b>
-        </div>
-        <textarea id="report-input-msg" rows="3" placeholder="What feels confusing or needs a better explanation? (optional)" style="width: 100%; border: 1px solid #f5cde2; border-radius: 10px; padding: 10px; font-family: inherit; font-size: 13px; color: #5c4a4d; outline: none; resize: none; margin-bottom: 14px; line-height: 1.4;"></textarea>
-        <button id="send-report-btn" class="login-btn" style="background: linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%); color: white; border: none;">
-            Send to Bean 🧸
-        </button>
-    </div>
-
-    <script>
-        // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.1';
-
-        document.getElementById('force-update-btn')?.addEventListener('click', async () => {
-            if ('caches' in window) {
-                const names = await caches.keys();
-                for (let name of names) await caches.delete(name);
-            }
-            if ('serviceWorker' in navigator) {
-                const reg = await navigator.serviceWorker.getRegistration();
-                if (reg) await reg.update();
-            }
-            alert(`Cache refreshed! Reloading Eggy's Mandarin...`);
-            window.location.reload(true);
-        });
-
-        // --- GLOBAL PHYSICAL SQUISH HANDLER (RESTORED FOR IOS) ---
-        const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn, .chat-reaction-badge';
-
-        const addSquish = (e) => {
-            const btn = e.target.closest(SQUISH_TARGETS);
-            if (!btn) return;
-            btn.classList.add('is-pressed');
-            if (navigator.vibrate) navigator.vibrate(10);
-            
-            const release = () => {
-                btn.classList.remove('is-pressed');
-                window.removeEventListener('touchend', release);
-                window.removeEventListener('touchcancel', release);
-                window.removeEventListener('mouseup', release);
-            };
-            window.addEventListener('touchend', release);
-            window.addEventListener('touchcancel', release);
-            window.addEventListener('mouseup', release);
-        };
-
-        document.addEventListener('touchstart', addSquish, { passive: true });
-        document.addEventListener('mousedown', addSquish);
-
-        // --- 1. ASSET CONSTANTS & CLOUD BACKEND CONFIG ---
-        const ADMIN_EMAIL = 'yenwen6281plus@gmail.com';
-        const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
-        const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
-        const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";
-        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEkOXPBJgpXoxALL2Qmx1LWoJc4Q1yHySGV_clcSJmuS6_ue7nZUrx5HEM-tOMpVSGrQ/exec';
-
-        // Dedicated Push Notification Server (Render) & VAPID Key
-        const PUSH_SERVER_URL = 'https://flissllt-push-server.onrender.com';
-        const PUBLIC_VAPID_KEY = 'BLL9lxz04NycS8kCs0tDQNeOU7VcUuBqcktqWcvxwLAW7DyZ4GeikXIkqj-jq8urDQqhv3SeaQcxdoSGKjkbsPs';
-
-        const FLASHCARD_BG_IMAGES_HANZI = [
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d1.png',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d2.png',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d3.png',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d4.png',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d5.png'
-        ];
-
-        const FLASHCARD_BG_IMAGES_ENGLISH = [
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e1.jpg',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e2.jpg',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e3.jpg',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e4.jpg',
-            'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e5.jpg'
-        ];
-
-        function stripPinyinTones(str) {
-            if (!str) return '';
-            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '');
+    document.getElementById('force-update-btn')?.addEventListener('click', async () => {
+        if ('caches' in window) {
+            const names = await caches.keys();
+            for (let name of names) await caches.delete(name);
         }
-
-        function urlBase64ToUint8Array(base64String) {
-            const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-            const rawData = window.atob(base64);
-            const outputArray = new Uint8Array(rawData.length);
-            for (let i = 0; i < rawData.length; ++i) {
-                outputArray[i] = rawData.charCodeAt(i);
-            }
-            return outputArray;
-        }
-
-        // --- 2. FIREBASE INITIALIZATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBGhMMd6fd2oK23J-YA27VYXFGh69R1PA0",
-            authDomain: "lltfliss-ce07a.firebaseapp.com",
-            projectId: "lltfliss-ce07a",
-            storageBucket: "lltfliss-ce07a.firebasestorage.app",
-            messagingSenderId: "839671719751",
-            appId: "1:839671719751:web:063a638ed2c7eb984f4e62",
-            measurementId: "G-RR57EXPBH6"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        db.enablePersistence().catch(err => console.warn("Firestore cache fallback:", err.code));
-
-        let currentUser = null;
-        let unsubscribeVocab = null;
-        let unsubscribeChat = null;
-        let unsubscribeChatWallpaper = null;
-        let unsubscribeGlobalAlerts = null;
-        let vocabList = [];
-        let beanRepliesList = [];
-        let askedWordsList = [];
-        let flashcardSessionCount = 0;
-        let activeChatUserId = null;
-        let activeReplyTarget = null;
-        let menuTargetMsg = null;
-        let swRegistration = null;
-
-        // Auto-register service worker using relative path for GitHub Pages
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => {
-                    swRegistration = reg;
-                    console.log("Service Worker registered on relative scope:", reg.scope);
-                })
-                .catch(err => console.warn("Relative SW register warning:", err));
+            const reg = await navigator.serviceWorker.getRegistration();
+            if (reg) await reg.update();
         }
+        alert(`Cache refreshed! Reloading Eggy's Mandarin...`);
+        window.location.reload(true);
+    });
 
-        function triggerAppNotification(title, body) {
-            if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
-            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    // --- GLOBAL PHYSICAL SQUISH HANDLER ---
+    const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn, .chat-reaction-badge';
 
-            const options = {
-                body: body,
-                icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
-                badge: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
-                tag: 'eggys-msg'
-            };
+    const addSquish = (e) => {
+        const btn = e.target.closest(SQUISH_TARGETS);
+        if (!btn) return;
+        btn.classList.add('is-pressed');
+        if (navigator.vibrate) navigator.vibrate(10);
+        
+        const release = () => {
+            btn.classList.remove('is-pressed');
+            window.removeEventListener('touchend', release);
+            window.removeEventListener('touchcancel', release);
+            window.removeEventListener('mouseup', release);
+        };
+        window.addEventListener('touchend', release);
+        window.addEventListener('touchcancel', release);
+        window.addEventListener('mouseup', release);
+    };
 
-            if (swRegistration && swRegistration.showNotification) {
-                swRegistration.showNotification(title, options).catch(() => {
-                    try { new Notification(title, options); } catch(e){}
-                });
-            } else if (navigator.serviceWorker && navigator.serviceWorker.ready) {
-                navigator.serviceWorker.ready.then(reg => reg.showNotification(title, options)).catch(() => {
-                    try { new Notification(title, options); } catch(e){}
-                });
-            } else {
+    document.addEventListener('touchstart', addSquish, { passive: true });
+    document.addEventListener('mousedown', addSquish);
+
+    // --- 1. ASSET CONSTANTS & BACKEND CONFIG ---
+    const ADMIN_EMAIL = 'yenwen6281plus@gmail.com';
+    const PONYO_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/2d078edf50412736a35f4427cde45c533d310fa3/ponyo-removebg-preview.png";
+    const WOODSTOCK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/dafd9d8981693cfc1ceb84a26c85442dcb9716da/woodstock.png";
+    const COMPLETE_DECK_IMG_URL = "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/45c35941f24aabe020891bdc3d9df53ec0aff55f/c2.png";       
+
+    const PUSH_SERVER_URL = 'https://flissllt-push-server.onrender.com';
+    const PUBLIC_VAPID_KEY = 'BLL9lxz04NycS8kCs0tDQNeOU7VcUuBqcktqWcvxwLAW7DyZ4GeikXIkqj-jq8urDQqhv3SeaQcxdoSGKjkbsPs';
+
+    const FLASHCARD_BG_IMAGES_HANZI = [
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d1.png',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d2.png',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d3.png',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d4.png',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/98ab0023e1c510c6ee108fe5098afbfe1adbc8f6/d5.png'
+    ];
+
+    const FLASHCARD_BG_IMAGES_ENGLISH = [
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e1.jpg',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e2.jpg',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e3.jpg',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e4.jpg',
+        'https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/83f32298468c63d9f2368dc328702ed6f301eb60/e5.jpg'
+    ];
+
+    function stripPinyinTones(str) {
+        if (!str) return '';
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '');
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    // --- 2. FIREBASE INITIALIZATION ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBGhMMd6fd2oK23J-YA27VYXFGh69R1PA0",
+        authDomain: "lltfliss-ce07a.firebaseapp.com",
+        projectId: "lltfliss-ce07a",
+        storageBucket: "lltfliss-ce07a.firebasestorage.app",
+        messagingSenderId: "839671719751",
+        appId: "1:839671719751:web:063a638ed2c7eb984f4e62",
+        measurementId: "G-RR57EXPBH6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    db.enablePersistence().catch(err => console.warn("Firestore cache fallback:", err.code));
+
+    let currentUser = null;
+    let unsubscribeVocab = null;
+    let inquiriesUnsubscribe = null;
+    let unsubscribeChat = null;
+    let unsubscribeChatWallpaper = null;
+    let unsubscribeGlobalAlerts = null;
+    let vocabList = [];
+    let beanRepliesList = [];
+    let askedWordsList = [];
+    let flashcardSessionCount = 0;
+    let activeChatUserId = null;
+    let activeReplyTarget = null;
+    let menuTargetMsg = null;
+    let swRegistration = null;
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => {
+                swRegistration = reg;
+                console.log("Service Worker registered on relative scope:", reg.scope);
+            })
+            .catch(err => console.warn("Relative SW register warning:", err));
+    }
+
+    function triggerAppNotification(title, body) {
+        if (navigator.vibrate) navigator.vibrate([60, 80, 60]);
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+        const options = {
+            body: body,
+            icon: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
+            badge: "https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/854cab3f7b910a95391b99dfa7d881b22543524f/c1.png",
+            tag: 'eggys-msg'
+        };
+
+        if (swRegistration && swRegistration.showNotification) {
+            swRegistration.showNotification(title, options).catch(() => {
                 try { new Notification(title, options); } catch(e){}
-            }
+            });
+        } else if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+            navigator.serviceWorker.ready.then(reg => reg.showNotification(title, options)).catch(() => {
+                try { new Notification(title, options); } catch(e){}
+            });
+        } else {
+            try { new Notification(title, options); } catch(e){}
+        }
+    }
+
+    // --- 3. FIRESTORE REAL-TIME INQUIRIES & BEAN REPLIES ---
+    function subscribeToInquiries(uid) {
+        if (inquiriesUnsubscribe) {
+            inquiriesUnsubscribe();
+            inquiriesUnsubscribe = null;
         }
 
-        function fetchBeanReplies(onComplete) {
-            fetch(GOOGLE_APP_SCRIPT_URL)
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        beanRepliesList = data;
-                        renderSavedVocab();
-                        renderBeanRepliesTab();
-                    }
-                    if (typeof onComplete === 'function') onComplete();
-                })
-                .catch(err => {
-                    console.error("Error loading Bean replies:", err);
-                    if (typeof onComplete === 'function') onComplete();
-                });
-        }
-        fetchBeanReplies();
-
-        function getAllBeanRepliesFor(hanzi) {
-            return beanRepliesList.filter(r => r.hanzi === hanzi && r.reply);
+        if (!uid) {
+            beanRepliesList = [];
+            return;
         }
 
-        function getReportIconStatus(hanzi) {
-            const answers = getAllBeanRepliesFor(hanzi);
-            if (answers.length > 0) return { color: '#e08b9b', title: "Bean answered! 💌" };
-            if (askedWordsList.includes(hanzi)) return { color: '#e6a23c', title: "Question sent to Bean 💌" };
-            return { color: '#b89c9e', title: "Ask Bean / Report Word" };
-        }
-
-        // --- 3. AUTH FLOW ---
-        const authView = document.getElementById('auth-view');
-        const appView = document.getElementById('app-view');
-        const googleLoginBtn = document.getElementById('google-login-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const userDisplayEmail = document.getElementById('user-display-email');
-        const syncKeyDisplay = document.getElementById('sync-key-display');
-        const enablePushBtn = document.getElementById('enable-push-btn');
-        const pushStatusLbl = document.getElementById('push-status-lbl');
-
-        googleLoginBtn.addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => alert("Login Error: " + err.message));
-        });
-
-        logoutBtn.addEventListener('click', () => {
-            if (confirm("Sign out of Eggy's Mandarin?")) auth.signOut();
-        });
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                authView.style.display = 'none';
-                appView.style.display = 'flex';
-                logoutBtn.style.display = 'inline-block';
-                userDisplayEmail.textContent = user.email;
-                syncKeyDisplay.textContent = user.uid;
-
-                db.collection('users').doc(user.uid).set({
-                    email: user.email,
-                    displayName: user.displayName || user.email.split('@')[0],
-                    lastSeen: Date.now()
-                }, { merge: true });
-
-                listenToCloudData(user.uid);
-                initChat(user);
-                initGlobalNotificationWatcher(user);
-                checkPushStatus();
-            } else {
-                currentUser = null;
-                if (unsubscribeVocab) unsubscribeVocab();
-                if (unsubscribeChat) unsubscribeChat();
-                if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
-                if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
-                authView.style.display = 'flex';
-                appView.style.display = 'none';
-                logoutBtn.style.display = 'none';
-                userDisplayEmail.textContent = "Please sign in";
-            }
-        });
-
-        document.getElementById('copy-sync-key-btn').addEventListener('click', () => {
-            if (currentUser) {
-                navigator.clipboard.writeText(currentUser.uid).then(() => alert("Sync Key copied to clipboard! 🌷"));
-            }
-        });
-
-        function initGlobalNotificationWatcher(user) {
-            if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
-
-            const targetUid = user.email === ADMIN_EMAIL && activeChatUserId ? activeChatUserId : user.uid;
-            let initialLoad = true;
-
-            unsubscribeGlobalAlerts = db.collection('users').doc(targetUid).collection('messages')
-                .orderBy('timestamp', 'desc')
-                .limit(20)
-                .onSnapshot(snap => {
-                    if (initialLoad) {
-                        initialLoad = false;
-                        return;
-                    }
-                    snap.docChanges().forEach(change => {
-                        if (change.type === 'added') {
-                            const msg = change.doc.data();
-                            if (msg.isSystem) return;
-
-                            const isMe = (currentUser.email === ADMIN_EMAIL && msg.sender === 'admin') ||
-                                         (currentUser.email !== ADMIN_EMAIL && msg.sender === 'user');
-                            
-                            if (!isMe && !msg.read) {
-                                const senderTitle = msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "New Message");
-                                const bodyPreview = msg.text || "Sent a photo 📷";
-                                triggerAppNotification(senderTitle, bodyPreview);
-                            }
-                        }
+        inquiriesUnsubscribe = db.collection('users')
+            .doc(uid)
+            .collection('inquiries')
+            .onSnapshot(snapshot => {
+                beanRepliesList = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    beanRepliesList.push({
+                        id: doc.id,
+                        hanzi: data.hanzi || '',
+                        user_query: data.user_query || '',
+                        reply: data.reply || '',
+                        status: data.status || 'pending',
+                        createdAt: data.createdAt || 0,
+                        repliedAt: data.repliedAt || null
                     });
-                }, err => console.warn("Global alert watcher error:", err));
+                });
+
+                console.log(`💌 Synced ${beanRepliesList.length} private inquiries from Firestore!`);
+
+                if (typeof renderSavedVocab === 'function') renderSavedVocab();
+                if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
+            }, err => {
+                console.error("Firestore inquiries sync error:", err);
+            });
+    }
+
+    function getAllBeanRepliesFor(hanzi) {
+        return beanRepliesList.filter(r => r.hanzi === hanzi && r.reply);
+    }
+
+    function markWordAsAsked(hanzi) {
+        if (!askedWordsList.includes(hanzi)) {
+            askedWordsList.push(hanzi);
+            try {
+                localStorage.setItem('asked_words_' + (currentUser ? currentUser.uid : 'anon'), JSON.stringify(askedWordsList));
+            } catch (e){}
         }
+        renderSavedVocab();
+    }
 
-        // Web Push Check & UI Status
-        async function checkPushStatus() {
-            if (!('Notification' in window)) {
-                pushStatusLbl.textContent = "Status: Not supported on this browser";
-                enablePushBtn.style.display = 'none';
-                return;
-            }
+    function isWordAsked(hanzi) {
+        return askedWordsList.includes(hanzi);
+    }
 
-            if (Notification.permission === 'granted') {
-                pushStatusLbl.textContent = "Status: Enabled";
-                enablePushBtn.textContent = "Notifications Active 🌸";
-            } else if (Notification.permission === 'denied') {
-                pushStatusLbl.textContent = "Status: Blocked in Settings";
-            } else {
-                pushStatusLbl.textContent = "Status: Ready to enable";
-            }
-        }
-
-        // Standard Web Push Activation (Cross-compatible with iOS Safari standalone mode)
-        enablePushBtn.addEventListener('click', async () => {
-            if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-                alert("Push notifications require iOS 16.4+ and adding this web app to your Home Screen!");
-                return;
-            }
+    // --- 4. AUTHENTICATION & INITIALIZATION ---
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('auth-view').style.display = 'none';
+            document.getElementById('app-view').style.display = 'flex';
+            document.getElementById('logout-btn').style.display = 'block';
+            document.getElementById('user-display-email').textContent = user.email;
+            document.getElementById('sync-key-display').textContent = user.uid;
 
             try {
-                // Request Permission (handles both Promise and Callback styles for older iOS Safari)
-                let permission;
-                try {
-                    permission = await Notification.requestPermission();
-                } catch (e) {
-                    permission = await new Promise(resolve => Notification.requestPermission(resolve));
-                }
-
-                if (permission !== 'granted') {
-                    checkPushStatus();
-                    alert("Notification permission was not granted (Status: " + permission + ").");
-                    return;
-                }
-
-                // Register Service Worker with relative path
-                const reg = await navigator.serviceWorker.register('./sw.js');
-                await navigator.serviceWorker.ready;
-
-                // Subscribe via PushManager using our verified VAPID Key
-                const subscription = await reg.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
-                });
-
-                if (currentUser) {
-                    const subClean = JSON.parse(JSON.stringify(subscription));
-
-                    // Store on Firestore
-                    await db.collection('users').doc(currentUser.uid).set({
-                        pushSubscription: subClean,
-                        pushUpdatedAt: Date.now()
-                    }, { merge: true });
-
-                    // Store on Render Push Server
-                    await fetch(`${PUSH_SERVER_URL}/api/save-subscription`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            userId: currentUser.uid,
-                            subscription: subClean
-                        })
-                    });
-                }
-
-                checkPushStatus();
-                alert("Notifications enabled! Background alerts are ready 🌸");
-            } catch (err) {
-                console.error("Push registration error:", err);
-                alert("Push activation error: " + err.message);
+                const rawAsked = localStorage.getItem('asked_words_' + user.uid);
+                askedWordsList = rawAsked ? JSON.parse(rawAsked) : [];
+            } catch(e) {
+                askedWordsList = [];
             }
-        });
 
-        // --- 4. FIRESTORE REALTIME SYNC ---
-        function listenToCloudData(uid) {
+            initUserData(user);
+            setupPushNotifications(user);
+        } else {
+            currentUser = null;
             if (unsubscribeVocab) unsubscribeVocab();
-
-            unsubscribeVocab = db.collection('users').doc(uid).collection('vocab')
-                .onSnapshot(snapshot => {
-                    vocabList = [];
-                    let idx = 0;
-                    snapshot.forEach(doc => {
-                        vocabList.push({ id: doc.id, _docIndex: idx++, ...doc.data() });
-                    });
-                    renderSavedVocab();
-                    renderBeanRepliesTab();
-                    updateFlashcardCounts();
-                }, err => console.error("Firestore sync error:", err));
-        }
-
-        // --- 5. TABS NAVIGATION ---
-        const tabBtnVocab = document.getElementById('tab-btn-vocab');
-        const tabBtnReplies = document.getElementById('tab-btn-replies');
-        const tabBtnFlash = document.getElementById('tab-btn-flash');
-        const tabBtnChat = document.getElementById('tab-btn-chat');
-        const tabBtnSync = document.getElementById('tab-btn-sync');
-        const vocabView = document.getElementById('vocab-view');
-        const repliesView = document.getElementById('replies-view');
-        const flashView = document.getElementById('flash-view');
-        const chatView = document.getElementById('chat-view');
-        const syncView = document.getElementById('sync-view');
-
-        function switchTab(activeBtn, activeSection) {
-            [tabBtnVocab, tabBtnReplies, tabBtnFlash, tabBtnChat, tabBtnSync].forEach(b => b.classList.remove('active'));
-            [vocabView, repliesView, flashView, chatView, syncView].forEach(s => s.style.display = 'none');
-            activeBtn.classList.add('active');
-            activeSection.style.display = (activeSection === flashView || activeSection === repliesView || activeSection === chatView) ? 'flex' : 'block';
-
-            if (activeSection === chatView) {
-                markIncomingMessagesAsRead();
-                scrollChatToBottom();
-            }
-        }
-
-        tabBtnVocab.addEventListener('click', () => switchTab(tabBtnVocab, vocabView));
-        tabBtnReplies.addEventListener('click', () => {
-            switchTab(tabBtnReplies, repliesView);
-            fetchBeanReplies();
-        });
-        tabBtnFlash.addEventListener('click', () => switchTab(tabBtnFlash, flashView));
-        tabBtnChat.addEventListener('click', () => switchTab(tabBtnChat, chatView));
-        tabBtnSync.addEventListener('click', () => switchTab(tabBtnSync, syncView));
-
-        function jumpToBeanReply(targetHanzi) {
-            switchTab(tabBtnReplies, repliesView);
-            setTimeout(() => {
-                document.querySelectorAll('.card-highlight-persistent').forEach(el => el.classList.remove('card-highlight-persistent'));
-                const targetCard = document.querySelector(`[data-reply-hanzi="${targetHanzi}"]`);
-                if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    targetCard.classList.remove('jelly-shake-once');
-                    void targetCard.offsetWidth;
-                    targetCard.classList.add('jelly-shake-once');
-                    targetCard.classList.add('card-highlight-persistent');
-                }
-            }, 100);
-        }
-
-        function jumpBackToSavedWord(targetHanzi) {
-            searchInput.value = '';
-            switchTab(tabBtnVocab, vocabView);
-            setTimeout(() => {
-                document.querySelectorAll('.card-highlight-persistent').forEach(el => el.classList.remove('card-highlight-persistent'));
-                const targetCard = document.querySelector(`[data-vocab-hanzi="${targetHanzi}"]`);
-                if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    targetCard.classList.remove('jelly-shake-once');
-                    void targetCard.offsetWidth;
-                    targetCard.classList.add('jelly-shake-once');
-                    targetCard.classList.add('card-highlight-persistent');
-                }
-            }, 100);
-        }
-
-        // --- 6. SAVED WORDS MODULE ---
-        const vocabListContainer = document.getElementById('vocab-list-container');
-        const searchInput = document.getElementById('vocab-search');
-        const filterSelect = document.getElementById('vocab-filter');
-        const sortSelect = document.getElementById('vocab-sort');
-
-        [searchInput, filterSelect, sortSelect].forEach(el => el.addEventListener('input', renderSavedVocab));
-
-        function parseTimestamp(rawVal) {
-            if (!rawVal) return 0;
-            if (typeof rawVal === 'number') return rawVal;
-            if (typeof rawVal.toMillis === 'function') return rawVal.toMillis();
-            if (typeof rawVal.seconds === 'number') return rawVal.seconds * 1000;
-            if (typeof rawVal === 'string') {
-                const parsed = Date.parse(rawVal);
-                return isNaN(parsed) ? 0 : parsed;
-            }
-            return 0;
-        }
-
-        function getOriginalAddedTime(v) {
-            const saved = parseTimestamp(v.savedAt);
-            if (saved > 0) return saved;
-
-            const ts = parseTimestamp(v.timestamp);
-            if (ts > 0) return ts;
-
-            const created = parseTimestamp(v.createdAt);
-            if (created > 0) return created;
-
-            const dateAdded = parseTimestamp(v.dateAdded);
-            if (dateAdded > 0) return dateAdded;
-
-            const added = parseTimestamp(v.addedAt);
-            if (added > 0) return added;
-
-            return 0;
-        }
-
-        function renderSavedVocab() {
-            let filtered = [...vocabList];
-            const rawQuery = (searchInput.value || '').toLowerCase().trim();
-            const cleanQuery = stripPinyinTones(rawQuery);
-            const filterVal = filterSelect.value;
-            const sortVal = sortSelect.value;
-
-            if (rawQuery) {
-                filtered = filtered.filter(vocab => {
-                    const matchHanzi = (vocab.hanzi || '').includes(rawQuery);
-                    const matchDef = (vocab.translations || []).some(t => t.toLowerCase().includes(rawQuery));
-                    const rawPinyin = (vocab.pinyin || '').toLowerCase();
-                    const cleanPinyin = stripPinyinTones(vocab.pinyin || '');
-                    const matchPinyin = rawPinyin.includes(rawQuery) || (cleanQuery && cleanPinyin.includes(cleanQuery));
-                    const matchNote = (vocab.note || '').toLowerCase().includes(rawQuery);
-                    const matchBean = (vocab.beanReply || '').toLowerCase().includes(rawQuery);
-                    return matchHanzi || matchDef || matchPinyin || matchNote || matchBean;
-                });
-            }
-
-            if (filterVal === 'deck') filtered = filtered.filter(v => !!v.inDeck);
-            else if (filterVal === 'notes') filtered = filtered.filter(v => (v.note || '').trim().length > 0);
-            else if (filterVal === 'bean') filtered = filtered.filter(v => (v.beanReply || '').trim().length > 0 || getAllBeanRepliesFor(v.hanzi).length > 0);
-
-            if (sortVal === 'time_desc') {
-                filtered.sort((a,b) => {
-                    const timeB = getOriginalAddedTime(b);
-                    const timeA = getOriginalAddedTime(a);
-                    if (timeB !== timeA) return timeB - timeA;
-                    return (b._docIndex || 0) - (a._docIndex || 0);
-                });
-            } else if (sortVal === 'time_asc') {
-                filtered.sort((a,b) => {
-                    const timeB = getOriginalAddedTime(b);
-                    const timeA = getOriginalAddedTime(a);
-                    if (timeB !== timeA) return timeA - timeB;
-                    return (a._docIndex || 0) - (b._docIndex || 0);
-                });
-            } else if (sortVal === 'pinyin_asc') {
-                filtered.sort((a,b) => (a.pinyin || '').localeCompare(b.pinyin || ''));
-            } else if (sortVal === 'pinyin_desc') {
-                filtered.sort((a,b) => (b.pinyin || '').localeCompare(a.pinyin || ''));
-            } else if (sortVal === 'hsk_asc') {
-                filtered.sort((a,b) => (a.level || 99) - (b.level || 99));
-            } else if (sortVal === 'hsk_desc') {
-                filtered.sort((a,b) => (b.level || 99) - (a.level || 99));
-            }
-
-            if (filtered.length === 0) {
-                vocabListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No words match your search or filter 🐣</div>`;
-                return;
-            }
-
-            vocabListContainer.innerHTML = '';
-            filtered.forEach(vocab => {
-                const card = document.createElement('div');
-                card.className = 'vocab-card';
-                card.setAttribute('data-vocab-hanzi', vocab.hanzi);
-
-                const defsHtml = (vocab.translations || []).map(t => `<li style="margin-bottom:2px;">${t}</li>`).join('');
-                const currentNote = vocab.note || '';
-                const allReplies = getAllBeanRepliesFor(vocab.hanzi);
-                const reportStatus = getReportIconStatus(vocab.hanzi);
-                let replyIdx = allReplies.length - 1;
-
-                card.innerHTML = `
-                    <div class="vocab-header">
-                        <div style="display: flex; align-items: center; gap: 2px;">
-                            <span class="vocab-title">${vocab.hanzi}</span>
-                            <button class="ponyo-btn card-speak-btn" title="Listen">
-                                <img src="${PONYO_IMG_URL}" alt="Speak">
-                            </button>
-                        </div>
-                        <span class="vocab-level">HSK ${vocab.level || '?'}</span>
-                    </div>
-                    <div class="vocab-pinyin">${vocab.pinyin || ''}</div>
-                    <ul class="vocab-defs">${defsHtml}</ul>
-
-                    <div class="sticky-note-box">
-                        <textarea class="sticky-note-input" maxlength="50" rows="2" placeholder="Tap to write note (50 chars)...">${currentNote}</textarea>
-                        <div class="sticky-note-footer">
-                            <span class="char-count" style="font-size:10.5px; color:#cf9664; font-weight:700;">${currentNote.length}/50</span>
-                            <span class="note-status" style="font-size:10px; color:#a38c90;">Auto-saved</span>
-                        </div>
-                    </div>
-
-                    ${allReplies.length > 0 ? `
-                        <div class="bean-reply-box">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                                <b style="color:#2e5973;">💬 Bean's Note:</b>
-                                <button class="woodstock-btn card-jump-btn" title="Jump to Bean's Notes tab!">
-                                    <img src="${WOODSTOCK_IMG_URL}" alt="Woodstock">
-                                </button>
-                            </div>
-                            <div class="card-reply-text" style="word-break: break-word;">${allReplies[replyIdx].reply}</div>
-                            ${allReplies.length > 1 ? `
-                                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 6px; border-top: 1px dashed #c9e4f5; padding-top: 4px;">
-                                    <button class="bean-nav-btn card-prev-reply">◀</button>
-                                    <span class="card-reply-counter" style="font-size: 11px; font-weight: bold; color: #6b8ea2;">${replyIdx + 1}/${allReplies.length}</span>
-                                    <button class="bean-nav-btn card-next-reply">▶</button>
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-
-                    <div class="card-actions">
-                        <button class="deck-badge ${vocab.inDeck ? 'in-deck' : ''}">
-                            ${vocab.inDeck ? '✓ Flashcard' : '+ Flashcard'}
-                        </button>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <div class="icon-btn ask-bean-btn" title="${reportStatus.title}" style="color: ${reportStatus.color};">
-                                <svg viewBox="0 0 24 24" width="17" height="17"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-                            </div>
-                            <button class="ghost-btn delete-vocab-btn" style="color: #ba6273;">Unsave</button>
-                        </div>
-                    </div>
-                `;
-
-                card.querySelector('.card-speak-btn').addEventListener('click', () => playTTS(vocab.hanzi));
-
-                card.querySelector('.deck-badge').addEventListener('click', () => {
-                    db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
-                        inDeck: !vocab.inDeck,
-                        updatedAt: Date.now()
-                    });
-                });
-
-                const jumpBtn = card.querySelector('.card-jump-btn');
-                if (jumpBtn) jumpBtn.addEventListener('click', () => jumpToBeanReply(vocab.hanzi));
-
-                if (allReplies.length > 1) {
-                    const replyText = card.querySelector('.card-reply-text');
-                    const counter = card.querySelector('.card-reply-counter');
-                    const prevBtn = card.querySelector('.card-prev-reply');
-                    const nextBtn = card.querySelector('.card-next-reply');
-
-                    prevBtn.addEventListener('click', () => {
-                        replyIdx = (replyIdx - 1 + allReplies.length) % allReplies.length;
-                        replyText.textContent = allReplies[replyIdx].reply;
-                        counter.textContent = `${replyIdx + 1}/${allReplies.length}`;
-                    });
-
-                    nextBtn.addEventListener('click', () => {
-                        replyIdx = (replyIdx + 1) % allReplies.length;
-                        replyText.textContent = allReplies[replyIdx].reply;
-                        counter.textContent = `${replyIdx + 1}/${allReplies.length}`;
-                    });
-                }
-
-                card.querySelector('.ask-bean-btn').addEventListener('click', () => openReportModal(vocab.hanzi));
-
-                card.querySelector('.delete-vocab-btn').addEventListener('click', () => {
-                    if (confirm(`Remove "${vocab.hanzi}" from saved words?`)) {
-                        db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).delete();
-                    }
-                });
-
-                const textarea = card.querySelector('.sticky-note-input');
-                const charCount = card.querySelector('.char-count');
-                const noteStatus = card.querySelector('.note-status');
-                let debounceTimeout = null;
-
-                textarea.addEventListener('input', (e) => {
-                    const val = e.target.value;
-                    charCount.textContent = `${val.length}/50`;
-                    noteStatus.textContent = "Saving...";
-
-                    clearTimeout(debounceTimeout);
-                    debounceTimeout = setTimeout(() => {
-                        db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
-                            note: val,
-                            updatedAt: Date.now()
-                        }).then(() => {
-                            noteStatus.textContent = "Saved ☁️";
-                        });
-                    }, 650);
-                });
-
-                vocabListContainer.appendChild(card);
-            });
-        }
-
-        // --- 7. BEAN'S NOTES TAB VIEW ---
-        const repliesListContainer = document.getElementById('replies-list-container');
-
-        function renderBeanRepliesTab() {
-            if (!repliesListContainer) return;
-
-            if (beanRepliesList.length === 0) {
-                repliesListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No explanations from Bean yet! Ask about any word anytime. 💌</div>`;
-                return;
-            }
-
-            repliesListContainer.innerHTML = '';
-
-            const groupedMap = new Map();
-            beanRepliesList.forEach(item => {
-                if (!item.hanzi || !item.reply) return;
-                if (!groupedMap.has(item.hanzi)) groupedMap.set(item.hanzi, []);
-                groupedMap.get(item.hanzi).push(item);
-            });
-
-            const uniqueWords = Array.from(groupedMap.keys()).reverse();
-
-            uniqueWords.forEach(hanzi => {
-                const replies = groupedMap.get(hanzi);
-                let currentIdx = replies.length - 1;
-
-                const card = document.createElement('div');
-                card.className = 'vocab-card';
-                card.setAttribute('data-reply-hanzi', hanzi);
-
-                const renderContent = () => {
-                    const item = replies[currentIdx];
-                    card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <span class="vocab-title">${hanzi}</span>
-                            <div class="jump-back-btn" title="Back to Saved Word">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 14 4 9 9 4"></polyline>
-                                    <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
-                                </svg>
-                                <span>Back</span>
-                            </div>
-                        </div>
-                        <div style="font-size:12.5px; color:#d09b9f; margin-bottom:8px;">
-                            ${item.user_query ? `<b>Question:</b> ${item.user_query}` : ''}
-                        </div>
-                        <div class="bean-reply-box" style="margin-top:6px;">
-                            <b style="color:#2e5973;">💬 Bean's Note:</b>
-                            <div style="word-break:break-word; margin-top:3px;">${item.reply}</div>
-                            ${replies.length > 1 ? `
-                                <div style="display:flex; justify-content:flex-end; align-items:center; gap:6px; margin-top:6px; border-top:1px dashed #c9e4f5; padding-top:4px;">
-                                    <button class="bean-nav-btn tab-prev-reply">◀</button>
-                                    <span style="font-size:11px; font-weight:bold; color:#6b8ea2;">${currentIdx + 1}/${replies.length}</span>
-                                    <button class="bean-nav-btn tab-next-reply">▶</button>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-
-                    card.querySelector('.jump-back-btn').addEventListener('click', () => jumpBackToSavedWord(hanzi));
-
-                    if (replies.length > 1) {
-                        card.querySelector('.tab-prev-reply').addEventListener('click', () => {
-                            currentIdx = (currentIdx - 1 + replies.length) % replies.length;
-                            renderContent();
-                        });
-                        card.querySelector('.tab-next-reply').addEventListener('click', () => {
-                            currentIdx = (currentIdx + 1) % replies.length;
-                            renderContent();
-                        });
-                    }
-                };
-
-                renderContent();
-                repliesListContainer.appendChild(card);
-            });
-        }
-
-        // --- 8. CHAT MODULE WITH BACKGROUND DISPATCH ---
-        const chatMessagesBox = document.getElementById('chat-messages-box');
-        const chatTextInput = document.getElementById('chat-text-input');
-        const chatSendActionBtn = document.getElementById('chat-send-action-btn');
-        const adminUserSelector = document.getElementById('admin-user-selector');
-        const adminTargetUserSelect = document.getElementById('admin-target-user-select');
-        const chatFileInput = document.getElementById('chat-file-input');
-        const chatAttachTrigger = document.getElementById('chat-attach-trigger');
-        const chatReplyPreviewBar = document.getElementById('chat-reply-preview-bar');
-        const replyToUserLabel = document.getElementById('reply-to-user-label');
-        const replyToTextLabel = document.getElementById('reply-to-text-label');
-        const cancelReplyBtn = document.getElementById('cancel-reply-btn');
-        const chatLightbox = document.getElementById('chat-lightbox');
-        const chatLightboxImg = document.getElementById('chat-lightbox-img');
-
-        const chatActionMenuOverlay = document.getElementById('chat-action-menu-overlay');
-        const menuActReply = document.getElementById('menu-act-reply');
-        const menuActCopy = document.getElementById('menu-act-copy');
-        const menuActUnsend = document.getElementById('menu-act-unsend');
-        const toggleMoreEmojisBtn = document.getElementById('toggle-more-emojis-btn');
-        const chatScrollableEmojiTray = document.getElementById('chat-scrollable-emoji-tray');
-
-        function scrollChatToBottom() {
-            setTimeout(() => {
-                chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
-            }, 60);
-        }
-
-        function markIncomingMessagesAsRead() {
-            if (!currentUser || !activeChatUserId) return;
-            const isCurrentAdmin = currentUser.email === ADMIN_EMAIL;
-            const targetSender = isCurrentAdmin ? 'user' : 'admin';
-
-            db.collection('users').doc(activeChatUserId).collection('messages')
-                .where('sender', '==', targetSender)
-                .where('read', '==', false)
-                .get()
-                .then(snapshot => {
-                    const batch = db.batch();
-                    snapshot.forEach(doc => {
-                        batch.update(doc.ref, { read: true });
-                    });
-                    return batch.commit();
-                })
-                .catch(err => console.warn("Read receipt update error:", err));
-        }
-
-        function initChat(user) {
-            activeChatUserId = user.uid;
-
-            if (user.email === ADMIN_EMAIL) {
-                adminUserSelector.style.display = 'block';
-                db.collection('users').get().then(snapshot => {
-                    adminTargetUserSelect.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const opt = document.createElement('option');
-                        opt.value = doc.id;
-                        opt.textContent = `${doc.data().displayName || doc.data().email || doc.id}`;
-                        if (doc.id === user.uid) opt.selected = true;
-                        adminTargetUserSelect.appendChild(opt);
-                    });
-                });
-
-                adminTargetUserSelect.addEventListener('change', (e) => {
-                    activeChatUserId = e.target.value;
-                    bindChatListener(activeChatUserId);
-                    initGlobalNotificationWatcher(currentUser);
-                });
-            }
-
-            bindChatListener(activeChatUserId);
-        }
-
-        function bindChatListener(targetUid) {
+            if (inquiriesUnsubscribe) inquiriesUnsubscribe();
             if (unsubscribeChat) unsubscribeChat();
             if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
-
-            unsubscribeChatWallpaper = db.collection('users').doc(targetUid)
-                .onSnapshot(doc => {
-                    const data = doc.data() || {};
-                    if (data.chatBackgroundUrl) {
-                        chatMessagesBox.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('${data.chatBackgroundUrl}')`;
-                    } else {
-                        chatMessagesBox.style.backgroundImage = 'none';
-                    }
-                });
-
-            unsubscribeChat = db.collection('users').doc(targetUid).collection('messages')
-                .orderBy('timestamp', 'asc')
-                .onSnapshot(snapshot => {
-                    if (snapshot.empty) {
-                        chatMessagesBox.innerHTML = `
-                            <div style="text-align: center; color: #a38c90; font-size: 12.5px; margin-top: 30px; font-style: italic;">
-                                Say hi to Bean! Chat history is permanently saved with your Google account 🧸💌
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    chatMessagesBox.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const msg = doc.data();
-
-                        if (msg.isSystem) {
-                            const systemEl = document.createElement('div');
-                            systemEl.className = 'chat-system-msg';
-                            systemEl.textContent = msg.text;
-                            chatMessagesBox.appendChild(systemEl);
-                            return;
-                        }
-
-                        const isMe = currentUser.email === ADMIN_EMAIL 
-                            ? msg.sender === 'admin'
-                            : msg.sender === 'user';
-
-                        const bubbleWrapper = document.createElement('div');
-                        bubbleWrapper.className = 'chat-bubble-wrapper';
-                        bubbleWrapper.id = `msg-wrapper-${doc.id}`;
-
-                        const bubble = document.createElement('div');
-                        bubble.className = `chat-bubble ${isMe ? 'from-user' : 'from-admin'}`;
-                        bubble.setAttribute('data-msg-id', doc.id);
-
-                        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-                        
-                        let receiptHTML = '';
-                        if (isMe && msg.read) {
-                            receiptHTML = `<span class="chat-read-label">Read</span>`;
-                        }
-
-                        let replyCardHTML = '';
-                        if (msg.replyTo) {
-                            let relationText = 'Replied';
-                            const origSender = msg.replyTo.senderRole;
-                            const currentSender = msg.sender;
-
-                            if (isMe) {
-                                relationText = (currentSender === origSender) ? 'Replied to yourself' : 'You replied';
-                            } else {
-                                relationText = (currentSender === origSender) ? 'Replied to themselves' : 'Replied to you';
-                            }
-
-                            replyCardHTML = `
-                                <div class="chat-reply-card" data-jump-to="${msg.replyTo.id}">
-                                    <div class="chat-reply-row-relation">${relationText}</div>
-                                    <div class="chat-reply-row-snippet">${escapeHtml(msg.replyTo.text || '[Image]')}</div>
-                                </div>
-                            `;
-                        }
-
-                        let mediaHTML = '';
-                        if (msg.imageUrl) {
-                            mediaHTML = `<img src="${msg.imageUrl}" class="chat-media-img" alt="Chat attachment" />`;
-                        }
-
-                        const senderHeaderHTML = isMe ? '' : `
-                            <div style="font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.85;">
-                                ${msg.sender === 'admin' ? "Bean 🧸" : (msg.senderName || "Bub 🌸")}
-                            </div>
-                        `;
-
-                        bubble.innerHTML = `
-                            ${replyCardHTML}
-                            ${senderHeaderHTML}
-                            ${msg.text ? `<div class="chat-actual-body">${escapeHtml(msg.text)}</div>` : ''}
-                            ${mediaHTML}
-                            <div class="chat-meta">
-                                <span>${timeStr}</span>
-                                ${receiptHTML}
-                            </div>
-                        `;
-
-                        const reactions = msg.reactions || {};
-                        let reactionPillsHTML = '';
-                        ['user', 'admin'].forEach(role => {
-                            const emoji = reactions[role];
-                            if (emoji && typeof emoji === 'string') {
-                                reactionPillsHTML += `
-                                    <span class="chat-reaction-badge" data-reactor-role="${role}" title="Tap to remove your reaction">
-                                        ${emoji}
-                                    </span>
-                                `;
-                            }
-                        });
-
-                        bubbleWrapper.appendChild(bubble);
-                        if (reactionPillsHTML) {
-                            bubbleWrapper.insertAdjacentHTML('beforeend', `
-                                <div class="chat-reactions-strip ${isMe ? 'from-user-strip' : 'from-admin-strip'}">
-                                    ${reactionPillsHTML}
-                                </div>
-                            `);
-                        }
-
-                        bubbleWrapper.querySelectorAll('.chat-reaction-badge').forEach(badge => {
-                            badge.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                const reactorRole = badge.getAttribute('data-reactor-role');
-                                const myRole = currentUser.email === ADMIN_EMAIL ? 'admin' : 'user';
-
-                                if (reactorRole === myRole) {
-                                    if (navigator.vibrate) navigator.vibrate(10);
-                                    removeReaction(doc.id, myRole);
-                                }
-                            });
-                        });
-
-                        const replyCardEl = bubble.querySelector('.chat-reply-card');
-                        if (replyCardEl) {
-                            replyCardEl.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                const jumpTargetId = replyCardEl.getAttribute('data-jump-to');
-                                jumpToMessage(jumpTargetId);
-                            });
-                        }
-
-                        bindLongPress(bubble, {
-                            id: doc.id,
-                            text: msg.text || '',
-                            imageUrl: msg.imageUrl || null,
-                            sender: msg.sender,
-                            senderName: msg.sender === 'admin' ? "Bean" : (msg.senderName || "Bub"),
-                            isMe: isMe
-                        });
-
-                        const imgEl = bubble.querySelector('.chat-media-img');
-                        if (imgEl) {
-                            imgEl.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                chatLightboxImg.src = msg.imageUrl;
-                                chatLightbox.style.display = 'flex';
-                            });
-                        }
-
-                        chatMessagesBox.appendChild(bubbleWrapper);
-                    });
-
-                    if (chatView.style.display === 'flex') {
-                        markIncomingMessagesAsRead();
-                    }
-                    scrollChatToBottom();
-                }, err => console.error("Chat sync error:", err));
-        }
-
-        function jumpToMessage(msgId) {
-            if (!msgId) return;
-            const targetEl = document.querySelector(`[data-msg-id="${msgId}"]`);
-            if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                targetEl.classList.remove('jelly-shake-once');
-                void targetEl.offsetWidth;
-                targetEl.classList.add('jelly-shake-once');
-            }
-        }
-
-        function bindLongPress(element, msgData) {
-            let pressTimer = null;
-            let startX = 0;
-            let startY = 0;
-            let isPressing = false;
-
-            const startPress = (e) => {
-                if (e.target.closest('.chat-reply-card') || e.target.closest('.chat-reaction-badge')) return;
-                
-                startX = e.clientX || (e.touches && e.touches[0].clientX);
-                startY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                isPressing = true;
-                element.classList.add('bubble-pressing');
-
-                pressTimer = setTimeout(() => {
-                    if (isPressing) {
-                        isPressing = false;
-                        element.classList.remove('bubble-pressing');
-                        if (navigator.vibrate) navigator.vibrate([15, 20]); 
-                        openActionMenu(msgData);
-                    }
-                }, 380);
-            };
-
-            const cancelPress = () => {
-                if (isPressing) {
-                    isPressing = false;
-                    element.classList.remove('bubble-pressing');
-                    if (pressTimer) clearTimeout(pressTimer);
-                }
-            };
-
-            const movePress = (e) => {
-                if (!isPressing) return;
-                const curX = e.clientX || (e.touches && e.touches[0].clientX);
-                const curY = e.clientY || (e.touches && e.touches[0].clientY);
-                if (Math.hypot(curX - startX, curY - startY) > 10) {
-                    cancelPress();
-                }
-            };
-
-            element.addEventListener('touchstart', startPress, { passive: true });
-            element.addEventListener('touchend', cancelPress);
-            element.addEventListener('touchcancel', cancelPress);
-            element.addEventListener('touchmove', movePress, { passive: true });
-
-            element.addEventListener('mousedown', startPress);
-            element.addEventListener('mouseup', cancelPress);
-            element.addEventListener('mouseleave', cancelPress);
-            element.addEventListener('mousemove', movePress);
+            if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
             
-            element.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                cancelPress();
-                if (navigator.vibrate) navigator.vibrate([15, 20]);
-                openActionMenu(msgData);
+            document.getElementById('auth-view').style.display = 'flex';
+            document.getElementById('app-view').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'none';
+            document.getElementById('user-display-email').textContent = 'Connecting...';
+        }
+    });
+
+    document.getElementById('google-login-btn').addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).catch(err => {
+            console.warn("Popup blocked or failed, using redirect:", err);
+            auth.signInWithRedirect(provider);
+        });
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        auth.signOut();
+    });
+
+    function initUserData(user) {
+        if (unsubscribeVocab) unsubscribeVocab();
+        unsubscribeVocab = db.collection('users').doc(user.uid).collection('vocab')
+            .onSnapshot(snapshot => {
+                vocabList = [];
+                snapshot.forEach(doc => {
+                    vocabList.push(doc.data());
+                });
+                renderSavedVocab();
+                updateFlashcardSetupCount();
+            }, err => console.error("Vocab stream error:", err));
+
+        // Subscribes directly to the current user's isolated inquiries in Firestore
+        subscribeToInquiries(user.uid);
+
+        setupChat(user);
+    }
+
+    // --- 5. SAVED VOCABULARY VIEW & ACTIONS ---
+    const searchInput = document.getElementById('vocab-search');
+    const filterSelect = document.getElementById('vocab-filter');
+    const sortSelect = document.getElementById('vocab-sort');
+    const vocabListContainer = document.getElementById('vocab-list-container');
+
+    searchInput.addEventListener('input', renderSavedVocab);
+    filterSelect.addEventListener('change', renderSavedVocab);
+    sortSelect.addEventListener('change', renderSavedVocab);
+
+    function renderSavedVocab() {
+        if (!vocabListContainer) return;
+        const q = searchInput.value.trim().toLowerCase();
+        const normQ = stripPinyinTones(q);
+        const filterVal = filterSelect.value;
+        const sortVal = sortSelect.value;
+
+        let filtered = vocabList.filter(item => {
+            const hanziMatch = item.hanzi && item.hanzi.includes(q);
+            const pinyinMatch = item.pinyin && stripPinyinTones(item.pinyin).includes(normQ);
+            const defsMatch = item.translations && item.translations.some(t => t.toLowerCase().includes(q));
+            const noteMatch = item.note && item.note.toLowerCase().includes(q);
+            const matchesQuery = !q || hanziMatch || pinyinMatch || defsMatch || noteMatch;
+
+            if (!matchesQuery) return false;
+            if (filterVal === 'deck') return !!item.inDeck;
+            if (filterVal === 'notes') return !!(item.note && item.note.trim());
+            if (filterVal === 'bean') return getAllBeanRepliesFor(item.hanzi).length > 0;
+            return true;
+        });
+
+        filtered.sort((a, b) => {
+            if (sortVal === 'time_desc') return (b.updatedAt || 0) - (a.updatedAt || 0);
+            if (sortVal === 'time_asc') return (a.updatedAt || 0) - (b.updatedAt || 0);
+            if (sortVal === 'pinyin_asc') return (a.pinyin || '').localeCompare(b.pinyin || '');
+            if (sortVal === 'pinyin_desc') return (b.pinyin || '').localeCompare(a.pinyin || '');
+            if (sortVal === 'hsk_asc') return (a.level || 0) - (b.level || 0);
+            if (sortVal === 'hsk_desc') return (b.level || 0) - (a.level || 0);
+            return 0;
+        });
+
+        if (filtered.length === 0) {
+            vocabListContainer.innerHTML = `
+                <div style="text-align: center; color: #a38c90; padding: 40px 10px; font-size: 13.5px; font-style: italic;">
+                    No vocabulary found matching your filters 🌸
+                </div>`;
+            return;
+        }
+
+        vocabListContainer.innerHTML = '';
+        filtered.forEach(vocab => {
+            const card = document.createElement('div');
+            card.className = 'vocab-card';
+            card.id = `card-hanzi-${encodeURIComponent(vocab.hanzi)}`;
+
+            const beanReplies = getAllBeanRepliesFor(vocab.hanzi);
+            const asked = isWordAsked(vocab.hanzi);
+
+            let beanSectionHtml = '';
+            if (beanReplies.length > 0) {
+                const totalReplies = beanReplies.length;
+                const latestReply = beanReplies[totalReplies - 1];
+                beanSectionHtml = `
+                    <div class="bean-reply-box" data-hanzi="${encodeURIComponent(vocab.hanzi)}" data-curr-idx="${totalReplies - 1}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <b style="color: #406277; font-size: 11px;">Bean's Note 🧸</b>
+                            <div style="display: flex; gap: 4px; align-items: center;">
+                                ${totalReplies > 1 ? `
+                                    <button class="bean-nav-btn bean-prev-btn">◀</button>
+                                    <span class="bean-idx-indicator" style="font-size: 10px; font-weight: 800; color: #6b8c9e;">${totalReplies}/${totalReplies}</span>
+                                    <button class="bean-nav-btn bean-next-btn">▶</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="bean-reply-content" style="white-space: pre-wrap;">${escapeHtml(latestReply.reply)}</div>
+                    </div>
+                `;
+            }
+
+            const defsHtml = (vocab.translations && vocab.translations.length)
+                ? `<ul class="vocab-defs">${vocab.translations.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>`
+                : `<div style="font-size: 13px; color: #a38c90; font-style: italic;">No translations saved.</div>`;
+
+            card.innerHTML = `
+                <div class="vocab-header">
+                    <div class="vocab-title">${vocab.hanzi}</div>
+                    <span class="vocab-level">HSK ${vocab.level || 1}</span>
+                </div>
+                <div class="vocab-pinyin">${vocab.pinyin || ''}</div>
+                ${defsHtml}
+
+                <div class="sticky-note-box">
+                    <textarea class="sticky-note-input" rows="2" placeholder="Write your private note...">${escapeHtml(vocab.note || '')}</textarea>
+                    <div class="sticky-note-footer">
+                        <span style="font-size: 10px; color: #b89c66; font-weight: 700;">Sticky Note 📝</span>
+                        <button class="save-note-btn ghost-btn" style="padding: 2px 8px; font-size: 10.5px; border-radius: 8px;">Save</button>
+                    </div>
+                </div>
+
+                ${beanSectionHtml}
+
+                <div class="card-actions">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button class="deck-badge ${vocab.inDeck ? 'in-deck' : ''}" data-hanzi="${vocab.hanzi}">
+                            ${vocab.inDeck ? '✓ In Deck' : '+ Flashcard'}
+                        </button>
+                        <button class="woodstock-btn ask-bean-trigger" data-hanzi="${vocab.hanzi}" title="Ask Bean">
+                            <img src="${WOODSTOCK_IMG_URL}" alt="Ask Bean" style="${asked ? 'opacity: 0.45; filter: grayscale(80%);' : ''}">
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button class="icon-btn copy-card-btn" data-hanzi="${vocab.hanzi}" title="Copy Hanzi">📋</button>
+                        <button class="icon-btn delete-card-btn" data-hanzi="${vocab.hanzi}" title="Delete" style="color: #d85268;">🗑️</button>
+                    </div>
+                </div>
+            `;
+
+            attachCardEventListeners(card, vocab, beanReplies);
+            vocabListContainer.appendChild(card);
+        });
+    }
+
+    function attachCardEventListeners(card, vocab, beanReplies) {
+        const deckBtn = card.querySelector('.deck-badge');
+        deckBtn.addEventListener('click', () => {
+            const newState = !vocab.inDeck;
+            db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
+                inDeck: newState,
+                updatedAt: Date.now()
             });
-        }
-
-        function openActionMenu(msgData) {
-            menuTargetMsg = msgData;
-            chatScrollableEmojiTray.style.display = 'none';
-
-            if (msgData.isMe) {
-                menuActUnsend.style.display = 'flex';
-            } else {
-                menuActUnsend.style.display = 'none';
-            }
-
-            chatActionMenuOverlay.style.display = 'flex';
-        }
-
-        function closeActionMenu() {
-            chatActionMenuOverlay.style.display = 'none';
-            menuTargetMsg = null;
-        }
-
-        chatActionMenuOverlay.addEventListener('click', (e) => {
-            if (e.target === chatActionMenuOverlay) closeActionMenu();
         });
 
-        document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const emoji = btn.getAttribute('data-emoji');
-                if (menuTargetMsg && emoji) {
-                    if (navigator.vibrate) navigator.vibrate(10);
-                    applyReaction(menuTargetMsg.id, emoji);
-                    closeActionMenu();
-                }
-            });
-        });
-
-        toggleMoreEmojisBtn.addEventListener('click', () => {
-            chatScrollableEmojiTray.style.display = chatScrollableEmojiTray.style.display === 'grid' ? 'none' : 'grid';
-        });
-
-        function applyReaction(msgId, emoji) {
-            if (!activeChatUserId || !msgId || !currentUser) return;
-            const myRole = currentUser.email === ADMIN_EMAIL ? 'admin' : 'user';
-            const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
-
-            if (wrapper) {
-                let strip = wrapper.querySelector('.chat-reactions-strip');
-                if (!strip) {
-                    const bubble = wrapper.querySelector('.chat-bubble');
-                    const isFromUser = bubble && bubble.classList.contains('from-user');
-                    wrapper.insertAdjacentHTML('beforeend', `<div class="chat-reactions-strip ${isFromUser ? 'from-user-strip' : 'from-admin-strip'}"></div>`);
-                    strip = wrapper.querySelector('.chat-reactions-strip');
-                }
-
-                let myBadge = strip.querySelector(`[data-reactor-role="${myRole}"]`);
-                if (myBadge) {
-                    if (myBadge.textContent.trim() === emoji) {
-                        myBadge.remove();
-                    } else {
-                        myBadge.textContent = emoji;
-                    }
-                } else {
-                    const newBadge = document.createElement('span');
-                    newBadge.className = 'chat-reaction-badge';
-                    newBadge.setAttribute('data-reactor-role', myRole);
-                    newBadge.textContent = emoji;
-                    newBadge.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (navigator.vibrate) navigator.vibrate(10);
-                        removeReaction(msgId, myRole);
-                    });
-                    strip.appendChild(newBadge);
-                }
-
-                if (strip.children.length === 0) strip.remove();
-            }
-
-            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
-            db.runTransaction(transaction => {
-                return transaction.get(ref).then(doc => {
-                    if (!doc.exists) return;
-                    const data = doc.data();
-                    const reactions = data.reactions || {};
-                    
-                    if (reactions[myRole] === emoji) {
-                        delete reactions[myRole];
-                    } else {
-                        reactions[myRole] = emoji;
-                    }
-                    transaction.update(ref, { reactions });
-                });
-            }).catch(err => console.error("Reaction update failed:", err));
-        }
-
-        function removeReaction(msgId, role) {
-            if (!activeChatUserId || !msgId) return;
-
-            const wrapper = document.getElementById(`msg-wrapper-${msgId}`);
-            if (wrapper) {
-                const strip = wrapper.querySelector('.chat-reactions-strip');
-                if (strip) {
-                    const myBadge = strip.querySelector(`[data-reactor-role="${role}"]`);
-                    if (myBadge) myBadge.remove();
-                    if (strip.children.length === 0) strip.remove();
-                }
-            }
-
-            const ref = db.collection('users').doc(activeChatUserId).collection('messages').doc(msgId);
-            db.runTransaction(transaction => {
-                return transaction.get(ref).then(doc => {
-                    if (!doc.exists) return;
-                    const data = doc.data();
-                    const reactions = data.reactions || {};
-                    delete reactions[role];
-                    transaction.update(ref, { reactions });
-                });
-            }).catch(err => console.error("Reaction removal failed:", err));
-        }
-
-        menuActReply.addEventListener('click', () => {
-            if (menuTargetMsg) {
-                setReplyTarget({
-                    id: menuTargetMsg.id,
-                    text: menuTargetMsg.text || (menuTargetMsg.imageUrl ? '[Image]' : ''),
-                    senderName: menuTargetMsg.senderName,
-                    senderRole: menuTargetMsg.sender
-                });
-            }
-            closeActionMenu();
-        });
-
-        menuActCopy.addEventListener('click', () => {
-            if (menuTargetMsg && menuTargetMsg.text) {
-                navigator.clipboard.writeText(menuTargetMsg.text).then(() => {
-                    alert("Text copied! 📋");
-                });
-            }
-            closeActionMenu();
-        });
-
-        menuActUnsend.addEventListener('click', () => {
-            if (menuTargetMsg && menuTargetMsg.isMe) {
-                if (confirm("Unsend this message?")) {
-                    db.collection('users').doc(activeChatUserId).collection('messages').doc(menuTargetMsg.id).delete();
-                }
-            }
-            closeActionMenu();
-        });
-
-        function setReplyTarget(target) {
-            activeReplyTarget = target;
-            replyToUserLabel.textContent = `Replying to ${target.senderName}:`;
-            replyToTextLabel.textContent = target.text;
-            chatReplyPreviewBar.style.display = 'flex';
-            chatTextInput.focus();
-        }
-
-        cancelReplyBtn.addEventListener('click', () => {
-            activeReplyTarget = null;
-            chatReplyPreviewBar.style.display = 'none';
-        });
-
-        chatLightbox.addEventListener('click', () => {
-            chatLightbox.style.display = 'none';
-            chatLightboxImg.src = '';
-        });
-
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        function sendChatMessage(imageUrl = null) {
-            const text = (chatTextInput.value || '').trim();
-            if (!text && !imageUrl) return;
-            if (!currentUser || !activeChatUserId) return;
-
-            const isCurrentAdmin = currentUser.email === ADMIN_EMAIL;
-            const messagePayload = {
-                text: text,
-                sender: isCurrentAdmin ? 'admin' : 'user',
-                senderEmail: currentUser.email,
-                senderName: currentUser.displayName || currentUser.email.split('@')[0],
-                timestamp: Date.now(),
-                read: false,
-                reactions: {}
-            };
-
-            if (imageUrl) messagePayload.imageUrl = imageUrl;
-            if (activeReplyTarget) {
-                messagePayload.replyTo = {
-                    id: activeReplyTarget.id,
-                    text: activeReplyTarget.text,
-                    senderName: activeReplyTarget.senderName,
-                    senderRole: activeReplyTarget.senderRole
-                };
-            }
-
-            chatTextInput.value = '';
-            cancelReplyBtn.click();
-
-            db.collection('users').doc(activeChatUserId).collection('messages').add(messagePayload)
-                .then(async () => {
-                    scrollChatToBottom();
-
-                    // Dispatches push notification to recipient's device via Render
-                    try {
-                        const targetRecipientUid = isCurrentAdmin ? activeChatUserId : ADMIN_EMAIL;
-                        
-                        let recipientSub = null;
-                        if (isCurrentAdmin) {
-                            const recipientDoc = await db.collection('users').doc(activeChatUserId).get();
-                            recipientSub = recipientDoc.data()?.pushSubscription;
-                        } else {
-                            const adminSnap = await db.collection('users').where('email', '==', ADMIN_EMAIL).limit(1).get();
-                            if (!adminSnap.empty) {
-                                recipientSub = adminSnap.docs[0].data()?.pushSubscription;
-                            }
-                        }
-
-                        if (recipientSub) {
-                            fetch(`${PUSH_SERVER_URL}/api/send-notification`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    recipientId: targetRecipientUid,
-                                    directSubscription: recipientSub,
-                                    title: isCurrentAdmin ? "Bean 🧸" : (currentUser.displayName || "Eggy 🌸"),
-                                    body: text || "Sent a photo 📷",
-                                    url: "./"
-                                })
-                            }).catch(err => console.warn("Push trigger notice:", err));
-                        }
-                    } catch (pushErr) {
-                        console.warn("Push notification dispatch failed:", pushErr);
-                    }
-                })
-                .catch(err => alert("Send failed: " + err.message));
-        }
-
-        chatSendActionBtn.addEventListener('click', () => sendChatMessage());
-        chatTextInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendChatMessage();
-            }
-        });
-
-        chatAttachTrigger.addEventListener('click', () => chatFileInput.click());
-        chatFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 750;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
-                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
-
-                    sendChatMessage(compressedDataUrl);
-                };
-                img.src = evt.target.result;
-            };
-            reader.readAsDataURL(file);
-            chatFileInput.value = '';
-        });
-
-        // --- CHAT WALLPAPER MANAGEMENT ---
-        const chatBgFileInput = document.getElementById('chat-bg-file-input');
-        const uploadBgBtn = document.getElementById('upload-bg-btn');
-        const resetBgBtn = document.getElementById('reset-bg-btn');
-
-        uploadBgBtn?.addEventListener('click', () => chatBgFileInput.click());
-
-        chatBgFileInput?.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file || !currentUser) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_DIM = 1280;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height && width > MAX_DIM) {
-                        height = Math.round((height * MAX_DIM) / width);
-                        width = MAX_DIM;
-                    } else if (height > MAX_DIM) {
-                        width = Math.round((width * MAX_DIM) / height);
-                        height = MAX_DIM;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                    updateChatWallpaper(compressedDataUrl);
-                };
-                img.src = evt.target.result;
-            };
-            reader.readAsDataURL(file);
-            chatBgFileInput.value = '';
-        });
-
-        resetBgBtn?.addEventListener('click', () => {
-            if (confirm("Reset the chat wallpaper to default?")) {
-                updateChatWallpaper(null);
-            }
-        });
-
-        function updateChatWallpaper(bgUrl) {
-            if (!currentUser) return;
-            
-            const targetRoomId = (currentUser.email === ADMIN_EMAIL && activeChatUserId) 
-                ? activeChatUserId 
-                : currentUser.uid;
-
-            const myName = currentUser.displayName || currentUser.email.split('@')[0];
-
-            db.collection('users').doc(targetRoomId).update({
-                chatBackgroundUrl: bgUrl
+        const saveNoteBtn = card.querySelector('.save-note-btn');
+        const noteInput = card.querySelector('.sticky-note-input');
+        saveNoteBtn.addEventListener('click', () => {
+            saveNoteBtn.disabled = true;
+            saveNoteBtn.textContent = 'Saving...';
+            db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).update({
+                note: noteInput.value.trim(),
+                updatedAt: Date.now()
             }).then(() => {
-                const actionNotice = bgUrl ? 'updated the chat wallpaper' : 'removed the chat wallpaper';
-                db.collection('users').doc(targetRoomId).collection('messages').add({
-                    isSystem: true,
-                    text: `${myName} ${actionNotice}`,
-                    timestamp: Date.now()
-                });
-                alert("Chat wallpaper updated successfully! 🌸");
-            }).catch(err => {
-                alert("Failed to update wallpaper: " + err.message);
-            });
-        }
-
-        // --- 9. ASK BEAN MODAL LOGIC ---
-        const reportModal = document.getElementById('report-modal');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const reportTargetHanzi = document.getElementById('report-target-hanzi');
-        const reportInputMsg = document.getElementById('report-input-msg');
-        const sendReportBtn = document.getElementById('send-report-btn');
-        const closeReportBtn = document.getElementById('close-report-btn');
-
-        let currentAskingHanzi = null;
-
-        function openReportModal(hanzi) {
-            currentAskingHanzi = hanzi;
-            reportTargetHanzi.textContent = hanzi;
-            reportInputMsg.value = '';
-            sendReportBtn.disabled = false;
-            sendReportBtn.textContent = 'Send to Bean 🧸';
-            sendReportBtn.style.background = 'linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%)';
-            modalOverlay.style.display = 'block';
-            reportModal.style.display = 'block';
-            setTimeout(() => reportInputMsg.focus(), 80);
-        }
-
-        function closeReportModal() {
-            modalOverlay.style.display = 'none';
-            reportModal.style.display = 'none';
-            currentAskingHanzi = null;
-        }
-
-        closeReportBtn.addEventListener('click', closeReportModal);
-        modalOverlay.addEventListener('click', closeReportModal);
-
-        sendReportBtn.addEventListener('click', () => {
-            if (!currentAskingHanzi) return;
-
-            sendReportBtn.disabled = true;
-            sendReportBtn.textContent = 'Sending... 💌';
-            sendReportBtn.style.background = '#d09b9f';
-
-            const payload = {
-                id: 'rep_' + Date.now(),
-                hanzi: currentAskingHanzi,
-                sentence: '',
-                user_query: reportInputMsg.value.trim()
-            };
-
-            fetch(GOOGLE_APP_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-                mode: 'no-cors'
-            }).then(() => {
-                if (!askedWordsList.includes(currentAskingHanzi)) askedWordsList.push(currentAskingHanzi);
-                sendReportBtn.textContent = 'Sent to Bean! 🧸';
-                sendReportBtn.style.background = '#a6cbb5';
+                saveNoteBtn.textContent = 'Saved! ✓';
                 setTimeout(() => {
-                    closeReportModal();
-                    renderSavedVocab();
+                    saveNoteBtn.textContent = 'Save';
+                    saveNoteBtn.disabled = false;
                 }, 1000);
-            }).catch(err => {
-                console.error("Report error:", err);
-                sendReportBtn.textContent = 'Oops, error! Try again.';
-                sendReportBtn.disabled = false;
             });
         });
 
-        // --- 10. 3D FLASHCARDS WITH GESTURE SWIPES & THEMES ---
-        const fcSetupBox = document.getElementById('fc-setup-box');
-        const fcSessionBox = document.getElementById('fc-session-box');
-        const fcCountPill = document.getElementById('fc-count-pill');
-        const fcModeHanziBtn = document.getElementById('fc-mode-hanzi');
-        const fcModeEnBtn = document.getElementById('fc-mode-english');
-        const fcClearDeckBtn = document.getElementById('fc-clear-deck-btn');
-        const fcQuitBtn = document.getElementById('fc-quit-btn');
-        const fcLeftCounter = document.getElementById('fc-left-counter');
-        const fcSwipeContainer = document.getElementById('fc-swipe-container');
-        const fcCardInner = document.getElementById('fc-card-inner');
-        const fcFaceFront = document.getElementById('fc-face-front');
-        const fcFaceBack = document.getElementById('fc-face-back');
-        const fcControlsBar = document.getElementById('fc-controls-bar');
-        const fcBtnLearn = document.getElementById('fc-btn-learn');
-        const fcBtnGotit = document.getElementById('fc-btn-gotit');
+        const askBtn = card.querySelector('.ask-bean-trigger');
+        askBtn.addEventListener('click', () => {
+            openReportModal(vocab.hanzi);
+        });
 
-        let fcQueue = [];
-        let fcMode = 'hanzi';
-        let fcIsFlipped = false;
+        const copyBtn = card.querySelector('.copy-card-btn');
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(vocab.hanzi);
+            copyBtn.textContent = '✓';
+            setTimeout(() => { copyBtn.textContent = '📋'; }, 1000);
+        });
 
-        function updateFlashcardCounts() {
-            const deckWords = vocabList.filter(v => v.inDeck);
-            fcCountPill.textContent = `${deckWords.length} Words in Deck`;
-        }
-
-        fcClearDeckBtn.addEventListener('click', () => {
-            if (confirm("Remove all words from the flashcard deck?")) {
-                const batch = db.batch();
-                vocabList.filter(v => v.inDeck).forEach(v => {
-                    const ref = db.collection('users').doc(currentUser.uid).collection('vocab').doc(v.hanzi);
-                    batch.update(ref, { inDeck: false, updatedAt: Date.now() });
-                });
-                batch.commit();
+        const deleteBtn = card.querySelector('.delete-card-btn');
+        deleteBtn.addEventListener('click', () => {
+            if (confirm(`Remove "${vocab.hanzi}" from your saved vocabulary?`)) {
+                db.collection('users').doc(currentUser.uid).collection('vocab').doc(vocab.hanzi).delete();
             }
         });
 
-        function startFlashcardSession(mode) {
-            const deckWords = vocabList.filter(v => v.inDeck);
-            if (deckWords.length === 0) {
-                alert("Your study deck is empty! Tap '+ Flashcard' on any saved word first 🌸");
-                return;
-            }
-            fcMode = mode;
-            fcQueue = [...deckWords].sort(() => Math.random() - 0.5);
-            flashcardSessionCount = 0;
-            fcSetupBox.style.display = 'none';
-            fcSessionBox.style.display = 'block';
-            renderNextFlashcard();
+        if (beanReplies && beanReplies.length > 1) {
+            const prevBtn = card.querySelector('.bean-prev-btn');
+            const nextBtn = card.querySelector('.bean-next-btn');
+            const indicator = card.querySelector('.bean-idx-indicator');
+            const content = card.querySelector('.bean-reply-content');
+            let idx = beanReplies.length - 1;
+
+            const updateReplyDisplay = () => {
+                indicator.textContent = `${idx + 1}/${beanReplies.length}`;
+                content.textContent = beanReplies[idx].reply;
+            };
+
+            prevBtn.addEventListener('click', () => {
+                idx = (idx - 1 + beanReplies.length) % beanReplies.length;
+                updateReplyDisplay();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                idx = (idx + 1) % beanReplies.length;
+                updateReplyDisplay();
+            });
+        }
+    }
+
+    // --- 6. BEAN'S NOTES DEDICATED TAB ---
+    function renderBeanRepliesTab() {
+        const container = document.getElementById('replies-list-container');
+        if (!container) return;
+
+        const repliesWithText = beanRepliesList.filter(r => r.reply && r.reply.trim());
+        if (repliesWithText.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; color: #a38c90; padding: 40px 10px; font-size: 13.5px; font-style: italic;">
+                    No notes from Bean yet! Ask about any word by tapping Woodstock 🧸
+                </div>`;
+            return;
         }
 
-        fcModeHanziBtn.addEventListener('click', () => startFlashcardSession('hanzi'));
-        fcModeEnBtn.addEventListener('click', () => startFlashcardSession('en'));
+        container.innerHTML = '';
+        repliesWithText.slice().reverse().forEach(rep => {
+            const item = document.createElement('div');
+            item.className = 'vocab-card';
+            item.innerHTML = `
+                <div class="vocab-header" style="margin-bottom: 6px;">
+                    <div class="vocab-title" style="font-size: 20px;">${escapeHtml(rep.hanzi)}</div>
+                    <button class="jump-back-btn" data-hanzi="${escapeHtml(rep.hanzi)}">
+                        <span>Card</span> ➔
+                    </button>
+                </div>
+                <div style="font-size: 12px; color: #a38c90; margin-bottom: 8px;">
+                    <b>Your question:</b> ${escapeHtml(rep.user_query || 'General explanation')}
+                </div>
+                <div class="bean-reply-box">
+                    <b style="color: #406277; font-size: 11px; display: block; margin-bottom: 4px;">Bean's Note 🧸:</b>
+                    <div style="white-space: pre-wrap;">${escapeHtml(rep.reply)}</div>
+                </div>
+            `;
 
-        fcQuitBtn.addEventListener('click', () => {
+            item.querySelector('.jump-back-btn').addEventListener('click', () => {
+                document.getElementById('tab-btn-vocab').click();
+                setTimeout(() => {
+                    const targetEl = document.getElementById(`card-hanzi-${encodeURIComponent(rep.hanzi)}`);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetEl.classList.add('card-highlight-persistent');
+                        setTimeout(() => targetEl.classList.remove('card-highlight-persistent'), 2500);
+                    }
+                }, 150);
+            });
+
+            container.appendChild(item);
+        });
+    }
+
+    // --- 7. ASK BEAN MODAL (DIRECT FIRESTORE WRITE) ---
+    const reportModal = document.getElementById('report-modal');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const closeReportBtn = document.getElementById('close-report-btn');
+    const sendReportBtn = document.getElementById('send-report-btn');
+    const reportInputMsg = document.getElementById('report-input-msg');
+    const reportTargetHanzi = document.getElementById('report-target-hanzi');
+    let currentAskingHanzi = '';
+
+    function openReportModal(hanzi) {
+        currentAskingHanzi = hanzi;
+        reportTargetHanzi.textContent = hanzi;
+        reportInputMsg.value = '';
+        sendReportBtn.disabled = false;
+        sendReportBtn.textContent = 'Send to Bean 🧸';
+        sendReportBtn.style.background = 'linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%)';
+        modalOverlay.style.display = 'block';
+        reportModal.style.display = 'block';
+    }
+
+    function closeReportModal() {
+        modalOverlay.style.display = 'none';
+        reportModal.style.display = 'none';
+    }
+
+    closeReportBtn.addEventListener('click', closeReportModal);
+    modalOverlay.addEventListener('click', closeReportModal);
+
+    sendReportBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!currentUser) return;
+
+        sendReportBtn.disabled = true;
+        sendReportBtn.textContent = 'Sending... 💌';
+        sendReportBtn.style.background = '#d09b9f';
+
+        const text = reportInputMsg.value.trim();
+        const inquiryId = 'rep_' + Date.now();
+
+        try {
+            // Native write to the user's isolated inquiries collection
+            await db.collection('users').doc(currentUser.uid).collection('inquiries').doc(inquiryId).set({
+                id: inquiryId,
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                hanzi: currentAskingHanzi,
+                user_query: text,
+                reply: '',
+                status: 'pending',
+                createdAt: Date.now(),
+                repliedAt: null
+            });
+
+            markWordAsAsked(currentAskingHanzi);
+
+            sendReportBtn.textContent = 'Sent to Bean! 🧸';
+            sendReportBtn.style.background = '#a6cbb5';
+            setTimeout(() => {
+                closeReportModal();
+            }, 1000);
+        } catch (err) {
+            console.error("Error creating inquiry in Firestore:", err);
+            sendReportBtn.textContent = 'Oops, error! Try again.';
+            sendReportBtn.disabled = false;
+        }
+    });
+
+    // --- 8. FLASHCARDS SYSTEM ---
+    let activeDeck = [];
+    let fcIndex = 0;
+    let fcMode = 'hanzi';
+    let isFlipped = false;
+
+    const fcCountPill = document.getElementById('fc-count-pill');
+    const fcSetupBox = document.getElementById('fc-setup-box');
+    const fcSessionBox = document.getElementById('fc-session-box');
+    const fcCardInner = document.getElementById('fc-card-inner');
+    const fcFaceFront = document.getElementById('fc-face-front');
+    const fcFaceBack = document.getElementById('fc-face-back');
+    const fcControlsBar = document.getElementById('fc-controls-bar');
+    const fcLeftCounter = document.getElementById('fc-left-counter');
+
+    function updateFlashcardSetupCount() {
+        const count = vocabList.filter(v => v.inDeck).length;
+        fcCountPill.textContent = `${count} Words in Deck`;
+    }
+
+    document.getElementById('fc-clear-deck-btn').addEventListener('click', async () => {
+        if (!confirm("Clear all cards from your flashcard deck?")) return;
+        const batch = db.batch();
+        vocabList.filter(v => v.inDeck).forEach(v => {
+            const ref = db.collection('users').doc(currentUser.uid).collection('vocab').doc(v.hanzi);
+            batch.update(ref, { inDeck: false });
+        });
+        await batch.commit();
+    });
+
+    document.getElementById('fc-mode-hanzi').addEventListener('click', () => startFlashcards('hanzi'));
+    document.getElementById('fc-mode-english').addEventListener('click', () => startFlashcards('english'));
+
+    function startFlashcards(mode) {
+        activeDeck = vocabList.filter(v => v.inDeck);
+        if (activeDeck.length === 0) {
+            alert("Your flashcard deck is empty! Add words using the '+ Flashcard' button.");
+            return;
+        }
+        fcMode = mode;
+        fcIndex = 0;
+        flashcardSessionCount++;
+        activeDeck = shuffleArray([...activeDeck]);
+        fcSetupBox.style.display = 'none';
+        fcSessionBox.style.display = 'block';
+        showFlashcard();
+    }
+
+    function showFlashcard() {
+        isFlipped = false;
+        fcCardInner.classList.remove('is-flipped');
+        fcControlsBar.style.opacity = '0.4';
+        fcControlsBar.style.pointerEvents = 'none';
+
+        if (fcIndex >= activeDeck.length) {
+            finishFlashcardSession();
+            return;
+        }
+
+        fcLeftCounter.textContent = `Card: ${fcIndex + 1} / ${activeDeck.length}`;
+        const item = activeDeck[fcIndex];
+        const bgFront = fcMode === 'hanzi'
+            ? FLASHCARD_BG_IMAGES_HANZI[fcIndex % FLASHCARD_BG_IMAGES_HANZI.length]
+            : FLASHCARD_BG_IMAGES_ENGLISH[fcIndex % FLASHCARD_BG_IMAGES_ENGLISH.length];
+        const bgBack = fcMode === 'hanzi'
+            ? FLASHCARD_BG_IMAGES_ENGLISH[fcIndex % FLASHCARD_BG_IMAGES_ENGLISH.length]
+            : FLASHCARD_BG_IMAGES_HANZI[fcIndex % FLASHCARD_BG_IMAGES_HANZI.length];
+
+        fcFaceFront.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72)), url('${bgFront}')`;
+        fcFaceBack.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.82)), url('${bgBack}')`;
+
+        if (fcMode === 'hanzi') {
+            fcFaceFront.innerHTML = `
+                <div style="font-size: 40px; font-weight: 800; color: #e08b9b;">${escapeHtml(item.hanzi)}</div>
+                <div style="font-size: 13px; color: #a38c90; margin-top: 10px;">Tap card to flip 🔄</div>
+            `;
+            fcFaceBack.innerHTML = `
+                <div style="font-size: 26px; font-weight: 800; color: #e08b9b;">${escapeHtml(item.hanzi)}</div>
+                <div style="font-size: 16px; color: #d09b9f; font-style: italic; margin-bottom: 8px;">${escapeHtml(item.pinyin || '')}</div>
+                <ul class="vocab-defs" style="margin: 0; padding-left: 18px; font-size: 13.5px;">
+                    ${(item.translations || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}
+                </ul>
+            `;
+        } else {
+            fcFaceFront.innerHTML = `
+                <ul class="vocab-defs" style="margin: 0; padding-left: 18px; font-size: 16px; font-weight: 700; color: #5c4a4d;">
+                    ${(item.translations || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}
+                </ul>
+                <div style="font-size: 13px; color: #a38c90; margin-top: 14px;">Tap card to flip 🔄</div>
+            `;
+            fcFaceBack.innerHTML = `
+                <div style="font-size: 34px; font-weight: 800; color: #e08b9b;">${escapeHtml(item.hanzi)}</div>
+                <div style="font-size: 16px; color: #d09b9f; font-style: italic; margin-bottom: 8px;">${escapeHtml(item.pinyin || '')}</div>
+            `;
+        }
+    }
+
+    fcCardInner.addEventListener('click', () => {
+        isFlipped = !isFlipped;
+        if (isFlipped) {
+            fcCardInner.classList.add('is-flipped');
+            fcControlsBar.style.opacity = '1';
+            fcControlsBar.style.pointerEvents = 'auto';
+        } else {
+            fcCardInner.classList.remove('is-flipped');
+        }
+    });
+
+    document.getElementById('fc-btn-learn').addEventListener('click', () => {
+        const item = activeDeck[fcIndex];
+        activeDeck.push(item);
+        fcIndex++;
+        showFlashcard();
+    });
+
+    document.getElementById('fc-btn-gotit').addEventListener('click', () => {
+        fcIndex++;
+        showFlashcard();
+    });
+
+    document.getElementById('fc-quit-btn').addEventListener('click', () => {
+        fcSessionBox.style.display = 'none';
+        fcSetupBox.style.display = 'block';
+    });
+
+    function finishFlashcardSession() {
+        fcFaceFront.style.backgroundImage = 'none';
+        fcFaceFront.innerHTML = `
+            <img src="${COMPLETE_DECK_IMG_URL}" style="width: 100px; height: auto; margin-bottom: 12px;">
+            <div style="font-size: 20px; font-weight: 800; color: #e08b9b;">All Done! 🎉</div>
+            <p style="font-size: 13px; color: #7b6267; margin: 6px 0 16px;">Deck reviewed successfully!</p>
+            <button id="fc-finish-btn" class="login-btn" style="padding: 8px 18px; font-size: 13px;">Return to Deck</button>
+        `;
+        document.getElementById('fc-finish-btn').addEventListener('click', () => {
             fcSessionBox.style.display = 'none';
             fcSetupBox.style.display = 'block';
         });
+    }
 
-        function renderNextFlashcard() {
-            if (fcQueue.length === 0) {
-                fcSessionBox.innerHTML = `
-                    <div style="text-align:center; padding:30px 10px;">
-                        <img src="${COMPLETE_DECK_IMG_URL}" style="width:75px; height:auto; border-radius:12px; margin-bottom:12px;" alt="Done">
-                        <h3 style="color:#e08b9b; margin:0 0 4px;">Deck Complete!</h3>
-                        <p style="color:#7b6267; font-size:13px; font-weight:700;">Well done bub!</p>
-                        <button id="fc-finish-btn" class="login-btn" style="margin-top:16px;">Back to Decks 🌷</button>
-                    </div>
-                `;
-                document.getElementById('fc-finish-btn').addEventListener('click', () => location.reload());
-                return;
-            }
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
 
-            fcIsFlipped = false;
-            fcCardInner.classList.remove('is-flipped');
-            fcControlsBar.style.opacity = '0.4';
-            fcControlsBar.style.pointerEvents = 'none';
+    // --- 9. MODERNIZED CHAT SYSTEM ---
+    const chatMessagesBox = document.getElementById('chat-messages-box');
+    const chatTextInput = document.getElementById('chat-text-input');
+    const chatSendBtn = document.getElementById('chat-send-action-btn');
+    const chatAttachTrigger = document.getElementById('chat-attach-trigger');
+    const chatFileInput = document.getElementById('chat-file-input');
+    const chatReplyPreviewBar = document.getElementById('chat-reply-preview-bar');
+    const replyToUserLabel = document.getElementById('reply-to-user-label');
+    const replyToTextLabel = document.getElementById('reply-to-text-label');
+    const cancelReplyBtn = document.getElementById('cancel-reply-btn');
+    const adminUserSelector = document.getElementById('admin-user-selector');
+    const adminTargetUserSelect = document.getElementById('admin-target-user-select');
 
-            const vocab = fcQueue[0];
-            fcLeftCounter.textContent = `Cards Left: ${fcQueue.length}`;
-
-            const activeSet = fcMode === 'en' ? FLASHCARD_BG_IMAGES_ENGLISH : FLASHCARD_BG_IMAGES_HANZI;
-            const bgImg = activeSet[flashcardSessionCount % activeSet.length];
-            const bgPosition = bgImg.includes('d5.png') ? 'left center' : 'center center';
-            const bgStyle = `background: linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.78)), url('${bgImg}'); background-position: ${bgPosition} !important;`;
-
-            fcFaceFront.style.cssText = bgStyle;
-            fcFaceBack.style.cssText = bgStyle;
-
-            if (fcMode === 'hanzi') {
-                fcFaceFront.innerHTML = `
-                    <span style="position:absolute; top:15px; right:15px; font-size:10px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700; color:#5c4a4d;">HSK ${vocab.level || '?'}</span>
-                    <button class="ponyo-btn fc-speak-btn" style="position:absolute; top:10px; left:10px;" title="Listen">
-                        <img src="${PONYO_IMG_URL}" alt="Speak">
-                    </button>
-                    <div style="font-size: 42px; font-weight: bold; color: #e08b9b; margin-top: 10px;">${vocab.hanzi}</div>
-                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #b89c9e; font-style: italic;">(Tap to flip)</div>
-                `;
-            } else {
-                const defs = (vocab.translations || []).map(t => `<li style="margin-bottom:4px;">${t}</li>`).join('');
-                fcFaceFront.innerHTML = `
-                    <span style="position:absolute; top:15px; right:15px; font-size:10px; background:#f5cde2; padding:3px 8px; border-radius:8px; font-weight:700; color:#5c4a4d;">HSK ${vocab.level || '?'}</span>
-                    <ul style="margin:0; padding-left:20px; font-size:15px; color:#5c4a4d; font-weight:700; text-align:left; width:100%;">${defs}</ul>
-                    <div style="position: absolute; bottom: 20px; font-size: 12px; color: #b89c9e; font-style: italic;">(Tap to flip)</div>
-                `;
-            }
-
-            const defsBack = (vocab.translations || []).map(t => `<li>${t}</li>`).join('');
-            const allReplies = getAllBeanRepliesFor(vocab.hanzi);
-            let fcReplyIdx = allReplies.length - 1;
-
-            fcFaceBack.innerHTML = `
-                <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-                    <div>
-                        <div style="font-size: 28px; font-weight: bold; color: #e08b9b;">${vocab.hanzi}</div>
-                        <div style="font-size: 14px; color: #d09b9f; font-style: italic;">${vocab.pinyin || ''}</div>
-                    </div>
-                    <button class="ponyo-btn fc-speak-btn" title="Listen">
-                        <img src="${PONYO_IMG_URL}" alt="Speak">
-                    </button>
-                </div>
-                <ul style="margin: 6px 0 10px; padding-left: 18px; font-size: 13px; line-height: 1.4;">${defsBack}</ul>
-                ${vocab.note ? `<div class="sticky-note-box" style="margin-bottom:6px; font-size:11px; padding:6px 8px;">📌 ${vocab.note}</div>` : ''}
-                ${allReplies.length > 0 ? `
-                    <div class="bean-reply-box" style="margin-top:6px; font-size:11px; padding:6px 8px; width:100%;">
-                        <b style="color:#2e5973;">💬 Bean's Note:</b>
-                        <div class="fc-reply-text" style="word-break:break-word; margin-top:2px;">${allReplies[fcReplyIdx].reply}</div>${allReplies.length > 1 ? `
-                            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 5px; margin-top: 5px; border-top: 1px dashed #c9e4f5; padding-top: 3px;">
-                                <button class="bean-nav-btn fc-prev-reply">◀</button>
-                                <span class="fc-reply-counter" style="font-size: 10px; font-weight: bold; color: #6b8ea2;">${fcReplyIdx + 1}/${allReplies.length}</span>
-                                <button class="bean-nav-btn fc-next-reply">▶</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                ` : ''}
-            `;
-
-            fcFaceFront.querySelector('.fc-speak-btn')?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                playTTS(vocab.hanzi);
-            });
-            fcFaceBack.querySelector('.fc-speak-btn')?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                playTTS(vocab.hanzi);
-            });
-
-            if (allReplies.length > 1) {
-                const replyText = fcFaceBack.querySelector('.fc-reply-text');
-                const counter = fcFaceBack.querySelector('.fc-reply-counter');
-                const prevBtn = fcFaceBack.querySelector('.fc-prev-reply');
-                const nextBtn = fcFaceBack.querySelector('.fc-next-reply');
-
-                prevBtn?.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    fcReplyIdx = (fcReplyIdx - 1 + allReplies.length) % allReplies.length;
-                    replyText.textContent = allReplies[fcReplyIdx].reply;
-                    counter.textContent = `${fcReplyIdx + 1}/${allReplies.length}`;
+    function setupChat(user) {
+        const isAdmin = (user.email === ADMIN_EMAIL);
+        
+        if (isAdmin) {
+            adminUserSelector.style.display = 'block';
+            db.collection('users').get().then(snapshot => {
+                adminTargetUserSelect.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const uData = doc.data();
+                    const opt = document.createElement('option');
+                    opt.value = doc.id;
+                    opt.textContent = `${uData.email || doc.id}`;
+                    adminTargetUserSelect.appendChild(opt);
                 });
-
-                nextBtn?.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    fcReplyIdx = (fcReplyIdx + 1) % allReplies.length;
-                    replyText.textContent = allReplies[fcReplyIdx].reply;
-                    counter.textContent = `${fcReplyIdx + 1}/${allReplies.length}`;
-                });
-            }
+                if (adminTargetUserSelect.options.length > 0) {
+                    activeChatUserId = adminTargetUserSelect.value;
+                    bindChatMessagesListener(activeChatUserId);
+                }
+            });
+            adminTargetUserSelect.addEventListener('change', () => {
+                activeChatUserId = adminTargetUserSelect.value;
+                bindChatMessagesListener(activeChatUserId);
+            });
+        } else {
+            adminUserSelector.style.display = 'none';
+            activeChatUserId = user.uid;
+            bindChatMessagesListener(activeChatUserId);
         }
 
-        fcCardInner.addEventListener('click', (e) => {
-            if (e.target.closest('.ponyo-btn') || e.target.closest('.bean-nav-btn')) return;
+        bindChatWallpaper(activeChatUserId);
+    }
 
-            if (!fcIsFlipped) {
-                fcIsFlipped = true;
-                if (navigator.vibrate) navigator.vibrate(10);
-                fcCardInner.classList.add('is-flipped');
-                fcControlsBar.style.opacity = '1';
-                fcControlsBar.style.pointerEvents = 'auto';
+    function bindChatMessagesListener(targetUid) {
+        if (unsubscribeChat) unsubscribeChat();
+        if (!targetUid) return;
 
-                if (fcMode === 'en') {
-                    playTTS(fcQueue[0].hanzi);
+        unsubscribeChat = db.collection('messages')
+            .where('chatSessionId', '==', targetUid)
+            .orderBy('timestamp', 'asc')
+            .onSnapshot(snapshot => {
+                chatMessagesBox.innerHTML = '';
+                snapshot.forEach(doc => {
+                    renderChatMessage(doc.id, doc.data());
+                });
+                chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+            }, err => console.error("Chat sync error:", err));
+    }
+
+    function renderChatMessage(msgId, msg) {
+        const isFromAdmin = (msg.senderEmail === ADMIN_EMAIL);
+        const isSelf = currentUser && (msg.senderEmail === currentUser.email);
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'chat-bubble-wrapper';
+
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${isFromAdmin ? 'from-admin' : 'from-user'}`;
+        bubble.dataset.msgId = msgId;
+
+        let replyCardHtml = '';
+        if (msg.replyTo) {
+            replyCardHtml = `
+                <div class="chat-reply-card">
+                    <span class="chat-reply-row-relation">${escapeHtml(msg.replyTo.senderName || 'Message')}</span>
+                    <span class="chat-reply-row-snippet">${escapeHtml(msg.replyTo.text || 'Photo')}</span>
+                </div>
+            `;
+        }
+
+        let mediaHtml = '';
+        if (msg.imageUrl) {
+            mediaHtml = `<img class="chat-media-img" src="${msg.imageUrl}" alt="Uploaded Photo">`;
+        }
+
+        const dateStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+        bubble.innerHTML = `
+            ${replyCardHtml}
+            ${msg.text ? `<div class="chat-actual-body">${escapeHtml(msg.text)}</div>` : ''}
+            ${mediaHtml}
+            <div class="chat-meta">
+                <span>${dateStr}</span>
+                ${isSelf && msg.read ? '<span class="chat-read-label">Read</span>' : ''}
+            </div>
+        `;
+
+        if (msg.reactions && Object.keys(msg.reactions).length > 0) {
+            const strip = document.createElement('div');
+            strip.className = `chat-reactions-strip ${isFromAdmin ? 'from-admin-strip' : 'from-user-strip'}`;
+            Object.entries(msg.reactions).forEach(([emoji, count]) => {
+                if (count > 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'chat-reaction-badge';
+                    badge.textContent = `${emoji} ${count > 1 ? count : ''}`;
+                    strip.appendChild(badge);
                 }
+            });
+            wrapper.appendChild(strip);
+        }
+
+        attachLongPressMenu(bubble, msgId, msg, isSelf);
+
+        const imgEl = bubble.querySelector('.chat-media-img');
+        if (imgEl) {
+            imgEl.addEventListener('click', () => openLightbox(imgEl.src));
+        }
+
+        wrapper.appendChild(bubble);
+        chatMessagesBox.appendChild(wrapper);
+    }
+
+    // Long Press Action Sheet Modal Logic
+    const actionMenuOverlay = document.getElementById('chat-action-menu-overlay');
+    const toggleMoreEmojisBtn = document.getElementById('toggle-more-emojis-btn');
+    const scrollableEmojiTray = document.getElementById('chat-scrollable-emoji-tray');
+    const menuActReply = document.getElementById('menu-act-reply');
+    const menuActCopy = document.getElementById('menu-act-copy');
+    const menuActUnsend = document.getElementById('menu-act-unsend');
+
+    function attachLongPressMenu(element, msgId, msg, isSelf) {
+        let pressTimer = null;
+
+        const startPress = (e) => {
+            element.classList.add('bubble-pressing');
+            pressTimer = setTimeout(() => {
+                element.classList.remove('bubble-pressing');
+                openActionMenu(msgId, msg, isSelf);
+            }, 450);
+        };
+
+        const cancelPress = () => {
+            element.classList.remove('bubble-pressing');
+            if (pressTimer) clearTimeout(pressTimer);
+        };
+
+        element.addEventListener('touchstart', startPress, { passive: true });
+        element.addEventListener('touchend', cancelPress);
+        element.addEventListener('touchmove', cancelPress);
+        element.addEventListener('mousedown', startPress);
+        element.addEventListener('mouseup', cancelPress);
+        element.addEventListener('mouseleave', cancelPress);
+    }
+
+    function openActionMenu(msgId, msg, isSelf) {
+        menuTargetMsg = { id: msgId, ...msg };
+        scrollableEmojiTray.style.display = 'none';
+        menuActUnsend.style.display = isSelf ? 'flex' : 'none';
+        actionMenuOverlay.style.display = 'flex';
+    }
+
+    actionMenuOverlay.addEventListener('click', (e) => {
+        if (e.target === actionMenuOverlay) {
+            actionMenuOverlay.style.display = 'none';
+        }
+    });
+
+    toggleMoreEmojisBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        scrollableEmojiTray.style.display = (scrollableEmojiTray.style.display === 'grid') ? 'none' : 'grid';
+    });
+
+    document.querySelectorAll('.chat-react-btn[data-emoji]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const emoji = btn.dataset.emoji;
+            if (menuTargetMsg && emoji) {
+                applyReaction(menuTargetMsg.id, emoji);
+            }
+            actionMenuOverlay.style.display = 'none';
+        });
+    });
+
+    async function applyReaction(msgId, emoji) {
+        const ref = db.collection('messages').doc(msgId);
+        await db.runTransaction(async t => {
+            const doc = await t.get(ref);
+            if (!doc.exists) return;
+            const data = doc.data();
+            const reactions = data.reactions || {};
+            reactions[emoji] = (reactions[emoji] || 0) + 1;
+            t.update(ref, { reactions });
+        });
+    }
+
+    menuActReply.addEventListener('click', () => {
+        actionMenuOverlay.style.display = 'none';
+        if (!menuTargetMsg) return;
+        activeReplyTarget = {
+            id: menuTargetMsg.id,
+            senderName: menuTargetMsg.senderEmail === ADMIN_EMAIL ? 'Bean' : 'Bub',
+            text: menuTargetMsg.text || 'Photo'
+        };
+        replyToUserLabel.textContent = `Replying to ${activeReplyTarget.senderName}`;
+        replyToTextLabel.textContent = activeReplyTarget.text;
+        chatReplyPreviewBar.style.display = 'flex';
+        chatTextInput.focus();
+    });
+
+    cancelReplyBtn.addEventListener('click', () => {
+        activeReplyTarget = null;
+        chatReplyPreviewBar.style.display = 'none';
+    });
+
+    menuActCopy.addEventListener('click', () => {
+        actionMenuOverlay.style.display = 'none';
+        if (menuTargetMsg && menuTargetMsg.text) {
+            navigator.clipboard.writeText(menuTargetMsg.text);
+        }
+    });
+
+    menuActUnsend.addEventListener('click', async () => {
+        actionMenuOverlay.style.display = 'none';
+        if (menuTargetMsg && confirm("Unsend this message?")) {
+            await db.collection('messages').doc(menuTargetMsg.id).delete();
+        }
+    });
+
+    // Chat Message Dispatching
+    chatSendBtn.addEventListener('click', sendChatMessage);
+    chatTextInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendChatMessage();
+    });
+
+    async function sendChatMessage() {
+        const text = chatTextInput.value.trim();
+        if (!text || !currentUser || !activeChatUserId) return;
+
+        chatTextInput.value = '';
+        const payload = {
+            chatSessionId: activeChatUserId,
+            senderEmail: currentUser.email,
+            text: text,
+            imageUrl: null,
+            replyTo: activeReplyTarget,
+            timestamp: Date.now(),
+            read: false,
+            reactions: {}
+        };
+
+        activeReplyTarget = null;
+        chatReplyPreviewBar.style.display = 'none';
+
+        await db.collection('messages').add(payload);
+    }
+
+    chatAttachTrigger.addEventListener('click', () => chatFileInput.click());
+    chatFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !currentUser || !activeChatUserId) return;
+
+        const reader = new FileReader();
+        reader.onload = async () => {
+            const dataUrl = reader.result;
+            await db.collection('messages').add({
+                chatSessionId: activeChatUserId,
+                senderEmail: currentUser.email,
+                text: '',
+                imageUrl: dataUrl,
+                replyTo: activeReplyTarget,
+                timestamp: Date.now(),
+                read: false,
+                reactions: {}
+            });
+            activeReplyTarget = null;
+            chatReplyPreviewBar.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Chat Lightbox
+    const lightbox = document.getElementById('chat-lightbox');
+    const lightboxImg = document.getElementById('chat-lightbox-img');
+    function openLightbox(url) {
+        lightboxImg.src = url;
+        lightbox.style.display = 'flex';
+    }
+    lightbox.addEventListener('click', () => {
+        lightbox.style.display = 'none';
+    });
+
+    // Chat Custom Wallpaper
+    const uploadBgBtn = document.getElementById('upload-bg-btn');
+    const resetBgBtn = document.getElementById('reset-bg-btn');
+    const chatBgFileInput = document.getElementById('chat-bg-file-input');
+
+    uploadBgBtn.addEventListener('click', () => chatBgFileInput.click());
+    chatBgFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file || !currentUser) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            db.collection('users').doc(currentUser.uid).set({
+                chatWallpaper: reader.result
+            }, { merge: true });
+        };
+        reader.readAsDataURL(file);
+    });
+
+    resetBgBtn.addEventListener('click', () => {
+        if (!currentUser) return;
+        db.collection('users').doc(currentUser.uid).set({
+            chatWallpaper: null
+        }, { merge: true });
+    });
+
+    function bindChatWallpaper(uid) {
+        if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
+        if (!uid) return;
+
+        unsubscribeChatWallpaper = db.collection('users').doc(uid)
+            .onSnapshot(doc => {
+                if (doc.exists && doc.data().chatWallpaper) {
+                    chatMessagesBox.style.backgroundImage = `url('${doc.data().chatWallpaper}')`;
+                } else {
+                    chatMessagesBox.style.backgroundImage = 'none';
+                }
+            });
+    }
+
+    // --- 10. WEB PUSH NOTIFICATIONS SETUP ---
+    async function setupPushNotifications(user) {
+        const pushBtn = document.getElementById('enable-push-btn');
+        const pushStatus = document.getElementById('push-status-lbl');
+        if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+            pushStatus.textContent = 'Status: Not supported on this device/browser.';
+            pushBtn.style.display = 'none';
+            return;
+        }
+
+        pushStatus.textContent = `Status: Permission ${Notification.permission}`;
+
+        pushBtn.addEventListener('click', async () => {
+            try {
+                const permission = await Notification.requestPermission();
+                pushStatus.textContent = `Status: Permission ${permission}`;
+                if (permission !== 'granted') return;
+
+                const reg = await navigator.serviceWorker.ready;
+                let sub = await reg.pushManager.getSubscription();
+                if (!sub) {
+                    sub = await reg.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+                    });
+                }
+
+                await fetch(`${PUSH_SERVER_URL}/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.uid,
+                        userEmail: user.email,
+                        subscription: sub
+                    })
+                });
+
+                alert("Push Notifications successfully registered! 🔔");
+            } catch (err) {
+                console.error("Push registration error:", err);
+                alert("Push notification setup error: " + err.message);
             }
         });
+    }
 
-        function markStillLearning() {
-            if (navigator.vibrate) navigator.vibrate(15);
-            const card = fcQueue.shift();
-            fcQueue.push(card);
-            flashcardSessionCount++;
-            renderNextFlashcard();
-        }
+    // --- 11. NAVIGATION & TABS ---
+    const tabs = {
+        vocab: { btn: document.getElementById('tab-btn-vocab'), view: document.getElementById('vocab-view') },
+        replies: { btn: document.getElementById('tab-btn-replies'), view: document.getElementById('replies-view') },
+        flash: { btn: document.getElementById('tab-btn-flash'), view: document.getElementById('flash-view') },
+        chat: { btn: document.getElementById('tab-btn-chat'), view: document.getElementById('chat-view') },
+        sync: { btn: document.getElementById('tab-btn-sync'), view: document.getElementById('sync-view') }
+    };
 
-        function markGotIt() {
-            if (navigator.vibrate) navigator.vibrate([10, 30]);
-            fcQueue.shift();
-            flashcardSessionCount++;
-            renderNextFlashcard();
-        }
+    Object.entries(tabs).forEach(([key, tab]) => {
+        tab.btn.addEventListener('click', () => {
+            Object.values(tabs).forEach(t => {
+                t.btn.classList.remove('active');
+                t.view.style.display = 'none';
+            });
+            tab.btn.classList.add('active');
+            tab.view.style.display = (key === 'flash' || key === 'replies') ? 'flex' : 'block';
 
-        fcBtnLearn.addEventListener('click', markStillLearning);
-        fcBtnGotit.addEventListener('click', markGotIt);
-
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        fcSwipeContainer.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        fcSwipeContainer.addEventListener('touchend', (e) => {
-            if (!fcIsFlipped) return;
-
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
-            const deltaY = e.changedTouches[0].clientY - touchStartY;
-
-            if (Math.abs(deltaX) > 60 && Math.abs(deltaY) < 50) {
-                if (deltaX < 0) {
-                    markStillLearning();
-                } else {
-                    markGotIt();
-                }
+            if (key === 'replies') renderBeanRepliesTab();
+            if (key === 'chat') {
+                chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
             }
-        }, { passive: true });
+        });
+    });
 
-        // --- 11. AUDIO SYNTHESIS (TTS) ---
-        function playTTS(text) {
-            try {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-CN';
-                utterance.rate = 0.85;
-                window.speechSynthesis.speak(utterance);
-            } catch (e) {
-                console.warn("TTS error:", e);
-            }
-        }
-    </script>
+    document.getElementById('copy-sync-key-btn')?.addEventListener('click', () => {
+        if (!currentUser) return;
+        navigator.clipboard.writeText(currentUser.uid).then(() => {
+            alert("Sync Key copied to clipboard! Paste it into the Netflix UserScript menu.");
+        });
+    });
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+</script>
 </body>
 </html>
