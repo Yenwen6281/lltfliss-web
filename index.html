@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.2)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.3)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,6 +19,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Pinyin Pro for Live Pinyin Generation -->
+    <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.19.7/dist/index.js"></script>
 
     <!-- Firebase SDK (v10 compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -101,6 +104,11 @@
             margin: 12px 18px 0;
             box-shadow: inset 0 2px 4px rgba(220, 160, 180, 0.15);
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .tab-btn {
@@ -872,7 +880,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.2</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.3</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -897,6 +905,7 @@
             <button class="tab-btn active" id="tab-btn-vocab">Saved Words</button>
             <button class="tab-btn" id="tab-btn-replies">Bean's Notes</button>
             <button class="tab-btn" id="tab-btn-flash">Flashcards</button>
+            <button class="tab-btn" id="tab-btn-dict">Dictionary 📖</button>
             <button class="tab-btn" id="tab-btn-chat">Chat 💬</button>
             <button class="tab-btn" id="tab-btn-sync">Sync & Settings</button>
         </div>
@@ -977,7 +986,19 @@
                 </div>
             </section>
 
-            <!-- 4. Modernized Chat View -->
+            <!-- 4. Pure Reference Dictionary View -->
+            <section id="dict-view" style="display: none; flex-direction: column;">
+                <div class="controls-card">
+                    <input type="text" id="dict-search-input" class="search-input" placeholder="🔍 Search English, Pinyin, or Hanzi...">
+                </div>
+                <div id="dict-results-container" style="display: flex; flex-direction: column;">
+                    <div style="text-align: center; color: #a38c90; margin-top: 30px; font-style: italic; font-size: 13.5px;">
+                        Instant dictionary search 🌸
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Modernized Chat View -->
             <section id="chat-view" style="display: none;">
                 <div id="admin-user-selector" style="display: none; margin-bottom: 8px;">
                     <span style="font-size: 11px; font-weight: 700; color: #e08b9b;">Admin: Select Conversation:</span>
@@ -1008,7 +1029,7 @@
                 </div>
             </section>
 
-            <!-- 5. Sync & Settings View -->
+            <!-- 6. Sync & Settings View -->
             <section id="sync-view" style="display: none;">
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">Your Netflix Sync Key</h3>
@@ -1050,7 +1071,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.2</b>
+                        <b id="settings-version-display">v1.2.3</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1145,7 +1166,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.2';
+        const APP_VERSION = 'v1.2.3';
 
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
@@ -1160,7 +1181,7 @@
             window.location.reload(true);
         });
 
-        // --- GLOBAL PHYSICAL SQUISH HANDLER (RESTORED FOR IOS) ---
+        // --- GLOBAL PHYSICAL SQUISH HANDLER ---
         const SQUISH_TARGETS = 'button, .tab-btn, .mode-picker-card, .deck-badge, .ghost-btn, .fc-btn, .ponyo-btn, .woodstock-btn, .icon-btn, .jump-back-btn, .chat-send-btn, .chat-attach-btn, .chat-menu-btn, .chat-react-btn, .chat-reaction-badge';
 
         const addSquish = (e) => {
@@ -1214,6 +1235,13 @@
             return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '');
         }
 
+        function decodeHtmlEntities(str) {
+            if (!str) return '';
+            const txt = document.createElement('textarea');
+            txt.innerHTML = str;
+            return txt.value;
+        }
+
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
             const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -1224,6 +1252,19 @@
             }
             return outputArray;
         }
+
+        // --- 1.5 LOAD HSK DICTIONARY IN MEMORY ---
+        let dictVocabMap = new Map();
+        let dictVocabArray = [];
+
+        fetch('https://raw.githubusercontent.com/Yenwen6281/mandarin-subtitles/refs/heads/main/cleaned_hsk.json')
+            .then(res => res.json())
+            .then(data => {
+                dictVocabArray = data;
+                data.forEach(item => dictVocabMap.set(item.hanzi, item));
+                console.log(`📖 Loaded ${dictVocabArray.length} HSK words into WebApp dictionary!`);
+            })
+            .catch(err => console.warn("Failed loading HSK dictionary:", err));
 
         // --- 2. FIREBASE INITIALIZATION ---
         const firebaseConfig = {
@@ -1320,8 +1361,6 @@
                             repliedAt: data.repliedAt || null
                         });
                     });
-
-                    console.log(`💌 Synced ${beanRepliesList.length} private inquiries from Firestore!`);
 
                     if (typeof renderSavedVocab === 'function') renderSavedVocab();
                     if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
@@ -1436,7 +1475,6 @@
                 }, err => console.warn("Global alert watcher error:", err));
         }
 
-        // Web Push Check & UI Status
         async function checkPushStatus() {
             if (!('Notification' in window)) {
                 pushStatusLbl.textContent = "Status: Not supported on this browser";
@@ -1454,7 +1492,6 @@
             }
         }
 
-        // Standard Web Push Activation (Cross-compatible with iOS Safari standalone mode)
         enablePushBtn.addEventListener('click', async () => {
             if (!('Notification' in window) || !('serviceWorker' in navigator)) {
                 alert("Push notifications require iOS 16.4+ and adding this web app to your Home Screen!");
@@ -1530,29 +1567,36 @@
         const tabBtnVocab = document.getElementById('tab-btn-vocab');
         const tabBtnReplies = document.getElementById('tab-btn-replies');
         const tabBtnFlash = document.getElementById('tab-btn-flash');
+        const tabBtnDict = document.getElementById('tab-btn-dict');
         const tabBtnChat = document.getElementById('tab-btn-chat');
         const tabBtnSync = document.getElementById('tab-btn-sync');
         const vocabView = document.getElementById('vocab-view');
         const repliesView = document.getElementById('replies-view');
         const flashView = document.getElementById('flash-view');
+        const dictView = document.getElementById('dict-view');
         const chatView = document.getElementById('chat-view');
         const syncView = document.getElementById('sync-view');
 
         function switchTab(activeBtn, activeSection) {
-            [tabBtnVocab, tabBtnReplies, tabBtnFlash, tabBtnChat, tabBtnSync].forEach(b => b.classList.remove('active'));
-            [vocabView, repliesView, flashView, chatView, syncView].forEach(s => s.style.display = 'none');
+            [tabBtnVocab, tabBtnReplies, tabBtnFlash, tabBtnDict, tabBtnChat, tabBtnSync].forEach(b => b.classList.remove('active'));
+            [vocabView, repliesView, flashView, dictView, chatView, syncView].forEach(s => s.style.display = 'none');
             activeBtn.classList.add('active');
-            activeSection.style.display = (activeSection === flashView || activeSection === repliesView || activeSection === chatView) ? 'flex' : 'block';
+            activeSection.style.display = (activeSection === flashView || activeSection === repliesView || activeSection === chatView || activeSection === dictView) ? 'flex' : 'block';
 
             if (activeSection === chatView) {
                 markIncomingMessagesAsRead();
                 scrollChatToBottom();
+            }
+            if (activeSection === dictView) {
+                const dictInput = document.getElementById('dict-search-input');
+                if (dictInput) dictInput.focus();
             }
         }
 
         tabBtnVocab.addEventListener('click', () => switchTab(tabBtnVocab, vocabView));
         tabBtnReplies.addEventListener('click', () => switchTab(tabBtnReplies, repliesView));
         tabBtnFlash.addEventListener('click', () => switchTab(tabBtnFlash, flashView));
+        tabBtnDict.addEventListener('click', () => switchTab(tabBtnDict, dictView));
         tabBtnChat.addEventListener('click', () => switchTab(tabBtnChat, chatView));
         tabBtnSync.addEventListener('click', () => switchTab(tabBtnSync, syncView));
 
@@ -1889,6 +1933,205 @@
                 renderContent();
                 repliesListContainer.appendChild(card);
             });
+        }
+
+        // --- 7.5 TRANSLATION-FIRST REFERENCE DICTIONARY ---
+        const dictSearchInput = document.getElementById('dict-search-input');
+        const dictResultsContainer = document.getElementById('dict-results-container');
+        let dictSearchTimer = null;
+
+        dictSearchInput?.addEventListener('input', () => {
+            clearTimeout(dictSearchTimer);
+            const query = (dictSearchInput.value || '').trim();
+
+            if (!query) {
+                dictResultsContainer.innerHTML = `
+                    <div style="text-align: center; color: #a38c90; margin-top: 30px; font-style: italic; font-size: 13.5px;">
+                        Instant dictionary search 🌸
+                    </div>`;
+                return;
+            }
+
+            dictSearchTimer = setTimeout(() => {
+                executeDictionarySearch(query);
+            }, 300);
+        });
+
+        async function executeDictionarySearch(query) {
+            dictResultsContainer.innerHTML = `
+                <div style="text-align: center; color: #a38c90; margin-top: 25px; font-size: 13.5px;">
+                    Looking up definition... 🎀
+                </div>`;
+
+            const isChinese = /[\u4e00-\u9fa5]/.test(query);
+            const qLower = query.toLowerCase();
+            let results = [];
+
+            if (isChinese) {
+                const engTranslation = await translateMandarinToEnglish(query);
+                let pinyinStr = '';
+                try {
+                    const pinyinFn = (typeof pinyinPro !== 'undefined' && pinyinPro.pinyin) || window.pinyin;
+                    if (typeof pinyinFn === 'function') {
+                        pinyinStr = pinyinFn(query, { toneType: 'symbol', type: 'string' });
+                    }
+                } catch (e) {}
+
+                const hskMatch = dictVocabMap.get(query);
+                results.push({
+                    hanzi: query,
+                    pinyin: pinyinStr,
+                    level: hskMatch ? hskMatch.level : 0,
+                    definitions: [engTranslation]
+                });
+
+                const hskSub = dictVocabArray.filter(v => v.hanzi !== query && v.hanzi.includes(query)).slice(0, 5);
+                results = results.concat(hskSub.map(v => ({
+                    hanzi: v.hanzi,
+                    pinyin: v.pinyin,
+                    level: v.level || 0,
+                    definitions: v.translations || []
+                })));
+            } else {
+                const translatedZh = await translateEnglishToMandarin(query);
+
+                if (translatedZh && /[\u4e00-\u9fa5]/.test(translatedZh)) {
+                    let pinyinStr = '';
+                    try {
+                        const pinyinFn = (typeof pinyinPro !== 'undefined' && pinyinPro.pinyin) || window.pinyin;
+                        if (typeof pinyinFn === 'function') {
+                            pinyinStr = pinyinFn(translatedZh, { toneType: 'symbol', type: 'string' });
+                        }
+                    } catch (e) {}
+
+                    const hskMatch = dictVocabMap.get(translatedZh);
+                    results.push({
+                        hanzi: translatedZh,
+                        pinyin: pinyinStr,
+                        level: hskMatch ? hskMatch.level : 0,
+                        definitions: [query]
+                    });
+                }
+
+                const cleanQuery = stripPinyinTones(qLower);
+                const pinyinMatches = dictVocabArray.filter(v => {
+                    const rawPin = (v.pinyin || '').toLowerCase();
+                    const cleanPin = stripPinyinTones(v.pinyin || '');
+                    return rawPin.startsWith(qLower) || (cleanQuery && cleanPin.startsWith(cleanQuery));
+                }).slice(0, 5);
+
+                pinyinMatches.forEach(pm => {
+                    if (!results.some(r => r.hanzi === pm.hanzi)) {
+                        results.push({
+                            hanzi: pm.hanzi,
+                            pinyin: pm.pinyin,
+                            level: pm.level || 0,
+                            definitions: pm.translations || []
+                        });
+                    }
+                });
+            }
+
+            renderDictionaryResults(results);
+        }
+
+        function renderDictionaryResults(results) {
+            if (!results || results.length === 0) {
+                dictResultsContainer.innerHTML = `
+                    <div style="text-align: center; color: #a38c90; margin-top: 30px; font-style: italic; font-size: 13.5px;">
+                        No definition found. 🐣
+                    </div>`;
+                return;
+            }
+
+            dictResultsContainer.innerHTML = '';
+            results.forEach(entry => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card';
+                card.style.marginBottom = '10px';
+
+                const hanzi = entry.hanzi || '';
+                const pinyin = entry.pinyin || '';
+                const defs = (entry.definitions || []).map(d => `<li style="margin-bottom: 2px;">${d}</li>`).join('');
+                const hskLevel = entry.level || 0;
+
+                card.innerHTML = `
+                    <div class="vocab-header">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="vocab-title" style="font-size: 21px;">${hanzi}</span>
+                            <button class="ponyo-btn dict-speak-btn" title="Listen">
+                                <img src="${PONYO_IMG_URL}" alt="Speak" style="width: 48px; height: auto;">
+                            </button>
+                        </div>
+                        ${hskLevel > 0 ? `<span class="vocab-level">HSK ${hskLevel}</span>` : ''}
+                    </div>
+                    <div class="vocab-pinyin" style="margin-bottom: 6px;">${pinyin}</div>
+                    <ul class="vocab-defs">${defs}</ul>
+                `;
+
+                card.querySelector('.dict-speak-btn')?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    playTTS(hanzi);
+                });
+
+                dictResultsContainer.appendChild(card);
+            });
+        }
+
+        async function translateEnglishToMandarin(query) {
+            try {
+                const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(query)}`;
+                const gRes = await fetch(googleUrl);
+                if (gRes.ok) {
+                    const data = await gRes.json();
+                    if (data && data[0]) {
+                        const translated = data[0].map(item => item[0]).filter(Boolean).join('');
+                        if (translated) return decodeHtmlEntities(translated);
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                let myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=en|zh-CN`;
+                if (currentUser && currentUser.email) myMemoryUrl += `&de=${encodeURIComponent(currentUser.email)}`;
+                const mRes = await fetch(myMemoryUrl);
+                if (mRes.ok) {
+                    const mData = await mRes.json();
+                    if (mData?.responseData?.translatedText) {
+                        return decodeHtmlEntities(mData.responseData.translatedText);
+                    }
+                }
+            } catch (e) {}
+
+            return '';
+        }
+
+        async function translateMandarinToEnglish(query) {
+            try {
+                const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q=${encodeURIComponent(query)}`;
+                const gRes = await fetch(googleUrl);
+                if (gRes.ok) {
+                    const data = await gRes.json();
+                    if (data && data[0]) {
+                        const translated = data[0].map(item => item[0]).filter(Boolean).join('');
+                        if (translated) return decodeHtmlEntities(translated);
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                let myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=zh-CN|en`;
+                if (currentUser && currentUser.email) myMemoryUrl += `&de=${encodeURIComponent(currentUser.email)}`;
+                const mRes = await fetch(myMemoryUrl);
+                if (mRes.ok) {
+                    const mData = await mRes.json();
+                    if (mData?.responseData?.translatedText) {
+                        return decodeHtmlEntities(mData.responseData.translatedText);
+                    }
+                }
+            } catch (e) {}
+
+            return query;
         }
 
         // --- 8. CHAT MODULE WITH BACKGROUND DISPATCH ---
@@ -2409,7 +2652,6 @@
                 .then(async () => {
                     scrollChatToBottom();
 
-                    // Dispatches push notification to recipient's device via Render
                     try {
                         const targetRecipientUid = isCurrentAdmin ? activeChatUserId : ADMIN_EMAIL;
                         
