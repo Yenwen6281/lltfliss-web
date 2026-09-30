@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.3)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.4)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -880,7 +880,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.3</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.4</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1071,7 +1071,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.3</b>
+                        <b id="settings-version-display">v1.2.4</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1166,7 +1166,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.3';
+        const APP_VERSION = 'v1.2.4';
 
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
@@ -3090,17 +3090,78 @@
             }
         }, { passive: true });
 
-        // --- 11. AUDIO SYNTHESIS (TTS) ---
+        // --- 11. AUDIO SYNTHESIS (TTS WITH CROSS-DEVICE CLOUD FALLBACK) ---
+        let currentPlayingAudio = null;
+
+        function playCloudTTS(text) {
+            try {
+                if (currentPlayingAudio) {
+                    currentPlayingAudio.pause();
+                    currentPlayingAudio.currentTime = 0;
+                }
+                const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&q=${encodeURIComponent(text)}`;
+                currentPlayingAudio = new Audio(audioUrl);
+                currentPlayingAudio.play().catch(e => console.warn("Cloud audio playback error:", e));
+            } catch (err) {
+                console.warn("Cloud TTS fallback error:", err);
+            }
+        }
+
         function playTTS(text) {
+            if (!text) return;
+
+            if (!('speechSynthesis' in window)) {
+                playCloudTTS(text);
+                return;
+            }
+
             try {
                 window.speechSynthesis.cancel();
+                const voices = window.speechSynthesis.getVoices() || [];
+                const chineseVoice = voices.find(v => {
+                    const l = (v.lang || '').toLowerCase();
+                    return l.startsWith('zh') || l.startsWith('cmn') || l.startsWith('yue');
+                });
+
+                if (!chineseVoice && voices.length > 0) {
+                    playCloudTTS(text);
+                    return;
+                }
+
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'zh-CN';
                 utterance.rate = 0.85;
+
+                if (chineseVoice) {
+                    utterance.voice = chineseVoice;
+                }
+
+                let speechStarted = false;
+                utterance.onstart = () => {
+                    speechStarted = true;
+                };
+
+                setTimeout(() => {
+                    if (!speechStarted && window.speechSynthesis.speaking === false) {
+                        playCloudTTS(text);
+                    }
+                }, 280);
+
+                utterance.onerror = () => {
+                    playCloudTTS(text);
+                };
+
                 window.speechSynthesis.speak(utterance);
             } catch (e) {
-                console.warn("TTS error:", e);
+                console.warn("Native TTS error, using fallback:", e);
+                playCloudTTS(text);
             }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
         }
     </script>
 </body>
