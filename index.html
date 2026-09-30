@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.4)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.5)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -880,7 +880,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.4</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.5</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -938,6 +938,21 @@
 
             <!-- 2. Bean's Notes View -->
             <section id="replies-view" style="display: none; flex-direction: column;">
+                <!-- Admin Bean Reply Console (Visible only to Bean) -->
+                <div id="admin-inquiry-controls" style="display: none; margin-bottom: 14px; background: #ffffff; border: 1.5px solid #f5cde2; border-radius: 18px; padding: 12px 14px; box-shadow: 0 4px 12px rgba(200, 150, 160, 0.12);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 800; font-size: 13.5px; color: #e08b9b;">🧸 Bean's Answer Desk</span>
+                        <span id="admin-pending-badge" style="background: #ffecf2; border: 1px solid #fcdbe9; color: #b56c7d; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 12px;">0 Pending</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <select id="admin-inquiry-filter" class="filter-select" style="font-weight: 700;">
+                            <option value="pending">Pending Only (Needs Answer)</option>
+                            <option value="answered">Answered Already</option>
+                            <option value="all">All Inquiries</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div id="replies-list-container"></div>
             </section>
 
@@ -1071,7 +1086,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.4</b>
+                        <b id="settings-version-display">v1.2.5</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1166,7 +1181,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.4';
+        const APP_VERSION = 'v1.2.5';
 
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
@@ -1332,41 +1347,70 @@
             }
         }
 
-        // Direct Real-Time Firestore Inquiry Sync
-        function subscribeToInquiries(uid) {
+        // Direct Real-Time Firestore Inquiry Sync (Unified for Admin & User)
+        function subscribeToInquiries(user) {
             if (inquiriesUnsubscribe) {
                 inquiriesUnsubscribe();
                 inquiriesUnsubscribe = null;
             }
 
-            if (!uid) {
+            if (!user) {
                 beanRepliesList = [];
                 return;
             }
 
-            inquiriesUnsubscribe = db.collection('users')
-                .doc(uid)
-                .collection('inquiries')
-                .onSnapshot(snapshot => {
-                    beanRepliesList = [];
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        beanRepliesList.push({
-                            id: doc.id,
-                            hanzi: data.hanzi || '',
-                            user_query: data.user_query || '',
-                            reply: data.reply || '',
-                            status: data.status || 'pending',
-                            createdAt: data.createdAt || 0,
-                            repliedAt: data.repliedAt || null
-                        });
-                    });
+            const isAdmin = user.email === ADMIN_EMAIL;
+            const adminInquiryControls = document.getElementById('admin-inquiry-controls');
+            if (adminInquiryControls) {
+                adminInquiryControls.style.display = isAdmin ? 'block' : 'none';
+            }
 
-                    if (typeof renderSavedVocab === 'function') renderSavedVocab();
-                    if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
-                }, err => {
-                    console.error("Firestore inquiries sync error:", err);
+            const handleInquirySnapshot = (snapshot) => {
+                beanRepliesList = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    beanRepliesList.push({
+                        id: doc.id,
+                        userId: data.userId || (doc.ref.parent && doc.ref.parent.parent ? doc.ref.parent.parent.id : user.uid),
+                        userEmail: data.userEmail || '',
+                        userName: data.userName || (data.userEmail ? data.userEmail.split('@')[0] : 'User'),
+                        hanzi: data.hanzi || '',
+                        user_query: data.user_query || '',
+                        reply: data.reply || '',
+                        status: data.status || (data.reply ? 'answered' : 'pending'),
+                        createdAt: data.createdAt || 0,
+                        repliedAt: data.repliedAt || null
+                    });
                 });
+
+                if (typeof renderSavedVocab === 'function') renderSavedVocab();
+                if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
+            };
+
+            if (isAdmin) {
+                try {
+                    // Try collectionGroup across all users
+                    inquiriesUnsubscribe = db.collectionGroup('inquiries')
+                        .onSnapshot(handleInquirySnapshot, (err) => {
+                            console.warn("collectionGroup fallback to direct user inquiries:", err);
+                            // Fallback to active chat user or own collection if collectionGroup index is pending
+                            const targetUid = activeChatUserId || user.uid;
+                            inquiriesUnsubscribe = db.collection('users').doc(targetUid).collection('inquiries')
+                                .onSnapshot(handleInquirySnapshot, e => console.error("Admin inquiry sync error:", e));
+                        });
+                } catch (e) {
+                    const targetUid = activeChatUserId || user.uid;
+                    inquiriesUnsubscribe = db.collection('users').doc(targetUid).collection('inquiries')
+                        .onSnapshot(handleInquirySnapshot, err => console.error("Direct inquiries sync error:", err));
+                }
+            } else {
+                inquiriesUnsubscribe = db.collection('users')
+                    .doc(user.uid)
+                    .collection('inquiries')
+                    .onSnapshot(handleInquirySnapshot, err => {
+                        console.error("Firestore inquiries sync error:", err);
+                    });
+            }
         }
 
         function getAllBeanRepliesFor(hanzi) {
@@ -1417,7 +1461,7 @@
                 }, { merge: true });
 
                 listenToCloudData(user.uid);
-                subscribeToInquiries(user.uid);
+                subscribeToInquiries(user);
                 initChat(user);
                 initGlobalNotificationWatcher(user);
                 checkPushStatus();
@@ -1852,12 +1896,25 @@
             });
         }
 
-        // --- 7. BEAN'S NOTES TAB VIEW ---
+        // --- 7. BEAN'S NOTES TAB VIEW (USER ARCHIVE + ADMIN INTERACTIVE DESK) ---
         const repliesListContainer = document.getElementById('replies-list-container');
+        const adminInquiryFilter = document.getElementById('admin-inquiry-filter');
+        const adminPendingBadge = document.getElementById('admin-pending-badge');
+
+        adminInquiryFilter?.addEventListener('change', renderBeanRepliesTab);
 
         function renderBeanRepliesTab() {
             if (!repliesListContainer) return;
+            const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
 
+            if (isAdmin) {
+                renderAdminInquiriesDesk();
+            } else {
+                renderUserBeanRepliesView();
+            }
+        }
+
+        function renderUserBeanRepliesView() {
             if (beanRepliesList.length === 0) {
                 repliesListContainer.innerHTML = `<div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">No explanations from Bean yet! Ask about any word anytime. 💌</div>`;
                 return;
@@ -1931,6 +1988,165 @@
                 };
 
                 renderContent();
+                repliesListContainer.appendChild(card);
+            });
+        }
+
+        // Dedicated Admin Mode Renderer: Direct Inquiries Answer Desk
+        function renderAdminInquiriesDesk() {
+            const filterVal = adminInquiryFilter?.value || 'pending';
+            const pendingItems = beanRepliesList.filter(i => !i.reply || i.status === 'pending');
+            
+            if (adminPendingBadge) {
+                adminPendingBadge.textContent = `${pendingItems.length} Pending`;
+                adminPendingBadge.style.background = pendingItems.length > 0 ? '#ffecf2' : '#f0f8f3';
+                adminPendingBadge.style.color = pendingItems.length > 0 ? '#ba6273' : '#498863';
+            }
+
+            let displayList = [...beanRepliesList];
+            if (filterVal === 'pending') {
+                displayList = displayList.filter(i => !i.reply || i.status === 'pending');
+            } else if (filterVal === 'answered') {
+                displayList = displayList.filter(i => i.reply && i.status === 'answered');
+            }
+
+            // Newest first
+            displayList.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if (displayList.length === 0) {
+                repliesListContainer.innerHTML = `
+                    <div style="text-align:center; color:#a38c90; margin-top:40px; font-style:italic;">
+                        ${filterVal === 'pending' ? 'All caught up! No pending questions from Bub right now 🎉' : 'No inquiries found in this view 💌'}
+                    </div>`;
+                return;
+            }
+
+            repliesListContainer.innerHTML = '';
+            displayList.forEach(inquiry => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card';
+                card.style.border = inquiry.reply ? '1.5px solid #d2e7f5' : '1.5px solid #f5cde2';
+
+                const askedDate = inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+                const isAnswered = !!inquiry.reply;
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <span class="vocab-title" style="font-size:24px;">${inquiry.hanzi}</span>
+                            <button class="ponyo-btn admin-speak-btn" title="Listen">
+                                <img src="${PONYO_IMG_URL}" alt="Speak" style="width:40px; height:auto;">
+                            </button>
+                        </div>
+                        <span style="font-size:11px; font-weight:800; padding:3px 9px; border-radius:10px; background:${isAnswered ? '#e3f3ff; color:#3b7095;' : '#ffeef4; color:#ba6273;'}">
+                            ${isAnswered ? '✓ Answered' : '⏳ Pending'}
+                        </span>
+                    </div>
+
+                    <div style="font-size:12px; color:#a38c90; margin-bottom:6px; font-weight:600;">
+                        Asked by <b>${escapeHtml(inquiry.userName || inquiry.userEmail || 'Bub')}</b> • ${askedDate}
+                    </div>
+
+                    ${inquiry.user_query ? `
+                        <div style="background:#fff9e6; border:1px solid #fbe7b2; border-radius:10px; padding:7px 10px; font-size:12.5px; color:#68513b; margin-bottom:10px; line-height:1.4;">
+                            <b>Question:</b> ${escapeHtml(inquiry.user_query)}
+                        </div>
+                    ` : ''}
+
+                    <div style="margin-top:6px;">
+                        <span style="font-size:12px; font-weight:700; color:#5c4a4d; display:block; margin-bottom:4px;">Bean's Explanation:</span>
+                        <textarea class="admin-reply-textarea" rows="3" placeholder="Type your detailed explanation here..." style="width:100%; border:1.5px solid #f5cde2; border-radius:12px; padding:10px; font-family:inherit; font-size:13px; color:#5c4a4d; outline:none; resize:none; background:#ffffff; box-shadow:inset 0 1px 3px rgba(220,160,180,0.12); line-height:1.4;">${inquiry.reply || ''}</textarea>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:8px; border-top:1px dashed #f5cde2;">
+                        <button class="ghost-btn admin-del-inquiry-btn" style="color:#d85268; padding:5px 12px; font-size:11px;">Delete</button>
+                        <button class="login-btn admin-submit-reply-btn" style="width:auto; padding:7px 18px; font-size:12.5px; font-weight:800; background:linear-gradient(180deg, #f09cb0 0%, #e08b9b 100%); color:#ffffff; border:none;">
+                            ${isAnswered ? 'Update Note 💌' : 'Send Answer 💌'}
+                        </button>
+                    </div>
+                `;
+
+                card.querySelector('.admin-speak-btn').addEventListener('click', () => playTTS(inquiry.hanzi));
+
+                const replyTextarea = card.querySelector('.admin-reply-textarea');
+                const submitBtn = card.querySelector('.admin-submit-reply-btn');
+                const delBtn = card.querySelector('.admin-del-inquiry-btn');
+
+                submitBtn.addEventListener('click', async () => {
+                    const replyVal = replyTextarea.value.trim();
+                    if (!replyVal) {
+                        alert("Please write an explanation first!");
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = "Saving... ☁️";
+
+                    try {
+                        const targetUserId = inquiry.userId;
+                        
+                        // 1. Update the inquiry in Firestore
+                        await db.collection('users').doc(targetUserId).collection('inquiries').doc(inquiry.id).update({
+                            reply: replyVal,
+                            status: 'answered',
+                            repliedAt: Date.now()
+                        });
+
+                        // 2. Mirror into user's saved vocab item if exists
+                        try {
+                            const vocabRef = db.collection('users').doc(targetUserId).collection('vocab').doc(inquiry.hanzi);
+                            const vocabDoc = await vocabRef.get();
+                            if (vocabDoc.exists) {
+                                await vocabRef.update({
+                                    beanReply: replyVal,
+                                    updatedAt: Date.now()
+                                });
+                            }
+                        } catch (vErr) {
+                            console.warn("Could not mirror reply to vocab:", vErr);
+                        }
+
+                        // 3. Dispatch real-time web push notification to user
+                        try {
+                            const userDoc = await db.collection('users').doc(targetUserId).get();
+                            const userSub = userDoc.data()?.pushSubscription;
+                            if (userSub) {
+                                fetch(`${PUSH_SERVER_URL}/api/send-notification`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        recipientId: targetUserId,
+                                        directSubscription: userSub,
+                                        title: "Bean answered your question! 💌",
+                                        body: `${inquiry.hanzi}: ${replyVal}`,
+                                        url: "./"
+                                    })
+                                }).catch(e => console.warn("Push dispatch error:", e));
+                            }
+                        } catch (pErr) {
+                            console.warn("Push inquiry error:", pErr);
+                        }
+
+                        submitBtn.textContent = "Sent! 🌸";
+                        submitBtn.style.background = "#a6cbb5";
+                        setTimeout(() => renderBeanRepliesTab(), 700);
+                    } catch (err) {
+                        alert("Failed to submit reply: " + err.message);
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Send Answer 💌";
+                    }
+                });
+
+                delBtn.addEventListener('click', async () => {
+                    if (confirm(`Delete inquiry for "${inquiry.hanzi}"?`)) {
+                        try {
+                            await db.collection('users').doc(inquiry.userId).collection('inquiries').doc(inquiry.id).delete();
+                        } catch (e) {
+                            alert("Delete failed: " + e.message);
+                        }
+                    }
+                });
+
                 repliesListContainer.appendChild(card);
             });
         }
@@ -2201,6 +2417,9 @@
                     activeChatUserId = e.target.value;
                     bindChatListener(activeChatUserId);
                     initGlobalNotificationWatcher(currentUser);
+                    if (currentUser && currentUser.email === ADMIN_EMAIL) {
+                        subscribeToInquiries(currentUser);
+                    }
                 });
             }
 
@@ -2840,6 +3059,7 @@
                     id: inquiryId,
                     userId: currentUser.uid,
                     userEmail: currentUser.email,
+                    userName: currentUser.displayName || currentUser.email.split('@')[0],
                     hanzi: currentAskingHanzi,
                     user_query: text,
                     reply: '',
