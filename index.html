@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Eggy's Mandarin 🌸 (v1.2.5)</title>
+    <title>Eggy's Mandarin 🌸 (v1.2.6)</title>
     
     <!-- iOS & PWA Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -880,7 +880,7 @@
     <!-- Header -->
     <header>
         <div class="header-title-box">
-            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.5</span></h1>
+            <h1>Eggy's Mandarin <span class="header-version-tag">v1.2.6</span></h1>
             <p id="user-display-email">Connecting...</p>
         </div>
         <button id="logout-btn" class="ghost-btn" style="display: none;">Sign Out</button>
@@ -1086,7 +1086,7 @@
                 <div class="sync-box">
                     <h3 style="margin: 0 0 6px; color: #e08b9b;">System Version</h3>
                     <div class="version-badge-pill">
-                        <b id="settings-version-display">v1.2.5</b>
+                        <b id="settings-version-display">v1.2.6</b>
                     </div>
                     <div>
                         <button id="force-update-btn" class="ghost-btn" style="padding: 8px 16px; font-weight: 800;">
@@ -1181,7 +1181,7 @@
 
     <script>
         // --- 0. VERSION TRACKING & CACHE REFRESH ---
-        const APP_VERSION = 'v1.2.5';
+        const APP_VERSION = 'v1.2.6';
 
         document.getElementById('force-update-btn')?.addEventListener('click', async () => {
             if ('caches' in window) {
@@ -1300,7 +1300,7 @@
 
         let currentUser = null;
         let unsubscribeVocab = null;
-        let inquiriesUnsubscribe = null;
+        let inquiriesUnsubscribes = [];
         let unsubscribeChat = null;
         let unsubscribeChatWallpaper = null;
         let unsubscribeGlobalAlerts = null;
@@ -1347,12 +1347,16 @@
             }
         }
 
-        // Direct Real-Time Firestore Inquiry Sync (Unified for Admin & User)
+        // --- DIRECT REAL-TIME FIRESTORE INQUIRY SYNC (ROBUST MULTI-USER MERGE FOR ADMIN) ---
+        function clearInquiryListeners() {
+            inquiriesUnsubscribes.forEach(unsub => {
+                if (typeof unsub === 'function') unsub();
+            });
+            inquiriesUnsubscribes = [];
+        }
+
         function subscribeToInquiries(user) {
-            if (inquiriesUnsubscribe) {
-                inquiriesUnsubscribe();
-                inquiriesUnsubscribe = null;
-            }
+            clearInquiryListeners();
 
             if (!user) {
                 beanRepliesList = [];
@@ -1365,51 +1369,81 @@
                 adminInquiryControls.style.display = isAdmin ? 'block' : 'none';
             }
 
-            const handleInquirySnapshot = (snapshot) => {
-                beanRepliesList = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    beanRepliesList.push({
-                        id: doc.id,
-                        userId: data.userId || (doc.ref.parent && doc.ref.parent.parent ? doc.ref.parent.parent.id : user.uid),
-                        userEmail: data.userEmail || '',
-                        userName: data.userName || (data.userEmail ? data.userEmail.split('@')[0] : 'User'),
-                        hanzi: data.hanzi || '',
-                        user_query: data.user_query || '',
-                        reply: data.reply || '',
-                        status: data.status || (data.reply ? 'answered' : 'pending'),
-                        createdAt: data.createdAt || 0,
-                        repliedAt: data.repliedAt || null
-                    });
-                });
-
-                if (typeof renderSavedVocab === 'function') renderSavedVocab();
-                if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
-            };
-
             if (isAdmin) {
-                try {
-                    // Try collectionGroup across all users
-                    inquiriesUnsubscribe = db.collectionGroup('inquiries')
-                        .onSnapshot(handleInquirySnapshot, (err) => {
-                            console.warn("collectionGroup fallback to direct user inquiries:", err);
-                            // Fallback to active chat user or own collection if collectionGroup index is pending
-                            const targetUid = activeChatUserId || user.uid;
-                            inquiriesUnsubscribe = db.collection('users').doc(targetUid).collection('inquiries')
-                                .onSnapshot(handleInquirySnapshot, e => console.error("Admin inquiry sync error:", e));
-                        });
-                } catch (e) {
-                    const targetUid = activeChatUserId || user.uid;
-                    inquiriesUnsubscribe = db.collection('users').doc(targetUid).collection('inquiries')
-                        .onSnapshot(handleInquirySnapshot, err => console.error("Direct inquiries sync error:", err));
-                }
+                // Admin Mode: 取得所有註冊使用者，並為每個用戶掛載 inquiries 即時監聽器
+                db.collection('users').get().then(snapshot => {
+                    const inquiriesByDocId = new Map();
+
+                    const refreshAdminInquiries = () => {
+                        beanRepliesList = Array.from(inquiriesByDocId.values());
+                        if (typeof renderSavedVocab === 'function') renderSavedVocab();
+                        if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
+                    };
+
+                    snapshot.forEach(userDoc => {
+                        const targetUid = userDoc.id;
+                        const userData = userDoc.data() || {};
+                        const userName = userData.displayName || (userData.email ? userData.email.split('@')[0] : 'User');
+                        const userEmail = userData.email || '';
+
+                        const unsub = db.collection('users').doc(targetUid).collection('inquiries')
+                            .onSnapshot(inqSnap => {
+                                inqSnap.docChanges().forEach(change => {
+                                    const doc = change.doc;
+                                    if (change.type === 'removed') {
+                                        inquiriesByDocId.delete(doc.id);
+                                    } else {
+                                        const data = doc.data() || {};
+                                        inquiriesByDocId.set(doc.id, {
+                                            id: doc.id,
+                                            userId: data.userId || targetUid,
+                                            userEmail: data.userEmail || userEmail,
+                                            userName: data.userName || userName,
+                                            hanzi: data.hanzi || '',
+                                            user_query: data.user_query || '',
+                                            reply: data.reply || '',
+                                            status: data.status || (data.reply ? 'answered' : 'pending'),
+                                            createdAt: data.createdAt || 0,
+                                            repliedAt: data.repliedAt || null
+                                        });
+                                    }
+                                });
+                                refreshAdminInquiries();
+                            }, err => console.warn(`Inquiry sync error for ${targetUid}:`, err));
+
+                        inquiriesUnsubscribes.push(unsub);
+                    });
+                }).catch(err => console.error("Admin user list fetch error:", err));
             } else {
-                inquiriesUnsubscribe = db.collection('users')
+                // Regular Learner Mode: 僅監聽自己
+                const unsub = db.collection('users')
                     .doc(user.uid)
                     .collection('inquiries')
-                    .onSnapshot(handleInquirySnapshot, err => {
-                        console.error("Firestore inquiries sync error:", err);
+                    .onSnapshot(snapshot => {
+                        beanRepliesList = [];
+                        snapshot.forEach(doc => {
+                            const data = doc.data() || {};
+                            beanRepliesList.push({
+                                id: doc.id,
+                                userId: data.userId || user.uid,
+                                userEmail: data.userEmail || user.email,
+                                userName: data.userName || (user.displayName || user.email.split('@')[0]),
+                                hanzi: data.hanzi || '',
+                                user_query: data.user_query || '',
+                                reply: data.reply || '',
+                                status: data.status || (data.reply ? 'answered' : 'pending'),
+                                createdAt: data.createdAt || 0,
+                                repliedAt: data.repliedAt || null
+                            });
+                        });
+
+                        if (typeof renderSavedVocab === 'function') renderSavedVocab();
+                        if (typeof renderBeanRepliesTab === 'function') renderBeanRepliesTab();
+                    }, err => {
+                        console.error("User inquiries sync error:", err);
                     });
+
+                inquiriesUnsubscribes.push(unsub);
             }
         }
 
@@ -1468,7 +1502,7 @@
             } else {
                 currentUser = null;
                 if (unsubscribeVocab) unsubscribeVocab();
-                if (inquiriesUnsubscribe) inquiriesUnsubscribe();
+                clearInquiryListeners();
                 if (unsubscribeChat) unsubscribeChat();
                 if (unsubscribeChatWallpaper) unsubscribeChatWallpaper();
                 if (unsubscribeGlobalAlerts) unsubscribeGlobalAlerts();
@@ -2417,9 +2451,6 @@
                     activeChatUserId = e.target.value;
                     bindChatListener(activeChatUserId);
                     initGlobalNotificationWatcher(currentUser);
-                    if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                        subscribeToInquiries(currentUser);
-                    }
                 });
             }
 
